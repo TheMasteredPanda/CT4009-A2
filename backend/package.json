@@ -1,0 +1,19 @@
+{
+  "name": "ct4009-backend",
+  "version": "1.0.0",
+  "description": "Bike Registry Backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/TheMasteredPanda/CT4009-A2.git"
+  },
+  "author": "Duke J. Morgan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheMasteredPanda/CT4009-A2/issues"
+  },
+  "homepage": "https://github.com/TheMasteredPanda/CT4009-A2#readme"
+}
