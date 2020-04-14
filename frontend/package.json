@@ -10,9 +10,11 @@
   "license": "ISC",
   "devDependencies": {
     "@types/draft-js": "^0.10.39",
+    "clean": "^4.0.2",
     "css-loader": "^3.5.2",
     "dependency-tree": "^7.2.1",
     "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
     "gulp-rename": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",

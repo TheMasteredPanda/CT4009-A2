@@ -1,1 +1,1 @@
-console.log("test");
+"use strict";function testFunc(t){return"test"}exports.__esModule=!0,exports.default=Axios,console.log("test");

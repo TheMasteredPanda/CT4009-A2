@@ -5,7 +5,7 @@ const patternDImport = new RegExp(
   "mg"
 );
 
-module.exports.tree = function (entryPoint) {
+module.exports.tree = function (entryPoint, directory) {
   return dependencyTree({
     filename: entryPoint,
     directory: "src",
@@ -40,4 +40,12 @@ module.exports.flatten = function (tree) {
 module.exports.stripImportDuplications = function (path) {
   let data = fs.readFileSync(path, { encoding: "utf8" });
   console.log(data);
+};
+
+function msleep(n) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, n);
+}
+
+module.exports.sleep = function (n) {
+  msleep(n * 1000);
 };
