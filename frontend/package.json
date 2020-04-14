@@ -19,6 +19,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-uglify": "^3.0.2",
+    "lodash": "^4.17.15",
     "readable-stream": "^3.6.0",
     "through2": "^3.0.1",
     "tmp": "^0.1.0",
@@ -26,6 +27,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "axios": "^0.19.2",
     "gulp-cli": "^2.2.0"
   }

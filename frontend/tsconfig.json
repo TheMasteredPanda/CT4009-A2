@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
-    "allowJs": true,
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"],
+    "typeRoots": ["../node_modules/@types"]
   },
   "exclude": ["node_modules"]
 }

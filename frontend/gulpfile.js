@@ -7,35 +7,41 @@ const concat = require("gulp-concat");
 const uglify = require("gulp-uglify");
 const ts = require("gulp-typescript");
 const clean = require("gulp-clean");
-
 const patternImport = new RegExp(
   /import(?:["'\s]*([\w*${}\n\r\t, ]+)from\s*)?["'\s]["'\s](.*[@\w_-]+)["'\s].*;$/,
   "mg"
 );
 
+function getPackage(importString) {
+  let splitImportString = importString.split(" ");
+  return splitImportString[splitImportString.length - 1]
+    .replace('"', "")
+    .replace('";', "");
+}
+
 gulp.task("setup", (cb) => {
   if (!fs.existsSync("output")) {
-    fs.mkdir("output");
+    fs.mkdirSync("output");
   }
 
   if (!fs.existsSync("output/copy")) {
-    fs.mkdir("output/copy");
+    fs.mkdirSync("output/copy");
   }
 
   if (!fs.existsSync("output/ts1")) {
-    fs.mkdir("output/ts1");
+    fs.mkdirSync("output/ts1");
   }
 
   if (!fs.existsSync("output/ts2")) {
-    fs.mkdir("output/ts2");
+    fs.mkdirSync("output/ts2");
   }
 
   if (!fs.existsSync("output/ts3")) {
-    fs.mkdir("output/ts3");
+    fs.mkdirSync("output/ts3");
   }
 
   if (!fs.existsSync("output/imports")) {
-    fs.mkdir("output/imports");
+    fs.mkdirSync("output/imports");
   }
 
   cb();
@@ -50,12 +56,12 @@ gulp.task("copy", (cb) => {
     let index = fs
       .readdirSync(`src/scripts/${package}`)
       .filter((path) => path.endsWith(".ts"))[0];
-    let tree = utils.tree(`src/scripts/${package}`, "src/scripts");
+    let tree = utils.tree(`src/scripts/${package}/${index}`, "src/scripts");
     let paths = utils.flatten(tree);
     promises.push(
       new Promise((resolve) => {
         gulp
-          .src(paths)
+          .src(paths, { base: `src/scripts/${package}` })
           .pipe(gulp.dest(`output/copy/${package}`))
           .on("end", () => resolve());
       })
@@ -79,21 +85,21 @@ gulp.task("ts-1", (cb) => {
     let index = fs
       .readdirSync(`output/copy/${package}`)
       .filter((path) => path.endsWith(".ts"))[0];
-    let tree = utils.tree(`output/copy/${packages}/${index}`, "output");
+    let tree = utils.tree(`output/copy/${package}/${index}`, "output/copy");
     let paths = utils.flatten(tree);
-    paths.reverse();
-
+    let imports = [];
     for (let i = 0; i < paths.length; i++) {
       const path = paths[i];
+      if (!path.includes(package)) continue;
       let pathSplit = path.split("output/copy");
       let subSplit = pathSplit[1].split("/");
-      let relativePath = "output/ts-1";
+      let relativePath = "output/ts1";
 
       for (let i = 0; i < subSplit.length - 1; i++) {
-        const directory = directory[i];
+        const directory = subSplit[i];
         relativePath = relativePath + `/${directory}`;
         if (!fs.existsSync(relativePath)) {
-          fs.mkdir(relativePath);
+          fs.mkdirSync(relativePath);
         }
       }
 
@@ -104,19 +110,21 @@ gulp.task("ts-1", (cb) => {
             let code = data.toString();
 
             while ((match = patternImport.exec(code)) != null) {
+              let package = getPackage(match[0]);
               if (
                 (match[0].includes('"../') &&
-                  packages.every(
-                    (localPackage) => !match[0].includes(localPackage)
+                  packages.some((localPackage) =>
+                    match[0].includes(localPackage)
                   )) ||
-                match[0].includes('"./')
+                imports.includes(package)
               )
                 continue;
               code = code.replace(match[0], "");
+              imports.push(package);
             }
 
             fs.writeFile(
-              path.replace("output/copy", "output/ts-1"),
+              path.replace("output/copy", "output/ts1"),
               code,
               () => {
                 resolve();
@@ -140,24 +148,27 @@ gulp.task("ts-2", (cb) => {
   let localModulePackages = {};
 
   for (let i = 0; i < packages.length; i++) {
-    const packages = packages[i];
-    let index = fs.readdirSync(`src/scripts/`);
-    let tree = utils.tree(`src/scripts/${packages}/${index}`, "src");
+    const package = packages[i];
+    let index = fs
+      .readdirSync(`src/scripts/${package}`)
+      .filter((path) => path.endsWith(".ts"))[0];
+    let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
     let paths = utils
       .flatten(tree)
-      .map((path) => path.replace("src/scripts", "output/ts-1"));
-
+      .map((path) => path.replace("src/scripts", "output/ts1"));
+    paths.reverse();
     for (let i = 0; i < paths.length; i++) {
       const path = paths[i];
-      let pathSplit = path.split("output/ts-1");
+      if (!path.includes(package)) continue;
+      let pathSplit = path.split("output/ts1");
       let subSplit = pathSplit[1].split("/");
-      let relativePath = "output/ts-2";
+      let relativePath = "output/ts2";
 
       for (let i = 0; i < subSplit.length - 1; i++) {
-        const directory = directory[i];
+        const directory = subSplit[i];
         relativePath = relativePath + `/${directory}`;
         if (!fs.existsSync(relativePath)) {
-          fs.mkdir(relativePath);
+          fs.mkdirSync(relativePath);
         }
       }
 
@@ -174,20 +185,16 @@ gulp.task("ts-2", (cb) => {
                 if (!match[0].includes(localPackage)) continue;
                 if (!localModulePackages.hasOwnProperty(package))
                   localModulePackages[package] = [];
-                if (!localModulePackages[package].contains(localPackage)) {
+                if (!localModulePackages[package].includes(localPackage)) {
                   localModulePackages[package].push(localPackage);
                   code = code.replace(match[0], "");
                 }
               }
             }
 
-            fs.writeFile(
-              path.replace("output/ts-1", "output/ts-2"),
-              code,
-              () => {
-                resolve();
-              }
-            );
+            fs.writeFile(path.replace("output/ts1", "output/ts2"), code, () => {
+              resolve();
+            });
           });
         })
       );
@@ -220,7 +227,7 @@ gulp.task("ts-3", (cb) => {
     let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
     let paths = utils
       .flatten(tree)
-      .map((path) => path.replace("src/scripts", "output/ts-2"));
+      .map((path) => path.replace("src/scripts", "output/ts2"));
 
     paths.reverse();
 
@@ -230,15 +237,16 @@ gulp.task("ts-3", (cb) => {
 
       for (let i = 0; i < paths.length; i++) {
         const path = paths[i];
-        let pathSplit = path.split("output/ts-2");
+        if (!path.includes(package)) continue;
+        let pathSplit = path.split("output/ts2");
         let subSplit = pathSplit[1].split("/");
-        let relativePath = "output/ts-3";
+        let relativePath = "output/ts3";
 
         for (let i = 0; i < subSplit.length - 1; i++) {
-          const directory = directory[i];
+          const directory = subSplit[i];
           relativePath = relativePath + `/${directory}`;
           if (!fs.existsSync(relativePath)) {
-            fs.mkdir(relativePath);
+            fs.mkdirSync(relativePath);
           }
         }
 
@@ -249,7 +257,7 @@ gulp.task("ts-3", (cb) => {
                 if (err) throw err;
                 let code = data.toString();
                 fs.writeFile(
-                  path.replace("output/ts-2", "output/ts-3"),
+                  path.replace("output/ts2", "output/ts3"),
                   code,
                   () => {
                     resolve();
@@ -259,10 +267,6 @@ gulp.task("ts-3", (cb) => {
             })
           );
           continue;
-          index;
-          index;
-          index;
-          index;
         }
 
         promises.push(
@@ -275,12 +279,12 @@ gulp.task("ts-3", (cb) => {
 
               for (let i = 0; i < imports.length; i++) {
                 const importValue = imports[i];
-                string = string + `import "./${importValue}"\n`;
+                string = string + `import "./${importValue}.bundle.js"\n`;
               }
 
-              code = imports + code;
+              code = string + code;
               fs.writeFile(
-                path.replace("output/ts-2", "output/ts-3"),
+                path.replace("output/ts2", "output/ts3"),
                 code,
                 () => {
                   resolve();
@@ -308,17 +312,19 @@ gulp.task("ts-4", (cb) => {
       .readdirSync(`src/scripts/${package}`)
       .filter((path) => path.endsWith(".ts"))[0];
     let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
-    let paths = utils
-      .flatten(tree)
-      .map((path) => path.replace(`src/scripts`, "output/ts-3"))
+    let paths = [...new Set(utils.flatten(tree))]
+      .map((path) => path.replace(`src/scripts`, "output/ts3"))
       .reverse();
+
     promises.push(
       new Promise((resolve) => {
+        const tsProject = ts.createProject("tsconfig.json");
         gulp
           .src(paths)
-          .pipe(ts())
+          .pipe(concat(`${package}.bundle.ts`))
+          .pipe(tsProject())
+          .pipe(rename(`${package}.bundle.js`))
           .pipe(uglify())
-          .pipe(concat(`${package}.bundle.js`))
           .pipe(gulp.dest("build/scripts"))
           .on("end", () => {
             resolve();
