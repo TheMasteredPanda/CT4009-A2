@@ -24,32 +24,31 @@ gulp.task("setup", (cb) => {
     fs.mkdirSync("output");
   }
 
-  if (!fs.existsSync("output/copy")) {
-    fs.mkdirSync("output/copy");
+  if (!fs.existsSync("output/scripts")) {
+    fs.mkdirSync("output/scripts");
   }
 
-  if (!fs.existsSync("output/ts1")) {
-    fs.mkdirSync("output/ts1");
+  if (!fs.existsSync("output/scripts/copy")) {
+    fs.mkdirSync("output/scripts/copy");
   }
 
-  if (!fs.existsSync("output/ts2")) {
-    fs.mkdirSync("output/ts2");
+  if (!fs.existsSync("output/scripts/ts1")) {
+    fs.mkdirSync("output/scripts/ts1");
   }
 
-  if (!fs.existsSync("output/ts3")) {
-    fs.mkdirSync("output/ts3");
+  if (!fs.existsSync("output/scripts/ts2")) {
+    fs.mkdirSync("output/scripts/ts2");
   }
 
-  if (!fs.existsSync("output/imports")) {
-    fs.mkdirSync("output/imports");
+  if (!fs.existsSync("output/scripts/ts3")) {
+    fs.mkdirSync("output/scripts/ts3");
   }
 
   cb();
 });
 
-gulp.task("copy", (cb) => {
+gulp.task("copy", async () => {
   let packages = fs.readdirSync(`src/scripts`);
-  let promises = [];
 
   for (let i = 0; i < packages.length; i++) {
     const package = packages[i];
@@ -58,17 +57,15 @@ gulp.task("copy", (cb) => {
       .filter((path) => path.endsWith(".ts"))[0];
     let tree = utils.tree(`src/scripts/${package}/${index}`, "src/scripts");
     let paths = utils.flatten(tree);
-    promises.push(
-      new Promise((resolve) => {
-        gulp
-          .src(paths, { base: `src/scripts/${package}` })
-          .pipe(gulp.dest(`output/copy/${package}`))
-          .on("end", () => resolve());
-      })
-    );
+    await new Promise((resolve) => {
+      gulp
+        .src(paths, { base: `src/scripts/${package}` })
+        .pipe(gulp.dest(`output/scripts/copy/${package}`))
+        .on("end", () => resolve());
+    });
   }
 
-  Promise.all(promises).then(() => cb());
+  return null;
 });
 
 /**
@@ -76,24 +73,26 @@ gulp.task("copy", (cb) => {
  * highest on the list as that height determines the way in which the content will be
  * concatinated
  */
-gulp.task("ts-1", (cb) => {
-  let packages = fs.readdirSync("output/copy");
-  let promises = [];
+gulp.task("ts-1", async () => {
+  let packages = fs.readdirSync("output/scripts/copy");
 
   for (let i = 0; i < packages.length; i++) {
     const package = packages[i];
     let index = fs
-      .readdirSync(`output/copy/${package}`)
+      .readdirSync(`output/scripts/copy/${package}`)
       .filter((path) => path.endsWith(".ts"))[0];
-    let tree = utils.tree(`output/copy/${package}/${index}`, "output/copy");
+    let tree = utils.tree(
+      `output/scripts/copy/${package}/${index}`,
+      "output/scripts"
+    );
     let paths = utils.flatten(tree);
     let imports = [];
     for (let i = 0; i < paths.length; i++) {
       const path = paths[i];
       if (!path.includes(package)) continue;
-      let pathSplit = path.split("output/copy");
+      let pathSplit = path.split("output/scripts/copy");
       let subSplit = pathSplit[1].split("/");
-      let relativePath = "output/ts1";
+      let relativePath = "output/scripts/ts1";
 
       for (let i = 0; i < subSplit.length - 1; i++) {
         const directory = subSplit[i];
@@ -103,48 +102,45 @@ gulp.task("ts-1", (cb) => {
         }
       }
 
-      promises.push(
-        new Promise((resolve) => {
-          fs.readFile(path, (err, data) => {
-            if (err) throw err;
-            let code = data.toString();
+      await new Promise((resolve) => {
+        fs.readFile(path, (err, data) => {
+          if (err) throw err;
+          let code = data.toString();
 
-            while ((match = patternImport.exec(code)) != null) {
-              let package = getPackage(match[0]);
-              if (
-                (match[0].includes('"../') &&
-                  packages.some((localPackage) =>
-                    match[0].includes(localPackage)
-                  )) ||
-                imports.includes(package)
-              )
-                continue;
-              code = code.replace(match[0], "");
-              imports.push(package);
+          while ((match = patternImport.exec(code)) != null) {
+            let package = getPackage(match[0]);
+            if (
+              (match[0].includes('"../') &&
+                packages.some((localPackage) =>
+                  match[0].includes(localPackage)
+                )) ||
+              imports.includes(package)
+            )
+              continue;
+            code = code.replace(match[0], "");
+            imports.push(package);
+          }
+
+          fs.writeFile(
+            path.replace("output/scripts/copy", "output/scripts/ts1"),
+            code,
+            () => {
+              resolve();
             }
-
-            fs.writeFile(
-              path.replace("output/copy", "output/ts1"),
-              code,
-              () => {
-                resolve();
-              }
-            );
-          });
-        })
-      );
+          );
+        });
+      });
     }
   }
 
-  Promise.all(promises).then(() => cb());
+  return null;
 });
 
 /**
  * Takes out locally imported modules to be bundled imports. Will be added later when they're about to be bundled.
  */
-gulp.task("ts-2", (cb) => {
+gulp.task("ts-2", async (cb) => {
   let packages = fs.readdirSync("src/scripts");
-  let promises = [];
   let localModulePackages = {};
 
   for (let i = 0; i < packages.length; i++) {
@@ -155,14 +151,14 @@ gulp.task("ts-2", (cb) => {
     let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
     let paths = utils
       .flatten(tree)
-      .map((path) => path.replace("src/scripts", "output/ts1"));
+      .map((path) => path.replace("src/scripts", "output/scripts/ts1"));
     paths.reverse();
     for (let i = 0; i < paths.length; i++) {
       const path = paths[i];
       if (!path.includes(package)) continue;
-      let pathSplit = path.split("output/ts1");
+      let pathSplit = path.split("output/scripts/ts1");
       let subSplit = pathSplit[1].split("/");
-      let relativePath = "output/ts2";
+      let relativePath = "output/scripts/ts2";
 
       for (let i = 0; i < subSplit.length - 1; i++) {
         const directory = subSplit[i];
@@ -172,139 +168,130 @@ gulp.task("ts-2", (cb) => {
         }
       }
 
-      promises.push(
-        new Promise((resolve) => {
-          fs.readFile(path, (err, data) => {
-            if (err) throw err;
-            let code = data.toString();
+      await new Promise((resolve) => {
+        fs.readFile(path, (err, data) => {
+          if (err) throw err;
+          let code = data.toString();
 
-            while ((match = patternImport.exec(code)) != null) {
-              for (let i = 0; i < packages.length; i++) {
-                const localPackage = packages[i];
+          while ((match = patternImport.exec(code)) != null) {
+            for (let i = 0; i < packages.length; i++) {
+              const localPackage = packages[i];
 
-                if (!match[0].includes(localPackage)) continue;
-                if (!localModulePackages.hasOwnProperty(package))
-                  localModulePackages[package] = [];
-                if (!localModulePackages[package].includes(localPackage)) {
-                  localModulePackages[package].push(localPackage);
-                  code = code.replace(match[0], "");
-                }
+              if (!match[0].includes(localPackage)) continue;
+              if (!localModulePackages.hasOwnProperty(package))
+                localModulePackages[package] = [];
+              if (!localModulePackages[package].includes(localPackage)) {
+                localModulePackages[package].push(localPackage);
+                code = code.replace(match[0], "");
               }
             }
+          }
 
-            fs.writeFile(path.replace("output/ts1", "output/ts2"), code, () => {
+          fs.writeFile(
+            path.replace("output/scripts/ts1", "output/scripts/ts2"),
+            code,
+            () => {
               resolve();
-            });
-          });
-        })
-      );
+            }
+          );
+        });
+      });
     }
 
-    Promise.all(promises).then(() => {
-      fs.writeFile(
-        "output/mappedImports.json",
-        JSON.stringify(localModulePackages),
-        () => {
-          cb();
-        }
-      );
-    });
+    await fs.writeFile(
+      "output/mappedImports.json",
+      JSON.stringify(localModulePackages),
+      () => {
+        cb();
+      }
+    );
   }
 });
 
 /**
  * Takes the mapped imports fro mthe json file made above and inserts the specified local modules into the first file in the array.
  */
-gulp.task("ts-3", (cb) => {
+gulp.task("ts-3", async () => {
   let packages = fs.readdirSync("src/scripts");
-  let promises = [];
-
   for (let i = 0; i < packages.length; i++) {
     const package = packages[i];
+
     let index = fs
       .readdirSync(`src/scripts/${package}`)
       .filter((path) => path.endsWith(".ts"))[0];
     let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
     let paths = utils
       .flatten(tree)
-      .map((path) => path.replace("src/scripts", "output/ts2"));
+      .map((path) => path.replace("src/scripts", "output/scripts/ts2"));
 
     paths.reverse();
-
-    fs.readFile("output/mappedImports.json", (err, data) => {
-      if (err) throw err;
-      let object = JSON.parse(data);
-
-      for (let i = 0; i < paths.length; i++) {
-        const path = paths[i];
-        if (!path.includes(package)) continue;
-        let pathSplit = path.split("output/ts2");
-        let subSplit = pathSplit[1].split("/");
-        let relativePath = "output/ts3";
-
-        for (let i = 0; i < subSplit.length - 1; i++) {
-          const directory = subSplit[i];
-          relativePath = relativePath + `/${directory}`;
-          if (!fs.existsSync(relativePath)) {
-            fs.mkdirSync(relativePath);
-          }
-        }
-
-        if (!object.hasOwnProperty(package)) {
-          promises.push(
-            new Promise((resolve) => {
-              fs.readFile(path, (err, data) => {
-                if (err) throw err;
-                let code = data.toString();
-                fs.writeFile(
-                  path.replace("output/ts2", "output/ts3"),
-                  code,
-                  () => {
-                    resolve();
-                  }
-                );
-              });
-            })
-          );
-          continue;
-        }
-
-        promises.push(
-          new Promise((resolve) => {
-            fs.readFile(path, (err, data) => {
-              if (err) throw err;
-              let code = data.toString();
-              let imports = object[package];
-              let string = "";
-
-              for (let i = 0; i < imports.length; i++) {
-                const importValue = imports[i];
-                string = string + `import "./${importValue}.bundle.js"\n`;
-              }
-
-              code = string + code;
-              fs.writeFile(
-                path.replace("output/ts2", "output/ts3"),
-                code,
-                () => {
-                  resolve();
-                }
-              );
-            });
-          })
-        );
-      }
+    let data = fs.readFileSync("output/mappedImports.json", {
+      encoding: "utf8",
     });
+    let object = JSON.parse(data);
+
+    for (let i = 0; i < paths.length; i++) {
+      const path = paths[i];
+      if (!path.includes(package)) continue;
+      let pathSplit = path.split("output/scripts/ts2");
+      let subSplit = pathSplit[1].split("/");
+      let relativePath = "output/scripts/ts3";
+
+      for (let i = 0; i < subSplit.length - 1; i++) {
+        const directory = subSplit[i];
+        relativePath = relativePath + `/${directory}`;
+        if (!fs.existsSync(relativePath)) {
+          fs.mkdirSync(relativePath);
+        }
+      }
+
+      if (!object.hasOwnProperty(package)) {
+        await new Promise((resolve) => {
+          fs.readFile(path, (err, data) => {
+            if (err) throw err;
+            let code = data.toString();
+            fs.writeFile(
+              path.replace("output/scripts/ts2", "output/scripts/ts3"),
+              code,
+              () => {
+                resolve();
+              }
+            );
+          });
+        });
+        continue;
+      }
+
+      await new Promise((resolve) => {
+        fs.readFile(path, (err, data) => {
+          if (err) throw err;
+          let code = data.toString();
+          let imports = object[package];
+          let string = "";
+
+          for (let i = 0; i < imports.length; i++) {
+            const importValue = imports[i];
+            string = string + `import "./${importValue}.bundle.js"\n`;
+          }
+
+          code = string + code;
+          fs.writeFile(
+            path.replace("output/scripts/ts2", "output/scripts/ts3"),
+            code,
+            () => {
+              resolve();
+            }
+          );
+        });
+      });
+    }
   }
 
-  Promise.all(promises).then(() => {
-    cb();
-  });
+  return null;
 });
 
-gulp.task("ts-4", (cb) => {
+gulp.task("ts-4", async () => {
   let packages = fs.readdirSync("src/scripts");
-  let promises = [];
 
   for (let i = 0; i < packages.length; i++) {
     const package = packages[i];
@@ -313,29 +300,25 @@ gulp.task("ts-4", (cb) => {
       .filter((path) => path.endsWith(".ts"))[0];
     let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
     let paths = [...new Set(utils.flatten(tree))]
-      .map((path) => path.replace(`src/scripts`, "output/ts3"))
+      .map((path) => path.replace(`src/scripts`, "output/scripts/ts3"))
       .reverse();
 
-    promises.push(
-      new Promise((resolve) => {
-        const tsProject = ts.createProject("tsconfig.json");
-        gulp
-          .src(paths)
-          .pipe(concat(`${package}.bundle.ts`))
-          .pipe(tsProject())
-          .pipe(rename(`${package}.bundle.js`))
-          .pipe(uglify())
-          .pipe(gulp.dest("build/scripts"))
-          .on("end", () => {
-            resolve();
-          });
-      })
-    );
+    await new Promise((resolve) => {
+      const tsProject = ts.createProject("tsconfig.json");
+      gulp
+        .src(paths)
+        .pipe(concat(`${package}.bundle.ts`))
+        .pipe(tsProject())
+        .pipe(rename(`${package}.bundle.js`))
+        .pipe(uglify())
+        .pipe(gulp.dest("build/scripts"))
+        .on("end", () => {
+          resolve();
+        });
+    });
   }
 
-  Promise.all(promises).then(() => {
-    cb();
-  });
+  return null;
 });
 
 gulp.task("clean", (cb) => {
@@ -344,7 +327,12 @@ gulp.task("clean", (cb) => {
   });
 });
 
+gulp.task("sass-compile", (cb) => {});
+
+gulp.task("php-1", (cb) => {});
+gulp.task("php-2", (cb) => {});
+gulp.task("php-3", (cb) => {});
 gulp.task(
   "default",
-  gulp.series("setup", "copy", "ts-1", "ts-2", "ts-3", "ts-4", "clean")
+  gulp.series("setup", "copy", "ts-1", "ts-2", "ts-3", "ts-4")
 );
