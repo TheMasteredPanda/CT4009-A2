@@ -1,5 +1,6 @@
 
-import "./folder/index2";
+
+import axios from "axios";
 
 function sayHello(name: string) {
   return `Hello ${name}`;

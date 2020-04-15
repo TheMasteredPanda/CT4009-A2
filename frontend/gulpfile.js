@@ -9,8 +9,8 @@ const uglify = require("gulp-uglify");
 const ts = require("gulp-typescript");
 const clean = require("gulp-clean");
 const patternImport = new RegExp(
-  /import(?:["'\s]*([\w*${}\n\r\t, ]+)from\s*)?["'\s]["'\s](.*[@\w_-]+)["'\s].*;$/,
-  "mg"
+  /import(?:["'\s]*([\w*{}\n\r\t, ]+)from\s*)?["'\s].*([@\w_-]+)["'\s].*;$/,
+  "gm"
 );
 
 function getPackage(importString) {
@@ -115,17 +115,18 @@ gulp.task("ts-1", async () => {
         fs.readFile(path, (err, data) => {
           if (err) throw err;
           let code = data.toString();
-
-          while ((match = patternImport.exec(code)) != null) {
+          while ((match = patternImport.exec(code)) !== null) {
+            console.log(match[0]);
             let package = getPackage(match[0]);
-            if (
+            /*if (
               (match[0].includes('"../') &&
                 packages.some((localPackage) =>
                   match[0].includes(localPackage)
                 )) ||
               imports.includes(package)
             )
-              continue;
+              continue;*/
+
             code = code.replace(match[0], "");
             imports.push(package);
           }
@@ -299,7 +300,12 @@ gulp.task("ts-4", async () => {
 
     console.log(paths);
     await new Promise((resolve) => {
-      const tsProject = ts.createProject("tsconfig.json");
+      const tsProject = ts.createProject("tsconfig.json", {
+        noImplicitAny: false,
+        suppressImplicitAnyIndexErrors: true,
+        noEmitOnError: false,
+        isolatedModules: true,
+      });
       gulp
         .src(paths)
         .pipe(concat(`${package}.bundle.ts`))
@@ -367,7 +373,6 @@ gulp.task(
     "ts-3",
     "ts-4",
     "sass-compile",
-    "php-copy",
-    "clean"
+    "php-copy"
   )
 );
