@@ -9,8 +9,8 @@ const uglify = require("gulp-uglify");
 const ts = require("gulp-typescript");
 const clean = require("gulp-clean");
 const patternImport = new RegExp(
-  /import(?:["'\s]*([\w*{}\n\r\t, ]+)from\s*)?["'\s].*([@\w_-]+)["'\s].*;$/,
-  "gm"
+  /import\s+?(?:(?:(?:[\w*\s{},]*)\s+from\s+?)|)(?:(?:".*?")|(?:'.*?'))[\s]*?(?:;|$|)/,
+  "g"
 );
 
 function getPackage(importString) {
@@ -115,20 +115,24 @@ gulp.task("ts-1", async () => {
         fs.readFile(path, (err, data) => {
           if (err) throw err;
           let code = data.toString();
-          while ((match = patternImport.exec(code)) !== null) {
-            console.log(match[0]);
-            let package = getPackage(match[0]);
-            /*if (
-              (match[0].includes('"../') &&
-                packages.some((localPackage) =>
-                  match[0].includes(localPackage)
-                )) ||
-              imports.includes(package)
-            )
-              continue;*/
 
-            code = code.replace(match[0], "");
-            imports.push(package);
+          let matches = code.match(patternImport);
+          if (matches !== null) {
+            for (let j = 0; j < matches.length; j++) {
+              const match = matches[j];
+              let package = getPackage(match);
+              if (
+                (match.includes('"../') &&
+                  packages.some((localPackage) =>
+                    match.includes(localPackage)
+                  )) ||
+                imports.includes(package)
+              )
+                continue;
+
+              code = code.replace(match, "");
+              imports.push(package);
+            }
           }
 
           fs.writeFile(
@@ -142,7 +146,7 @@ gulp.task("ts-1", async () => {
       });
     }
   }
-
+  return;
   return null;
 });
 
@@ -174,17 +178,21 @@ gulp.task("ts-2", async (cb) => {
         fs.readFile(path, (err, data) => {
           if (err) throw err;
           let code = data.toString();
+          let matches = code.match(patternImport);
+          if (matches !== null) {
+            for (let i = 0; i < matches.length; i++) {
+              const match = matches[i];
 
-          while ((match = patternImport.exec(code)) != null) {
-            for (let i = 0; i < packages.length; i++) {
-              const localPackage = packages[i];
+              for (let i = 0; i < packages.length; i++) {
+                const localPackage = packages[i];
 
-              if (!match[0].includes(localPackage)) continue;
-              if (!localModulePackages.hasOwnProperty(package))
-                localModulePackages[package] = [];
-              if (!localModulePackages[package].includes(localPackage)) {
-                localModulePackages[package].push(localPackage);
-                code = code.replace(match[0], "");
+                if (!match.includes(localPackage)) continue;
+                if (!localModulePackages.hasOwnProperty(package))
+                  localModulePackages[package] = [];
+                if (!localModulePackages[package].includes(localPackage)) {
+                  localModulePackages[package].push(localPackage);
+                  code = code.replace(match, "");
+                }
               }
             }
           }
@@ -298,7 +306,6 @@ gulp.task("ts-4", async () => {
       .sort((a, b) => (a.includes("node_modules") ? -1 : 1))
       .reverse();
 
-    console.log(paths);
     await new Promise((resolve) => {
       const tsProject = ts.createProject("tsconfig.json", {
         noImplicitAny: false,

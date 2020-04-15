@@ -1,1 +1,1 @@
-"use strict";function testFunc(e){return"test"}Object.defineProperty(exports,"__esModule",{value:!0});var axios_1=require("axios");function sayHello(e){return"Hello "+e}console.log(sayHello(name)),axios_1.default.post("/test/world",{}).then(function(e){console.log(e)}),require("../master/index"),console.log("test"),exports.default=Axios;
+console.log("test");
