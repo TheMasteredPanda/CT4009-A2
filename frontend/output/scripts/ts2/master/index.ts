@@ -1,5 +1,6 @@
 
 import "./folder/index2";
+
 function sayHello(name: string) {
   return `Hello ${name}`;
 }

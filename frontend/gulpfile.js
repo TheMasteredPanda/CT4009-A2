@@ -1,3 +1,4 @@
+const sass = require("gulp-sass");
 const rename = require("gulp-rename");
 const through2 = require("through2");
 const utils = require("./gulputils");
@@ -42,6 +43,22 @@ gulp.task("setup", (cb) => {
 
   if (!fs.existsSync("output/scripts/ts3")) {
     fs.mkdirSync("output/scripts/ts3");
+  }
+
+  if (!fs.existsSync("output/php")) {
+    fs.mkdirSync("output/php");
+  }
+
+  if (!fs.existsSync("output/php/copy")) {
+    fs.mkdirSync("output/php/copy");
+  }
+
+  if (!fs.existsSync("output/php/php1")) {
+    fs.mkdirSync("output/php/php1");
+  }
+
+  if (!fs.existsSync("output/php/php2")) {
+    fs.mkdirSync("output/php/php2");
   }
 
   cb();
@@ -91,16 +108,8 @@ gulp.task("ts-1", async () => {
       const path = paths[i];
       if (!path.includes(package)) continue;
       let pathSplit = path.split("output/scripts/copy");
-      let subSplit = pathSplit[1].split("/");
       let relativePath = "output/scripts/ts1";
-
-      for (let i = 0; i < subSplit.length - 1; i++) {
-        const directory = subSplit[i];
-        relativePath = relativePath + `/${directory}`;
-        if (!fs.existsSync(relativePath)) {
-          fs.mkdirSync(relativePath);
-        }
-      }
+      utils.mkdirs([pathSplit[1]], relativePath);
 
       await new Promise((resolve) => {
         fs.readFile(path, (err, data) => {
@@ -157,16 +166,8 @@ gulp.task("ts-2", async (cb) => {
       const path = paths[i];
       if (!path.includes(package)) continue;
       let pathSplit = path.split("output/scripts/ts1");
-      let subSplit = pathSplit[1].split("/");
       let relativePath = "output/scripts/ts2";
-
-      for (let i = 0; i < subSplit.length - 1; i++) {
-        const directory = subSplit[i];
-        relativePath = relativePath + `/${directory}`;
-        if (!fs.existsSync(relativePath)) {
-          fs.mkdirSync(relativePath);
-        }
-      }
+      utils.mkdirs([pathSplit[1]], relativePath);
 
       await new Promise((resolve) => {
         fs.readFile(path, (err, data) => {
@@ -234,16 +235,8 @@ gulp.task("ts-3", async () => {
       const path = paths[i];
       if (!path.includes(package)) continue;
       let pathSplit = path.split("output/scripts/ts2");
-      let subSplit = pathSplit[1].split("/");
       let relativePath = "output/scripts/ts3";
-
-      for (let i = 0; i < subSplit.length - 1; i++) {
-        const directory = subSplit[i];
-        relativePath = relativePath + `/${directory}`;
-        if (!fs.existsSync(relativePath)) {
-          fs.mkdirSync(relativePath);
-        }
-      }
+      utils.mkdirs([pathSplit[1]], relativePath);
 
       if (!object.hasOwnProperty(package)) {
         await new Promise((resolve) => {
@@ -301,8 +294,10 @@ gulp.task("ts-4", async () => {
     let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
     let paths = [...new Set(utils.flatten(tree))]
       .map((path) => path.replace(`src/scripts`, "output/scripts/ts3"))
+      .sort((a, b) => (a.includes("node_modules") ? -1 : 1))
       .reverse();
 
+    console.log(paths);
     await new Promise((resolve) => {
       const tsProject = ts.createProject("tsconfig.json");
       gulp
@@ -322,17 +317,57 @@ gulp.task("ts-4", async () => {
 });
 
 gulp.task("clean", (cb) => {
-  fs.rmdir("output", () => {
-    cb();
-  });
+  fs.rmdirSync("output", { recursive: true });
+  cb();
 });
 
-gulp.task("sass-compile", (cb) => {});
+gulp.task("sass-compile", async () => {
+  let packages = fs
+    .readdirSync("src/styles")
+    .filter((path) => fs.lstatSync(`src/styles/${path}`).isDirectory());
 
-gulp.task("php-1", (cb) => {});
-gulp.task("php-2", (cb) => {});
-gulp.task("php-3", (cb) => {});
+  for (let i = 0; i < packages.length; i++) {
+    const package = packages[i];
+    let index = fs
+      .readdirSync(`src/styles/${package}`)
+      .filter((path) => path.endsWith(".scss"))[0];
+    let tree = utils.tree(`src/styles/${package}/${index}`, "src/styles");
+    let paths = utils.flatten(tree);
+    paths.reverse();
+    await new Promise((resolve) => {
+      gulp
+        .src(paths)
+        .pipe(sass())
+        .pipe(concat(`${package}.bundle.css`))
+        .pipe(gulp.dest(`build/styles`))
+        .on("end", () => {
+          resolve();
+        });
+    });
+  }
+
+  return null;
+});
+
+gulp.task("php-copy", (cb) => {
+  let paths = utils.map("src/php");
+  gulp
+    .src(paths)
+    .pipe(gulp.dest("build"))
+    .on("end", () => cb());
+});
+
 gulp.task(
   "default",
-  gulp.series("setup", "copy", "ts-1", "ts-2", "ts-3", "ts-4")
+  gulp.series(
+    "setup",
+    "copy",
+    "ts-1",
+    "ts-2",
+    "ts-3",
+    "ts-4",
+    "sass-compile",
+    "php-copy",
+    "clean"
+  )
 );
