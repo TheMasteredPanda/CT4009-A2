@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "build",
+    "rootDir": "src",
+    "lib": ["ES2015"],
+    "noImplicitAny": true,
+    "removeComments": true,
+    "strict": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "sourceMap": true
+  },
+  "exclude": ["node_modules"],
+  "files": []
+}
