@@ -1,6 +1,15 @@
-import fs from "fs";
-let actions = {};
+import * as fs from "fs";
+let actions: any = {};
+/**
+ * A manager responsible for loading all action scrippts.
+ *
+ * An action script is a TypeScript file with defined functions
+ * that will be used in it's corresponding endpoint file.
+ */
 
+/**
+ * If the manager is loaded this value would be true, otherwise false.
+ */
 let loaded: boolean = false;
 
 /**
@@ -15,39 +24,38 @@ export function isLoaded() {
  * assume the first file in that directory is the index file.
  */
 export function load() {
-  let paths = fs.readdirSync("../actions").map((path: string) => {
-    if (fs.lstatSync(path).isDirectory()) {
-      return `../actions/${path}/${
-        fs
-          .readdirSync(`../actions/${path}`)
-          .filter((path: string) => path.endsWith(".ts"))[0]
-      }`;
+  return new Promise((resolve, reject) => {
+    let paths = fs.readdirSync(`actions`).map((path: string) => {
+      if (fs.lstatSync(`actions/${path}`).isDirectory()) {
+        return `actions/${path}/${
+          fs
+            .readdirSync(`actions/${path}`)
+            .filter((path: string) => path.endsWith(".ts"))[0]
+        }`;
+      }
+
+      return `actions/${path}`;
+    });
+
+    let promises: Promise<any>[] = [];
+    let names: string[] = [];
+
+    for (let i = 0; i < paths.length; i++) {
+      const path = paths[i];
+      let pathSplit = path.split("/");
+      let name = pathSplit[pathSplit.length - 1].split(".")[0];
+      promises.push(
+        import(`../${path}`).then((module) => {
+          actions[name] = module;
+          names.push(name);
+        })
+      );
     }
 
-    return `../actions/${path}`;
-  });
-
-  let promises = [];
-  let names = [];
-
-  for (let i = 0; i < paths.length; i++) {
-    const path = paths[i];
-    let pathSplit = path.split("/");
-    let name = pathSplit[pathSplit.length - 1].split(".")[0];
-    promises.push(
-      import(path).then((module) => {
-        actions[name] = module;
-        names.push(name);
-      })
-    );
-  }
-
-  return Promise.all(promises)
-    .then(() => (loaded = true))
-    .then(() => {
-      return Promise.resolve(names);
-    })
-    .catch(console.error);
+    return Promise.all(promises)
+      .then(() => (loaded = true))
+      .then(() => resolve(names));
+  }).catch(console.error);
 }
 
 /**

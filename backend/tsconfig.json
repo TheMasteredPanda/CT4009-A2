@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "ES6",
     "module": "CommonJS",
     "outDir": "build",
     "rootDir": "src",
@@ -7,13 +8,15 @@
     "noImplicitAny": true,
     "removeComments": true,
     "strict": true,
-    "types": ["node"],
+    "sourceMap": false,
+    "types": ["node", "express", "sequelize"],
     "baseUrl": ".",
+    "esModuleInterop": true,
     "paths": {
       "*": ["node_modules/*"]
     },
-    "sourceMap": true
+    "typeRoots": ["/node_modules/", "/node_modules/@types"],
+    "moduleResolution": "Node"
   },
-  "exclude": ["node_modules"],
-  "files": []
+  "exclude": ["node_modules", "build"]
 }
