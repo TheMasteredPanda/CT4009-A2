@@ -60,6 +60,11 @@ export interface ConfigFile {
   server: {
     port: number;
   };
+  auth: {
+    secretExp: number;
+    refreshExp: number;
+    refreshOffset: number;
+  };
 }
 
 /**
@@ -83,6 +88,11 @@ export function create() {
     },
     server: {
       port: 3000,
+    },
+    auth: {
+      secretExp: "5m",
+      refreshExp: "5m",
+      refreshOffset: "2m",
     },
   };
 
