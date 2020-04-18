@@ -61,9 +61,9 @@ export interface ConfigFile {
     port: number;
   };
   auth: {
-    secretExp: number;
-    refreshExp: number;
-    refreshOffset: number;
+    secretExp: string;
+    refreshExp: string;
+    refreshOffset: string;
   };
 }
 
@@ -100,6 +100,13 @@ export function create() {
   configObject = JSON.parse(readFileSync("config.json").toString());
 }
 
+/**
+ * Sets the config object. Used for testing the server.
+ * @param cfgObject - The object the configObject will be.
+ */
+export function set(cfgObject: any) {
+  configObject = cfgObject;
+}
 /**
  * To check if a configuration file already exists.
  *

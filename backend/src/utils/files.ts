@@ -31,7 +31,7 @@ export function map(directory: string) {
   for (let i = 0; i < rootFiles.length; i++) {
     const file = rootFiles[i];
 
-    if (!fs.lstatSync(`${directory}/${file}`).isDirectory()) {
+    if (fs.lstatSync(`${directory}/${file}`).isDirectory()) {
       paths = walk(`${directory}/${file}`, paths);
     } else {
       paths.push(`${directory}/${file}`);

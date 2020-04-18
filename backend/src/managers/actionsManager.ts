@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import { resolve } from "dns";
 let actions: any = {};
 /**
  * A manager responsible for loading all action scrippts.
@@ -23,39 +24,37 @@ export function isLoaded() {
  * Load all actions under the actions directory. If the action has it's own directory it will
  * assume the first file in that directory is the index file.
  */
-export function load() {
-  return new Promise((resolve, reject) => {
-    let paths = fs.readdirSync(`actions`).map((path: string) => {
-      if (fs.lstatSync(`actions/${path}`).isDirectory()) {
-        return `actions/${path}/${
-          fs
-            .readdirSync(`actions/${path}`)
-            .filter((path: string) => path.endsWith(".ts"))[0]
-        }`;
-      }
-
-      return `actions/${path}`;
-    });
-
-    let promises: Promise<any>[] = [];
-    let names: string[] = [];
-
-    for (let i = 0; i < paths.length; i++) {
-      const path = paths[i];
-      let pathSplit = path.split("/");
-      let name = pathSplit[pathSplit.length - 1].split(".")[0];
-      promises.push(
-        import(`../${path}`).then((module) => {
-          actions[name] = module;
-          names.push(name);
-        })
-      );
+export async function load() {
+  let paths = fs.readdirSync(`actions`).map((path: string) => {
+    if (fs.lstatSync(`actions/${path}`).isDirectory()) {
+      return `actions/${path}/${
+        fs
+          .readdirSync(`actions/${path}`)
+          .filter((path: string) => path.endsWith(".ts"))[0]
+      }`;
     }
 
-    return Promise.all(promises)
-      .then(() => (loaded = true))
-      .then(() => resolve(names));
-  }).catch(console.error);
+    return `actions/${path}`;
+  });
+
+  let promises: Promise<any>[] = [];
+  let names: string[] = [];
+
+  for (let i = 0; i < paths.length; i++) {
+    const path = paths[i];
+    let pathSplit = path.split("/");
+    let name = pathSplit[pathSplit.length - 1].split(".")[0];
+    promises.push(
+      import(`../${path}`).then((module) => {
+        actions[name] = module;
+        names.push(name);
+      })
+    );
+  }
+
+  await Promise.all(promises);
+  loaded = true;
+  return names;
 }
 
 /**

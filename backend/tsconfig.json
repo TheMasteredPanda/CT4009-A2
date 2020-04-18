@@ -3,20 +3,21 @@
     "target": "ES6",
     "module": "CommonJS",
     "outDir": "build",
-    "rootDir": "src",
     "lib": ["ES2015"],
     "noImplicitAny": true,
     "removeComments": true,
     "strict": true,
     "sourceMap": false,
-    "types": ["node", "express", "sequelize"],
+    "types": ["node", "jest"],
     "baseUrl": ".",
+    "listEmittedFiles": true,
     "esModuleInterop": true,
     "paths": {
       "*": ["node_modules/*"]
     },
-    "typeRoots": ["/node_modules/", "/node_modules/@types"],
+    "typeRoots": ["node_modules/@types"],
     "moduleResolution": "Node"
   },
+  "include": ["src", "test"],
   "exclude": ["node_modules", "build"]
 }

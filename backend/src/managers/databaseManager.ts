@@ -7,14 +7,14 @@ import * as configUtils from "../utils/config";
 let client: Sequelize | null = null;
 
 /**
- * Connects to the server. 
- * 
+ * Connects to the server.
+ *
  * This will throw a connection error if the server cannot be connected to.
  * It will also throw an error if the configuration file does not exist.
- * 
+ *
  */
 export async function load() {
-  if (!configUtils.exists()) {
+  if (!configUtils.exists() && process.env.NODE_ENV !== "development") {
     throw new Error(`DatabaseManager: Configuration file does not exist.`);
   }
 
@@ -40,7 +40,7 @@ export async function load() {
 
 /**
  * Creates the associatoins between Sequelize models. This is
- * translated into the references on the server. 
+ * translated into the references on the server.
  * (One to One, One to Many, and Many to Many references.)
  */
 export async function createAssociations() {
@@ -101,7 +101,7 @@ export async function unload() {
       }`
     );
 
-  client = null;
+    client = null;
   } catch (err) {
     throw err;
   }

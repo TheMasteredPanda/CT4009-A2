@@ -23,7 +23,7 @@ function errorResponser(req, res, next) {
             },
             badRequest: (type, title, detail = "No detail", data) => {
                 next(new ClientBadRequestError(type, title, detail, data));
-            }
+            },
         },
         server: {
             generic: (type, title, detail = "No detail", data) => {
@@ -31,8 +31,8 @@ function errorResponser(req, res, next) {
             },
             notImplemented: (type, title, detail = "No detail", data) => {
                 next(new ServerNotImplementedError(type, title, detail, data));
-            }
-        }
+            },
+        },
     };
     next();
 }
@@ -66,7 +66,7 @@ class HttpError extends Error {
             status: this.status,
             type: this.type,
             title: this.title,
-            data: this.data ? JSON.stringify(this.data) : ""
+            data: this.data ? JSON.stringify(this.data) : "",
         };
         if (this.message != "No detail") {
             response.detail = this.message;
@@ -131,3 +131,12 @@ class ServerNotImplementedError extends HttpError {
     }
 }
 exports.ServerNotImplementedError = ServerNotImplementedError;
+function handleInternalError(res, err) {
+    if (err instanceof HttpError) {
+        res.error.error(err);
+    }
+    else {
+        throw err;
+    }
+}
+exports.handleInternalError = handleInternalError;

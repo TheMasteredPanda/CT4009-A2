@@ -1,3 +1,4 @@
+import * as timeUtils from "../utils/timeUtil";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import * as configUtils from "../utils/config";
@@ -10,7 +11,7 @@ import { ClientNotAcceptableError } from "../utils/errorhandler";
  * JWTs for each user (handler).
  */
 
-let handlers: any = {};
+let handlers: { [key: number]: AuthHandler } = {};
 
 /**
  * Create a new auth handler for a user if one doesn't exist. If one
@@ -20,8 +21,8 @@ let handlers: any = {};
  *
  * @returns {AuthHandler} an auth handler an error.
  */
-export function create(userId: string) {
-  if (Object.keys(handlers).includes(userId)) {
+export function create(userId: number): AuthHandler {
+  if (Object.keys(handlers).includes(String(userId))) {
     throw new ServerGenericError(
       "Auth",
       "Cannot make duplicate handlers",
@@ -40,8 +41,8 @@ export function create(userId: string) {
  *
  * @returns {boolean} true if one exists, otherwise false.
  */
-export function hasHandler(userId: string) {
-  return Object.keys(handlers).includes(userId);
+export function hasHandler(userId: number) {
+  return Object.keys(handlers).includes(String(userId));
 }
 
 /**
@@ -50,8 +51,8 @@ export function hasHandler(userId: string) {
  *
  * @param userId - The id of the user.
  */
-export function remove(userId: string) {
-  if (!Object.keys(handlers).includes(userId)) {
+export function remove(userId: number) {
+  if (!Object.keys(handlers).includes(String(userId))) {
     throw new ServerGenericError(
       "Auth",
       "Cannot delete what the user does not have",
@@ -69,8 +70,8 @@ export function remove(userId: string) {
  *
  * @returns {AuthHandler} an auth handler or an error.
  */
-export function get(userId: string) {
-  if (!Object.keys(handlers).includes(userId)) {
+export function get(userId: number) {
+  if (!Object.keys(handlers).includes(String(userId))) {
     throw new ServerGenericError(
       "Auth",
       "Cannot return what the user does not have",
@@ -79,6 +80,13 @@ export function get(userId: string) {
   }
 
   return handlers[userId];
+}
+
+/**
+ * Deletes all auth handlers.
+ */
+export function flushAll() {
+  handlers = {};
 }
 
 /**
@@ -116,44 +124,44 @@ export interface JWTPayload extends JWT {
  * also deals with the rotation of the secret key, and the verification of the JWT.
  */
 export class AuthHandler {
-  id: string;
+  private id: number;
   /**
    * The secret tokens expiration time
    */
-  secretExp: number;
+  private secretExp: number;
 
   /**
    * The refresh tokens expiration time.
    */
-  refreshExp: number;
+  private refreshExp: number;
 
   /**
    * The amount of time the refresh nbf value will overlap with the secret tokens expiration time.
    */
-  refreshOffset: number;
+  private refreshOffset: number;
 
   /**
    * The current valid secret entry used to sign the jwtEntry.
    */
-  secretEntry: SecretEntry;
+  private secretEntry: SecretEntry;
 
   /**
    * The current refresh token entry.
    */
-  refreshToken: RefreshToken;
+  private refreshToken: RefreshToken;
 
   /**
    * The current jwt the user is using. While JWT is, by nature, stateless I store it here to prevent the
    * sercret key from being stolen and used to forge a valid token.
    */
-  jwtEntry: JWT | null;
+  private jwtEntry: JWT | null;
 
-  constructor(userId: string) {
+  constructor(userId: number) {
     this.id = userId;
     let config = configUtils.get();
-    this.secretExp = config.auth.secretExp;
-    this.refreshExp = config.auth.refreshExp;
-    this.refreshOffset = config.auth.refreshOffset;
+    this.secretExp = timeUtils.fromString(config.auth.secretExp);
+    this.refreshExp = timeUtils.fromString(config.auth.refreshExp);
+    this.refreshOffset = timeUtils.fromString(config.auth.refreshOffset);
     this.secretEntry = this.generateSecret();
     this.refreshToken = this.generateRefreshToken();
     this.jwtEntry = null;
@@ -168,7 +176,7 @@ export class AuthHandler {
     return {
       token: secret,
       exp: now + this.secretExp, //Expiration time in miliseconds.
-      nbf: now, //Not before time in miliseconds
+      nbf: now - 1, //Not before time in miliseconds
       iat: now, //Issued at time in miliseconds.
     };
   }
@@ -181,31 +189,28 @@ export class AuthHandler {
    *
    * @returns {JWT} A JWT entry.
    */
-  generateJWT(payload: string, sub: string, aud: string): Promise<JWT> {
-    return new Promise((resolve, reject) => {
-      let now = Date.now();
-      jwt.sign(
-        { payload, refreshToken: JSON.stringify(this.refreshToken) },
-        this.secretEntry.token,
-        {
-          expiresIn: this.secretEntry.exp,
-          audience: aud,
-          subject: sub,
-          notBefore: this.secretEntry.nbf,
-        },
-        (token: any) => {
-          let jwtEntry = {
-            token, //JWT
-            exp: this.secretEntry.exp, //Expiration time in miliseconds.
-            aud, //The client who will use this JWT.
-            sub, //The subject the JWT will be used for.
-            nbf: this.secretEntry.nbf, //The Not Before time in miliseconds
-            iat: now, //The Issued at time in miliseconds.
-          };
-          resolve(jwtEntry);
-        }
-      );
-    });
+  async generateJWT(payload: any, sub: string, aud: string): Promise<JWT> {
+    let token = await jwt.sign(
+      { payload, refreshToken: this.refreshToken },
+      this.secretEntry.token,
+      {
+        expiresIn: this.secretEntry.exp,
+        audience: aud,
+        subject: sub,
+      }
+    );
+
+    let entry = {
+      token, //JWT
+      exp: this.secretEntry.exp, //Expiration time in miliseconds.
+      aud, //The client who will use this JWT.
+      sub, //The subject the JWT will be used for.
+      nbf: this.secretEntry.nbf, //The Not Before time in miliseconds
+      iat: Number(((Date.now() % 60000) / 1000).toFixed(0)), //The Issued at time in miliseconds.
+    };
+
+    this.jwtEntry = entry;
+    return entry;
   }
 
   /**
@@ -215,11 +220,11 @@ export class AuthHandler {
    */
   generateRefreshToken() {
     let token = crypto.randomBytes(48).toString("base64");
-    let now = Date.now();
+    let now = Date.now() / 1000;
 
     return {
       token, //The refresh token.
-      exp: now + this.refreshExp, //The expiration time in miliesconds
+      exp: this.secretEntry.exp + this.refreshExp, //The expiration time in miliesconds
       nbf:
         this.secretEntry.exp -
         this
@@ -232,20 +237,39 @@ export class AuthHandler {
   /**
    * Verify the JWT against the stored secret entry.
    *
-   * @param entry - The JWT entry.
+   * @param token - The JWT token.
    *
    * @returns {boolean} true if valid, otherwise false.
    */
-  verify(entry: JWT) {
-    return new Promise((resolve, reject) => {
-      jwt.verify(entry.token, this.secretEntry.token, (err, decoded) => {
-        if (err) {
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      });
-    });
+  async verify(token: string): Promise<boolean> {
+    if (!this.jwtEntry) {
+      throw new ServerGenericError(
+        "Auth",
+        "JWT Not Found",
+        `There is no JWT entry to reference in memory.`
+      );
+    }
+
+    if (token !== this.jwtEntry.token) {
+      throw new ServerGenericError(
+        "Auth",
+        "Json Web Token Mismatch",
+        `The JWT token given is not identical to the authentication token stored.`
+      );
+    }
+
+    let decoded;
+    try {
+      if (this.secretEntry.nbf > Date.now()) {
+        console.log("Secret Entry NBF is bigger than the current date.");
+      }
+
+      decoded = await jwt.verify(token, this.secretEntry.token);
+    } catch (err) {
+      throw err;
+    }
+
+    return decoded ? true : false;
   }
 
   /**
@@ -253,66 +277,61 @@ export class AuthHandler {
    * payload. After the injected JWT is verified, new secret and refresh tokens are
    * generated. Then a new JWT is generated.
    *
-   * @param entry - The JWT entry.
+   * @param entry - A JWT token.
    *
-   * @returns {JWT} a JWT or an error.
+   * @returns {string} a JWT token or an error.
    */
-  refresh(entry: JWT) {
-    return new Promise((resolve, reject) => {
-      jwt.verify(entry.token, this.secretEntry.token, (err, decoded) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+  async refresh(token: string) {
+    let decoded;
+    try {
+      decoded = await jwt.verify(token, this.secretEntry.token);
+    } catch (err) {
+      throw err;
+    }
 
-        let payload = decoded as JWTPayload;
+    let payload = decoded as JWTPayload;
 
-        if (!payload) {
-          reject(
-            new ServerGenericError(
-              "Auth",
-              "Payload Error",
-              `Payload is ${payload}`
-            )
-          );
-          return;
-        }
+    if (!payload) {
+      throw new ServerGenericError(
+        "Auth",
+        "Payload Error",
+        `Payload is ${payload}`
+      );
+    }
 
-        if (payload.refreshToken.token !== this.refreshToken.token) {
-          reject(
-            new ClientNotAcceptableError(
-              "Auth",
-              "Payload Error",
-              `Refresh token found in JWT payload is not identical to the payload stored on the server.`
-            )
-          );
-          return;
-        }
+    if (payload.refreshToken.token !== this.refreshToken.token) {
+      throw new ClientNotAcceptableError(
+        "Auth",
+        "Payload Error",
+        `Refresh token found in JWT payload is not identical to the payload stored on the server.`
+      );
+    }
 
-        let jwtEntry = this.jwtEntry;
+    let jwtEntry = this.jwtEntry;
 
-        if (!jwtEntry) {
-          reject(
-            new ServerGenericError(
-              "Auth",
-              "Auth error",
-              `JWT Entry is ${jwtEntry}`
-            )
-          );
-          return;
-        }
+    if (!jwtEntry) {
+      throw new ServerGenericError(
+        "Auth",
+        "Auth error",
+        `JWT Entry is ${jwtEntry}`
+      );
+    }
 
-        this.secretEntry = this.generateSecret();
-        this.refreshToken = this.generateRefreshToken();
-        this.generateJWT(
-          JSON.stringify(payload),
-          jwtEntry.sub,
-          jwtEntry.aud
-        ).then((jwt) => {
-          this.jwtEntry = jwt;
-          resolve(this.jwtEntry);
-        });
-      });
-    });
+    this.secretEntry = this.generateSecret();
+    this.refreshToken = this.generateRefreshToken();
+    let entry;
+
+    try {
+      entry = await this.generateJWT(
+        JSON.stringify(payload),
+        jwtEntry.sub,
+        jwtEntry.aud
+      );
+    } catch (err) {
+      throw err;
+    }
+
+    this.jwtEntry = entry;
+    return entry.token;
   }
 }

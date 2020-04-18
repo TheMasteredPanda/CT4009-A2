@@ -22,7 +22,7 @@ const configUtils = __importStar(require("../utils/config"));
 let client = null;
 function load() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!configUtils.exists()) {
+        if (!configUtils.exists() && process.env.NODE_ENV !== "development") {
             throw new Error(`DatabaseManager: Configuration file does not exist.`);
         }
         let configFile = configUtils.get();

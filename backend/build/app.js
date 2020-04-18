@@ -16,8 +16,14 @@ const actionManager = __importStar(require("./managers/actionsManager"));
 const databaseManager = __importStar(require("./managers/databaseManager"));
 const configUtils = __importStar(require("./utils/config"));
 const errorhandler_1 = require("./utils/errorhandler");
+const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
+console.log("Process: ");
+console.log(process.env.NODE_ENV);
 const app = express_1.default();
 app.use(errorhandler_1.errorResponser);
+app.use(cors_1.default());
+app.use(body_parser_1.default());
 let scriptRoutes = fileUtils
     .map(__dirname + "/endpoints")
     .filter((path) => path.endsWith(".ts"));

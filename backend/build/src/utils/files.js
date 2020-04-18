@@ -21,7 +21,7 @@ function map(directory) {
     let paths = [];
     for (let i = 0; i < rootFiles.length; i++) {
         const file = rootFiles[i];
-        if (!fs_1.default.lstatSync(`${directory}/${file}`).isDirectory()) {
+        if (fs_1.default.lstatSync(`${directory}/${file}`).isDirectory()) {
             paths = walk(`${directory}/${file}`, paths);
         }
         else {

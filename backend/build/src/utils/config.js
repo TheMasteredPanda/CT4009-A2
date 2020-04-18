@@ -20,11 +20,20 @@ function create() {
         server: {
             port: 3000,
         },
+        auth: {
+            secretExp: "5m",
+            refreshExp: "5m",
+            refreshOffset: "2m",
+        },
     };
     fs_1.writeFileSync("config.json", JSON.stringify(config, null, 4));
     configObject = JSON.parse(fs_1.readFileSync("config.json").toString());
 }
 exports.create = create;
+function set(cfgObject) {
+    configObject = cfgObject;
+}
+exports.set = set;
 function exists() {
     return fs_1.existsSync("config.json");
 }
