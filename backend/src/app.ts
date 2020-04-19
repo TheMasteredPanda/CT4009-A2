@@ -49,6 +49,7 @@ export async function start() {
           charset: "utf8",
           collate: "utf8_unicode_ci",
         },
+        logging: false,
         pool: {
           min: 5,
           max: 10,

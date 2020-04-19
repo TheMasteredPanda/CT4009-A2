@@ -67,6 +67,9 @@ class AuthHandler {
         this.refreshToken = this.generateRefreshToken();
         this.jwtEntry = null;
     }
+    getRefreshToken() {
+        return this.refreshToken;
+    }
     generateSecret() {
         let secret = crypto_1.default.randomBytes(48).toString("base64");
         let now = Date.now();
@@ -77,20 +80,17 @@ class AuthHandler {
             iat: now,
         };
     }
-    generateJWT(payload, sub, aud) {
+    generateJWT(payload) {
         return __awaiter(this, void 0, void 0, function* () {
+            let now = Date.now();
             let token = yield jsonwebtoken_1.default.sign({ payload, refreshToken: this.refreshToken }, this.secretEntry.token, {
-                expiresIn: this.secretEntry.exp,
-                audience: aud,
-                subject: sub,
+                expiresIn: now + this.secretEntry.exp,
             });
             let entry = {
                 token,
                 exp: this.secretEntry.exp,
-                aud,
-                sub,
                 nbf: this.secretEntry.nbf,
-                iat: Number(((Date.now() % 60000) / 1000).toFixed(0)),
+                iat: now,
             };
             this.jwtEntry = entry;
             return entry;
@@ -98,7 +98,7 @@ class AuthHandler {
     }
     generateRefreshToken() {
         let token = crypto_1.default.randomBytes(48).toString("base64");
-        let now = Date.now() / 1000;
+        let now = Date.now();
         return {
             token,
             exp: this.secretEntry.exp + this.refreshExp,
@@ -153,7 +153,7 @@ class AuthHandler {
             this.refreshToken = this.generateRefreshToken();
             let entry;
             try {
-                entry = yield this.generateJWT(JSON.stringify(payload), jwtEntry.sub, jwtEntry.aud);
+                entry = yield this.generateJWT(JSON.stringify(payload));
             }
             catch (err) {
                 throw err;

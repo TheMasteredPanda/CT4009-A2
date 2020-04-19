@@ -56,7 +56,6 @@ function register(params) {
             throw new errorhandler_1.ClientNotAcceptableError("Client", "Username already taken", `The username ${params.username} has already been taken`, { username: params.username });
         }
         let hash = yield bcrypt_1.default.hash(params.password, 10);
-        console.log(`Hashed password at registration: ${hash}`);
         let model = yield User_schema_1.default.create({ username: params.username, password: hash });
         let user = model.toJSON();
         yield Contacts_schema_1.default.create({
@@ -69,8 +68,17 @@ function register(params) {
         let jwtEntry = yield handler.generateJWT({
             username: user.username,
             id: user.id,
-        }, "To access the rest server of the Bicycle Registry", String(user.id));
-        return { token: jwtEntry.token, id: user.id };
+        });
+        let refreshToken = handler.getRefreshToken();
+        return {
+            token: jwtEntry.token,
+            id: user.id,
+            refreshToken: {
+                token: refreshToken.token,
+                nbf: refreshToken.nbf,
+                exp: refreshToken.exp,
+            },
+        };
     });
 }
 exports.register = register;
@@ -91,8 +99,17 @@ function login(username, password) {
             throw new errorhandler_1.ClientUnauthorizedError("Client", "Unable to authorise user", `Passwords are not identical.`);
         }
         let handler = authManager.create(user.id);
-        let jwt = yield handler.generateJWT({ username: user.username, id: user.id }, "To access the rest server of the Bicycle Registry", String(user.id));
-        return { token: jwt.token, id: user.id };
+        let jwt = yield handler.generateJWT({ username: user.username, id: user.id });
+        let refreshToken = handler.getRefreshToken();
+        return {
+            token: jwt.token,
+            id: user.id,
+            refreshToken: {
+                token: refreshToken.token,
+                exp: refreshToken.exp,
+                nbf: refreshToken.nbf,
+            },
+        };
     });
 }
 exports.login = login;

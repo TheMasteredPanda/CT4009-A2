@@ -19,7 +19,6 @@ export async function load() {
   }
 
   let configFile: configUtils.ConfigFile = configUtils.get();
-  console.log(configFile);
   client = new Sequelize(configFile.mariadb as any);
 
   try {

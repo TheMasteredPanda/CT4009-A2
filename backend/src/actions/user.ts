@@ -62,7 +62,6 @@ export async function register(params: any) {
   }
 
   let hash = await bcrypt.hash(params.password, 10);
-  console.log(`Hashed password at registration: ${hash}`);
   let model = await Users.create({ username: params.username, password: hash });
   let user: any = model.toJSON();
   await Contacts.create({
@@ -73,16 +72,21 @@ export async function register(params: any) {
   });
 
   let handler = authManager.create(user.id);
-  let jwtEntry = await handler.generateJWT(
-    {
-      username: user.username,
-      id: user.id,
-    },
-    "To access the rest server of the Bicycle Registry",
-    String(user.id)
-  );
+  let jwtEntry = await handler.generateJWT({
+    username: user.username,
+    id: user.id,
+  });
 
-  return { token: jwtEntry.token, id: user.id };
+  let refreshToken = handler.getRefreshToken();
+  return {
+    token: jwtEntry.token,
+    id: user.id,
+    refreshToken: {
+      token: refreshToken.token,
+      nbf: refreshToken.nbf,
+      exp: refreshToken.exp,
+    },
+  };
 }
 
 export async function login(username: string, password: string): Promise<any> {
@@ -112,12 +116,17 @@ export async function login(username: string, password: string): Promise<any> {
   }
 
   let handler = authManager.create(user.id);
-  let jwt = await handler.generateJWT(
-    { username: user.username, id: user.id },
-    "To access the rest server of the Bicycle Registry",
-    String(user.id)
-  );
-  return { token: jwt.token, id: user.id };
+  let jwt = await handler.generateJWT({ username: user.username, id: user.id });
+  let refreshToken = handler.getRefreshToken();
+  return {
+    token: jwt.token,
+    id: user.id,
+    refreshToken: {
+      token: refreshToken.token,
+      exp: refreshToken.exp,
+      nbf: refreshToken.nbf,
+    },
+  };
 }
 
 export async function verify(token: string, userId: number) {

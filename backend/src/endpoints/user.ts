@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import * as actions from "../actions/user";
 import * as authManager from "../managers/authManager";
 import { handleInternalError } from "../utils/errorhandler";
+import { resolveMx } from "dns";
 
 /**
  * This script contains all user specific endpoints, that includes:
@@ -10,13 +11,19 @@ import { handleInternalError } from "../utils/errorhandler";
  * -  Account Endpoints
  */
 const router = Router();
-
+const dmz = [
+  "/user/register",
+  "/user/login",
+  "/user/verify",
+]; /*Demilitarized endpoints, used to stop requests to these endpoints 
+from being processed through the middleware below.*/
+const authDmz = ["/user/refresh"]; //Demilitarized endpoints for the authentication middleware only.
 /**
  * Uses the 'userId' query parameter to fetch user informaton and
  * store it in the request object for reference.
  */
 router.use((req: Request, res: Response, next: Function) => {
-  if (["/user/register", "/user/login", "/user/valid"].includes(req.url)) {
+  if (dmz.some((endpoint) => req.url.startsWith(endpoint))) {
     next();
     return;
   }
@@ -69,21 +76,15 @@ router.use((req: Request, res: Response, next: Function) => {
  * Authenticates the request before the request reaches it's endpoint.
  */
 router.use((req: Request, res: Response, next: Function) => {
-  if (["/user/register", "/user/valid", "/user/login"].includes(req.url)) {
+  if (
+    dmz.some((endpoint) => req.url.startsWith(endpoint)) ||
+    authDmz.some((endpoint) => req.url.startsWith(endpoint))
+  ) {
     next();
     return;
   }
-
-  if (req.url.startsWith("/user/valid")) {
-    next();
-    return;
-  }
-
-  console.log(req.url);
 
   let headers = req.headers;
-  console.log("-----------------------------------------------");
-  console.log(headers);
   if (!headers.hasOwnProperty("authorization")) {
     res.error.client.badRequest("Auth", "No Authorization Header");
     return;
@@ -210,7 +211,7 @@ router.post("/user/register", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
-router.post("/user/valid", (req: Request, res: Response) => {
+router.post("/user/verify", (req: Request, res: Response) => {
   let body = req.body;
   let query: any = req.query;
 
@@ -251,6 +252,34 @@ router.post("/user/logout", (req: Request, res: Response) => {
 
   actions.logout(query.userId);
   res.sendStatus(200);
+});
+
+router.post("/user/refresh", (req: Request, res: Response) => {
+  if (!authManager.hasHandler(req.user.id)) {
+    res.error.client.unauthorized(
+      "Auth",
+      "User has no handler",
+      `User ${req.user.id} has no auth handler, who are you?`
+    );
+    return;
+  }
+
+  if (!req.headers.authorization) {
+    res.error.server.generic(
+      "Auth",
+      "Unreachable point reached",
+      `An assumed unreachable point in the code has been reached in /user/refresh`
+    );
+    return;
+  }
+
+  let handler = authManager.get(req.user.id);
+  handler
+    .refresh(req.headers.authorization.split(" ")[1])
+    .then((value: any) => {
+      let jwt = value as authManager.JWT;
+      res.status(200).send(jwt.token);
+    });
 });
 
 export default router;

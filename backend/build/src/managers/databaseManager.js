@@ -26,7 +26,6 @@ function load() {
             throw new Error(`DatabaseManager: Configuration file does not exist.`);
         }
         let configFile = configUtils.get();
-        console.log(configFile);
         client = new sequelize_1.Sequelize(configFile.mariadb);
         try {
             yield client.authenticate();

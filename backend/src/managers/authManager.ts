@@ -111,8 +111,6 @@ export interface JWT {
   exp: number;
   nbf: number;
   iat: number;
-  sub: string;
-  aud: string;
 }
 
 export interface JWTPayload extends JWT {
@@ -168,6 +166,14 @@ export class AuthHandler {
   }
 
   /**
+   * The refresh token, used to generate a new JWT at the expiry of the old one.
+   *
+   * @returns {RefreshToken} a refresh token or null.
+   */
+  getRefreshToken() {
+    return this.refreshToken;
+  }
+  /**
    * Generate a new secret entry.
    */
   generateSecret() {
@@ -184,29 +190,24 @@ export class AuthHandler {
   /**
    * Create a new JWT.
    * @param payload - The data encoded in the JWT.
-   * @param sub - The subject the JWT will be used for.
-   * @param aud - The client the JWT will be used by.
    *
    * @returns {JWT} A JWT entry.
    */
-  async generateJWT(payload: any, sub: string, aud: string): Promise<JWT> {
+  async generateJWT(payload: any): Promise<JWT> {
+    let now = Date.now();
     let token = await jwt.sign(
       { payload, refreshToken: this.refreshToken },
       this.secretEntry.token,
       {
-        expiresIn: this.secretEntry.exp,
-        audience: aud,
-        subject: sub,
+        expiresIn: now + this.secretEntry.exp,
       }
     );
 
     let entry = {
       token, //JWT
       exp: this.secretEntry.exp, //Expiration time in miliseconds.
-      aud, //The client who will use this JWT.
-      sub, //The subject the JWT will be used for.
       nbf: this.secretEntry.nbf, //The Not Before time in miliseconds
-      iat: Number(((Date.now() % 60000) / 1000).toFixed(0)), //The Issued at time in miliseconds.
+      iat: now, //The Issued at time in miliseconds.
     };
 
     this.jwtEntry = entry;
@@ -220,7 +221,7 @@ export class AuthHandler {
    */
   generateRefreshToken() {
     let token = crypto.randomBytes(48).toString("base64");
-    let now = Date.now() / 1000;
+    let now = Date.now();
 
     return {
       token, //The refresh token.
@@ -322,11 +323,7 @@ export class AuthHandler {
     let entry;
 
     try {
-      entry = await this.generateJWT(
-        JSON.stringify(payload),
-        jwtEntry.sub,
-        jwtEntry.aud
-      );
+      entry = await this.generateJWT(JSON.stringify(payload));
     } catch (err) {
       throw err;
     }

@@ -12,8 +12,14 @@ const actions = __importStar(require("../actions/user"));
 const authManager = __importStar(require("../managers/authManager"));
 const errorhandler_1 = require("../utils/errorhandler");
 const router = express_1.Router();
+const dmz = [
+    "/user/register",
+    "/user/login",
+    "/user/verify",
+];
+const authDmz = ["/user/refresh"];
 router.use((req, res, next) => {
-    if (["/user/register", "/user/login", "/user/valid"].includes(req.url)) {
+    if (dmz.some((endpoint) => req.url.startsWith(endpoint))) {
         next();
         return;
     }
@@ -43,18 +49,12 @@ router.use((req, res, next) => {
     });
 });
 router.use((req, res, next) => {
-    if (["/user/register", "/user/valid", "/user/login"].includes(req.url)) {
+    if (dmz.some((endpoint) => req.url.startsWith(endpoint)) ||
+        authDmz.some((endpoint) => req.url.startsWith(endpoint))) {
         next();
         return;
     }
-    if (req.url.startsWith("/user/valid")) {
-        next();
-        return;
-    }
-    console.log(req.url);
     let headers = req.headers;
-    console.log("-----------------------------------------------");
-    console.log(headers);
     if (!headers.hasOwnProperty("authorization")) {
         res.error.client.badRequest("Auth", "No Authorization Header");
         return;
@@ -122,7 +122,7 @@ router.post("/user/register", (req, res) => {
         .then((data) => res.status(200).send(data))
         .catch((err) => errorhandler_1.handleInternalError(res, err));
 });
-router.post("/user/valid", (req, res) => {
+router.post("/user/verify", (req, res) => {
     let body = req.body;
     let query = req.query;
     if (!body.hasOwnProperty("jwt")) {
@@ -145,5 +145,22 @@ router.post("/user/logout", (req, res) => {
     }
     actions.logout(query.userId);
     res.sendStatus(200);
+});
+router.post("/user/refresh", (req, res) => {
+    if (!authManager.hasHandler(req.user.id)) {
+        res.error.client.unauthorized("Auth", "User has no handler", `User ${req.user.id} has no auth handler, who are you?`);
+        return;
+    }
+    if (!req.headers.authorization) {
+        res.error.server.generic("Auth", "Unreachable point reached", `An assumed unreachable point in the code has been reached in /user/refresh`);
+        return;
+    }
+    let handler = authManager.get(req.user.id);
+    handler
+        .refresh(req.headers.authorization.split(" ")[1])
+        .then((value) => {
+        let jwt = value;
+        res.status(200).send(jwt.token);
+    });
 });
 exports.default = router;

@@ -44,7 +44,6 @@ function errorHandler(error, req, res, next) {
     }
     res.set("Content-Type", "application/problem+json");
     if (error instanceof HttpError) {
-        console.log(error);
         res.status(error.status).send(error.serialize());
     }
     else {

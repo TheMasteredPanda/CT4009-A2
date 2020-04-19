@@ -14,9 +14,9 @@ beforeAll(async (done) => {
   process.env.TEST_MARIADB_PORT = "3306";
   process.env.TEST_MARIADB_DATABASE = "test";
   process.env.TEST_SERVER_PORT = "4000";
-  process.env.TEST_SERVER_AUTH_SECRETEXP = "5m";
-  process.env.TEST_SERVER_AUTH_REFRESHEXP = "2m";
-  process.env.TEST_SERVER_AUTH_REFRESHOFFSET = "1m";
+  process.env.TEST_SERVER_AUTH_SECRETEXP = "60s";
+  process.env.TEST_SERVER_AUTH_REFRESHEXP = "20s";
+  process.env.TEST_SERVER_AUTH_REFRESHOFFSET = "20s";
 
   process.chdir(process.cwd() + `/build/src`);
   await start();
@@ -50,7 +50,7 @@ afterAll(async (done) => {
 });
 
 describe("Testing Auth Endpoints: ", () => {
-  it("/user/register", (done) => {
+  it("/user/register with all expected parameters", (done) => {
     request
       .post("/user/register")
       .send({
@@ -70,7 +70,36 @@ describe("Testing Auth Endpoints: ", () => {
       });
   });
 
-  it("/user/logout", (done) => {
+  it("/user/register with some parameters", async (done) => {
+    request
+      .post("/user/register")
+      .send({ username: "johndoe", email: "johndoe@gmail.com" })
+      .expect(400)
+      .end((err, res) => {
+        if (err) throw err;
+        expect(res.status).toBe(400);
+        request
+          .post("/user/register")
+          .send({ username: "johndoe", password: "password1" })
+          .expect(400)
+          .end((err, res) => {
+            if (err) throw err;
+            expect(res.status).toBe(400);
+
+            request
+              .post("/user/register")
+              .send({ username: "johndoe", email: "johndoe@gmail.com" })
+              .expect(400)
+              .end((err, res) => {
+                if (err) throw err;
+                expect(res.status).toBe(400);
+                done();
+              });
+          });
+      });
+  });
+
+  it("/user/logout with all expected parameters", (done) => {
     request
       .post("/user/register")
       .send({
@@ -95,7 +124,29 @@ describe("Testing Auth Endpoints: ", () => {
       });
   });
 
-  it("/user/login", (done) => {
+  it("/user/logout with without the query parmaeter `userId`", (done) => {
+    request
+      .post("/user/register")
+      .send({
+        username: "johndoe",
+        password: "password1",
+        email: "johndoe@gmail.com",
+      })
+      .end((err, res) => {
+        if (err) throw err;
+        request
+          .post("/user/logout")
+          .set("Authorization", `Bearer ${res.body.token}`)
+          .expect(400)
+          .end((err, res) => {
+            if (err) throw err;
+            expect(res.status).toBe(400);
+            done();
+          });
+      });
+  });
+
+  it("/user/login with all expected parameters", (done) => {
     request
       .post("/user/register")
       .send({
@@ -123,7 +174,7 @@ describe("Testing Auth Endpoints: ", () => {
       });
   });
 
-  it("/user/valid", (done) => {
+  it("/user/login with some expected parameters", (done) => {
     request
       .post("/user/register")
       .send({
@@ -134,7 +185,35 @@ describe("Testing Auth Endpoints: ", () => {
       .end((err, res) => {
         if (err) throw err;
         request
-          .post(`/user/valid?userId=${res.body.id}`)
+          .post(`/user/logout?userId=${res.body.id}`)
+          .set("Authorization", `Bearer ${res.body.token}`)
+          .end((err, res) => {
+            if (err) throw err;
+            request
+              .post(`/user/login`)
+              .send({ uername: "johndoe" })
+              .expect(400)
+              .end((err, res) => {
+                if (err) throw err;
+                expect(res.status).toBe(400);
+                done();
+              });
+          });
+      });
+  });
+
+  it("/user/verify with all expected parameters", (done) => {
+    request
+      .post("/user/register")
+      .send({
+        username: "johndoe",
+        password: "password1",
+        email: "johndoe@gmail.com",
+      })
+      .end((err, res) => {
+        if (err) throw err;
+        request
+          .post(`/user/verify?userId=${res.body.id}`)
           .send({ jwt: res.body.token })
           .end((err, res) => {
             if (err) throw err;
@@ -143,4 +222,64 @@ describe("Testing Auth Endpoints: ", () => {
           });
       });
   });
+
+  it("/user/verify with some expected parameters", (done) => {
+    request
+      .post("/user/register")
+      .send({
+        username: "johndoe",
+        password: "password1",
+        email: "johndoe@gmail.com",
+      })
+      .end((err, res) => {
+        if (err) throw err;
+        let token = res.body.token;
+        request
+          .post(`/user/logout?userId=${res.body.id}`)
+          .set("Authorization", `Bearer ${res.body.token}`)
+          .end((err, res) => {
+            if (err) throw err;
+            request
+              .post(`/user/verify`)
+              .send({ jwt: token })
+              .expect(400)
+              .end((err, res) => {
+                if (err) throw err;
+                expect(res.status).toBe(400);
+                done();
+              });
+          });
+      });
+  });
+
+  it("/user/refresh with all expected parameters", (done) => {
+    request
+      .post("/user/register")
+      .send({
+        username: "johndoe",
+        password: "password1",
+        email: "johndoe@gmail.com",
+      })
+      .end((err, res) => {
+        if (err) throw err;
+        let untilExpiry = res.body.refreshToken.nbf - 1000 - Date.now();
+
+        console.log(
+          `Waiting ${(untilExpiry / 1000).toFixed(
+            0
+          )} seconds to get a new token.`
+        );
+        setTimeout(() => {
+          console.log("Refreshing token.");
+          request
+            .post(`/user/refresh?userId=${res.body.id}`)
+            .set("Authorization", `Bearer ${res.body.token}`)
+            .end((err, res) => {
+              if (err) throw err;
+              expect(res.body).toBeDefined();
+              done();
+            });
+        }, untilExpiry);
+      });
+  }, 100000);
 });
