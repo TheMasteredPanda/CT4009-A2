@@ -88,6 +88,8 @@ router.use((req, res, next) => {
 });
 router.post("/user/login", (req, res) => {
     let body = req.body;
+    console.log("Hit /user/login");
+    console.log(body);
     if (!body.hasOwnProperty("username")) {
         res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found.`);
         return;
@@ -125,11 +127,11 @@ router.post("/user/register", (req, res) => {
 router.post("/user/verify", (req, res) => {
     let body = req.body;
     let query = req.query;
-    if (!body.hasOwnProperty("jwt")) {
+    if (!body.hasOwnProperty("jwt") || !body.jwt) {
         res.error.client.badRequest("Parameters", "Parameter not found", `Body parameter 'jwt' was not found.`);
         return;
     }
-    if (!query.hasOwnProperty("userId")) {
+    if (!query.hasOwnProperty("userId") || !query.userId) {
         res.error.client.badRequest("Parameters", "Parameter not found", `Query parameter 'userId' was not found.`);
         return;
     }

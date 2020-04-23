@@ -148,12 +148,15 @@ router.use((req: Request, res: Response, next: Function) => {
 
 router.post("/user/login", (req: Request, res: Response) => {
   let body = req.body;
+  console.log("Hit /user/login");
+  console.log(body);
 
   if (!body.hasOwnProperty("username")) {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
-      `Parameter 'username' was not found.`
+      `Parameter 'username' was not found.`,
+      { parameter: "username" }
     );
     return;
   }
@@ -162,7 +165,8 @@ router.post("/user/login", (req: Request, res: Response) => {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
-      `Parameter 'password' was not found.`
+      `Parameter 'password' was not found.`,
+      { parameter: "password" }
     );
     return;
   }
@@ -182,7 +186,8 @@ router.post("/user/register", (req: Request, res: Response) => {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
-      `Parameter 'username' was not found`
+      `Parameter 'username' was not found`,
+      { parameter: "username" }
     );
     return;
   }
@@ -191,7 +196,8 @@ router.post("/user/register", (req: Request, res: Response) => {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
-      `Parameter 'password' was not found.`
+      `Parameter 'password' was not found.`,
+      { parameter: "password" }
     );
     return;
   }
@@ -200,7 +206,8 @@ router.post("/user/register", (req: Request, res: Response) => {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
-      `Parameter 'email' was not found.`
+      `Parameter 'email' was not found.`,
+      { parameter: "email" }
     );
     return;
   }
@@ -215,7 +222,7 @@ router.post("/user/verify", (req: Request, res: Response) => {
   let body = req.body;
   let query: any = req.query;
 
-  if (!body.hasOwnProperty("jwt")) {
+  if (!body.hasOwnProperty("jwt") || !body.jwt) {
     res.error.client.badRequest(
       "Parameters",
       "Parameter not found",
@@ -224,7 +231,7 @@ router.post("/user/verify", (req: Request, res: Response) => {
     return;
   }
 
-  if (!query.hasOwnProperty("userId")) {
+  if (!query.hasOwnProperty("userId") || !query.userId) {
     res.error.client.badRequest(
       "Parameters",
       "Parameter not found",

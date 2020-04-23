@@ -11,6 +11,8 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/draft-js": "^0.10.39",
+    "@types/jquery": "^3.3.35",
+    "@types/materialize-css": "^1.0.7",
     "browser-sync": "^2.26.7",
     "clean": "^4.0.2",
     "css-loader": "^3.5.2",
@@ -19,19 +21,24 @@
     "gulp-clean": "^0.4.0",
     "gulp-cli": "^2.2.0",
     "gulp-concat": "^2.6.1",
+    "gulp-connect-php": "^1.0.3",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.0.2",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-uglify": "^3.0.2",
+    "gulp-webpack": "^1.5.0",
     "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
     "readable-stream": "^3.6.0",
     "through2": "^3.0.1",
     "tmp": "^0.1.0",
     "ts-loader": "^6.2.2",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "jquery": "^3.5.0",
+    "materialize-css": "^1.0.0"
   }
 }

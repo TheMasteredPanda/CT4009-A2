@@ -1,385 +1,77 @@
-const sass = require("gulp-sass");
-const rename = require("gulp-rename");
-const through2 = require("through2");
 const utils = require("./gulputils");
 const fs = require("fs");
 const gulp = require("gulp");
+const sass = require("gulp-sass");
+const webpack = require("webpack");
+const gWebpack = require("gulp-webpack");
+const webpackConfig = require("./webpack.config.js");
 const concat = require("gulp-concat");
-const uglify = require("gulp-uglify");
-const ts = require("gulp-typescript");
-const clean = require("gulp-clean");
-const patternImport = new RegExp(
-  /import\s+?(?:(?:(?:[\w*\s{},]*)\s+from\s+?)|)(?:(?:".*?")|(?:'.*?'))[\s]*?(?:;|$|)/,
-  "g"
-);
+const connect = require("gulp-connect-php");
+const browserSync = require("browser-sync");
 
-function getPackage(importString) {
-  let splitImportString = importString.split(" ");
-  return splitImportString[splitImportString.length - 1]
-    .replace('"', "")
-    .replace('";', "");
-}
+gulp.task("webpack", () => {
+  return new Promise((resolve, reject) => {
+    webpack(webpackConfig, (err, stats) => {
+      if (err) {
+        return reject(err);
+      }
 
-gulp.task("setup", (cb) => {
-  if (!fs.existsSync("output")) {
-    fs.mkdirSync("output");
+      if (stats.hasErrors()) {
+        return reject(new Error(stats.compilation.errors.join("\n")));
+      }
+      resolve();
+    });
+  });
+});
+
+gulp.task("sass", async (cb) => {
+  let packages = fs.readdirSync("src/styles");
+  let promises = [];
+
+  for (let i = 0; i < packages.length; i++) {
+    const package = packages[i];
+    promises.push(
+      new Promise((resolve, reject) => {
+        let tree = utils.tree(
+          `src/styles/${package}/index.scss`,
+          `src/styles/${package}`
+        );
+        let flatten = utils.flatten(tree).reverse();
+
+        gulp
+          .src(flatten)
+          .pipe(sass())
+          .pipe(concat(`${package}.bundle.css`))
+          .pipe(gulp.dest("build/styles"))
+          .on("end", () => resolve());
+      })
+    );
   }
 
-  if (!fs.existsSync("output/scripts")) {
-    fs.mkdirSync("output/scripts");
-  }
-
-  if (!fs.existsSync("output/scripts/copy")) {
-    fs.mkdirSync("output/scripts/copy");
-  }
-
-  if (!fs.existsSync("output/scripts/ts1")) {
-    fs.mkdirSync("output/scripts/ts1");
-  }
-
-  if (!fs.existsSync("output/scripts/ts2")) {
-    fs.mkdirSync("output/scripts/ts2");
-  }
-
-  if (!fs.existsSync("output/scripts/ts3")) {
-    fs.mkdirSync("output/scripts/ts3");
-  }
-
-  if (!fs.existsSync("output/php")) {
-    fs.mkdirSync("output/php");
-  }
-
-  if (!fs.existsSync("output/php/copy")) {
-    fs.mkdirSync("output/php/copy");
-  }
-
-  if (!fs.existsSync("output/php/php1")) {
-    fs.mkdirSync("output/php/php1");
-  }
-
-  if (!fs.existsSync("output/php/php2")) {
-    fs.mkdirSync("output/php/php2");
-  }
-
+  await Promise.all(promises);
   cb();
 });
 
-gulp.task("copy", async () => {
-  let packages = fs.readdirSync(`src/scripts`);
-
-  for (let i = 0; i < packages.length; i++) {
-    const package = packages[i];
-    let index = fs
-      .readdirSync(`src/scripts/${package}`)
-      .filter((path) => path.endsWith(".ts"))[0];
-    let tree = utils.tree(`src/scripts/${package}/${index}`, "src/scripts");
-    let paths = utils.flatten(tree);
-    await new Promise((resolve) => {
-      gulp
-        .src(paths, { base: `src/scripts/${package}` })
-        .pipe(gulp.dest(`output/scripts/copy/${package}`))
-        .on("end", () => resolve());
-    });
-  }
-
-  return null;
-});
-
-/**
- * Removes all duplicate node package imports. Leaves the imports to the file whose content is
- * highest on the list as that height determines the way in which the content will be
- * concatinated
- */
-gulp.task("ts-1", async () => {
-  let packages = fs.readdirSync("output/scripts/copy");
-
-  for (let i = 0; i < packages.length; i++) {
-    const package = packages[i];
-    let index = fs
-      .readdirSync(`output/scripts/copy/${package}`)
-      .filter((path) => path.endsWith(".ts"))[0];
-    let tree = utils.tree(
-      `output/scripts/copy/${package}/${index}`,
-      "output/scripts"
-    );
-    let paths = utils.flatten(tree);
-    let imports = [];
-    for (let i = 0; i < paths.length; i++) {
-      const path = paths[i];
-      if (!path.includes(package)) continue;
-      let pathSplit = path.split("output/scripts/copy");
-      let relativePath = "output/scripts/ts1";
-      utils.mkdirs([pathSplit[1]], relativePath);
-
-      await new Promise((resolve) => {
-        fs.readFile(path, (err, data) => {
-          if (err) throw err;
-          let code = data.toString();
-
-          let matches = code.match(patternImport);
-          if (matches !== null) {
-            for (let j = 0; j < matches.length; j++) {
-              const match = matches[j];
-              let package = getPackage(match);
-              if (
-                (match.includes('"../') &&
-                  packages.some((localPackage) =>
-                    match.includes(localPackage)
-                  )) ||
-                imports.includes(package)
-              )
-                continue;
-
-              code = code.replace(match, "");
-              imports.push(package);
-            }
-          }
-
-          fs.writeFile(
-            path.replace("output/scripts/copy", "output/scripts/ts1"),
-            code,
-            () => {
-              resolve();
-            }
-          );
-        });
-      });
-    }
-  }
-  return;
-  return null;
-});
-
-/**
- * Takes out locally imported modules to be bundled imports. Will be added later when they're about to be bundled.
- */
-gulp.task("ts-2", async (cb) => {
-  let packages = fs.readdirSync("src/scripts");
-  let localModulePackages = {};
-
-  for (let i = 0; i < packages.length; i++) {
-    const package = packages[i];
-    let index = fs
-      .readdirSync(`src/scripts/${package}`)
-      .filter((path) => path.endsWith(".ts"))[0];
-    let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
-    let paths = utils
-      .flatten(tree)
-      .map((path) => path.replace("src/scripts", "output/scripts/ts1"));
-    paths.reverse();
-    for (let i = 0; i < paths.length; i++) {
-      const path = paths[i];
-      if (!path.includes(package)) continue;
-      let pathSplit = path.split("output/scripts/ts1");
-      let relativePath = "output/scripts/ts2";
-      utils.mkdirs([pathSplit[1]], relativePath);
-
-      await new Promise((resolve) => {
-        fs.readFile(path, (err, data) => {
-          if (err) throw err;
-          let code = data.toString();
-          let matches = code.match(patternImport);
-          if (matches !== null) {
-            for (let i = 0; i < matches.length; i++) {
-              const match = matches[i];
-
-              for (let i = 0; i < packages.length; i++) {
-                const localPackage = packages[i];
-
-                if (!match.includes(localPackage)) continue;
-                if (!localModulePackages.hasOwnProperty(package))
-                  localModulePackages[package] = [];
-                if (!localModulePackages[package].includes(localPackage)) {
-                  localModulePackages[package].push(localPackage);
-                  code = code.replace(match, "");
-                }
-              }
-            }
-          }
-
-          fs.writeFile(
-            path.replace("output/scripts/ts1", "output/scripts/ts2"),
-            code,
-            () => {
-              resolve();
-            }
-          );
-        });
-      });
-    }
-
-    await fs.writeFile(
-      "output/mappedImports.json",
-      JSON.stringify(localModulePackages),
-      () => {
-        cb();
-      }
-    );
-  }
-});
-
-/**
- * Takes the mapped imports fro mthe json file made above and inserts the specified local modules into the first file in the array.
- */
-gulp.task("ts-3", async () => {
-  let packages = fs.readdirSync("src/scripts");
-  for (let i = 0; i < packages.length; i++) {
-    const package = packages[i];
-
-    let index = fs
-      .readdirSync(`src/scripts/${package}`)
-      .filter((path) => path.endsWith(".ts"))[0];
-    let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
-    let paths = utils
-      .flatten(tree)
-      .map((path) => path.replace("src/scripts", "output/scripts/ts2"));
-
-    paths.reverse();
-    let data = fs.readFileSync("output/mappedImports.json", {
-      encoding: "utf8",
-    });
-    let object = JSON.parse(data);
-
-    for (let i = 0; i < paths.length; i++) {
-      const path = paths[i];
-      if (!path.includes(package)) continue;
-      let pathSplit = path.split("output/scripts/ts2");
-      let relativePath = "output/scripts/ts3";
-      utils.mkdirs([pathSplit[1]], relativePath);
-
-      if (!object.hasOwnProperty(package)) {
-        await new Promise((resolve) => {
-          fs.readFile(path, (err, data) => {
-            if (err) throw err;
-            let code = data.toString();
-            fs.writeFile(
-              path.replace("output/scripts/ts2", "output/scripts/ts3"),
-              code,
-              () => {
-                resolve();
-              }
-            );
-          });
-        });
-        continue;
-      }
-
-      await new Promise((resolve) => {
-        fs.readFile(path, (err, data) => {
-          if (err) throw err;
-          let code = data.toString();
-          let imports = object[package];
-          let string = "";
-
-          for (let i = 0; i < imports.length; i++) {
-            const importValue = imports[i];
-            string = string + `import "./${importValue}.bundle.js"\n`;
-          }
-
-          code = string + code;
-          fs.writeFile(
-            path.replace("output/scripts/ts2", "output/scripts/ts3"),
-            code,
-            () => {
-              resolve();
-            }
-          );
-        });
-      });
-    }
-  }
-
-  return null;
-});
-
-gulp.task("ts-4", async () => {
-  let packages = fs.readdirSync("src/scripts");
-
-  for (let i = 0; i < packages.length; i++) {
-    const package = packages[i];
-    let index = fs
-      .readdirSync(`src/scripts/${package}`)
-      .filter((path) => path.endsWith(".ts"))[0];
-    let tree = utils.tree(`src/scripts/${package}/${index}`, "src");
-    let paths = [...new Set(utils.flatten(tree))]
-      .map((path) => path.replace(`src/scripts`, "output/scripts/ts3"))
-      .sort((a, b) => (a.includes("node_modules") ? -1 : 1))
-      .reverse();
-
-    await new Promise((resolve) => {
-      const tsProject = ts.createProject("tsconfig.json", {
-        noImplicitAny: false,
-        suppressImplicitAnyIndexErrors: true,
-        noEmitOnError: false,
-        isolatedModules: true,
-      });
-      gulp
-        .src(paths)
-        .pipe(concat(`${package}.bundle.ts`))
-        .pipe(tsProject())
-        .pipe(rename(`${package}.bundle.js`))
-        .pipe(uglify())
-        .pipe(gulp.dest("build/scripts"))
-        .on("end", () => {
-          resolve();
-        });
-    });
-  }
-
-  return null;
-});
-
-gulp.task("clean", (cb) => {
-  fs.rmdirSync("output", { recursive: true });
-  cb();
-});
-
-gulp.task("sass-compile", async () => {
-  let packages = fs
-    .readdirSync("src/styles")
-    .filter((path) => fs.lstatSync(`src/styles/${path}`).isDirectory());
-
-  for (let i = 0; i < packages.length; i++) {
-    const package = packages[i];
-    let index = fs
-      .readdirSync(`src/styles/${package}`)
-      .filter((path) => path.endsWith(".scss"))[0];
-    let tree = utils.tree(`src/styles/${package}/${index}`, "src/styles");
-    let paths = utils.flatten(tree);
-    paths.reverse();
-    await new Promise((resolve) => {
-      gulp
-        .src(paths)
-        .pipe(sass())
-        .pipe(concat(`${package}.bundle.css`))
-        .pipe(gulp.dest(`build/styles`))
-        .on("end", () => {
-          resolve();
-        });
-    });
-  }
-
-  return null;
-});
-
-gulp.task("php-copy", (cb) => {
+gulp.task("php", (cb) => {
   let paths = utils.map("src/php");
+
   gulp
-    .src(paths)
+    .src(paths, { base: "src/php" })
     .pipe(gulp.dest("build"))
     .on("end", () => cb());
 });
 
-gulp.task(
-  "default",
-  gulp.series(
-    "setup",
-    "copy",
-    "ts-1",
-    "ts-2",
-    "ts-3",
-    "ts-4",
-    "sass-compile",
-    "php-copy"
-  )
-);
+gulp.task("server", (cb) => {
+  connect.server({ base: "build" }, () => {
+    browserSync({
+      proxy: "127.0.0.1:8000",
+    });
+
+    gulp.watch("src/scripts/**/*", gulp.series("webpack"));
+    gulp.watch("src/styles/**/*", gulp.series("sass"));
+    gulp.watch("src/php/**/*", gulp.series("php"));
+    cb();
+  });
+});
+
+gulp.task("default", gulp.series("webpack", "sass", "php", "server"));

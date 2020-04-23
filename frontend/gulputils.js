@@ -93,7 +93,7 @@ module.exports.map = function (directory) {
     const rootFile = rootFiles[i];
 
     if (fs.lstatSync(`${directory}/${rootFile}`).isDirectory()) {
-      paths = walk(direcotry + `/${rootFile}`);
+      paths = walk(directory + `/${rootFile}`, paths);
     } else {
       paths.push(directory + `/${rootFile}`);
     }
