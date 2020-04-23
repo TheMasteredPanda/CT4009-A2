@@ -62,7 +62,7 @@ gulp.task("php", (cb) => {
 });
 
 gulp.task("server", (cb) => {
-  connect.server({}, () => {
+  connect.server({ base: "build" }, () => {
     browserSync({
       proxy: "127.0.0.1:8000",
     });

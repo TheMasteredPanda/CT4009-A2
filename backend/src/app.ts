@@ -73,7 +73,6 @@ export async function start() {
   app.use(errorResponser);
   app.use(cors()); //Middleware for Connect/Express
   app.use(bodyParser.json()); //Middleware for parsing request body content to json.
-
   let scriptRoutes = fileUtils
     .map("endpoints")
     .filter((path: string) => path.endsWith(".js"));

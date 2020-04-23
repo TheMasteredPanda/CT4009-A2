@@ -6547,16 +6547,15 @@ input[type=range]::-ms-thumb {
 .materialize-red.lighten-3 {
   background-color: #f3989b !important; }
 
-.materialize-red-text.text-lighten-3, .login_or_register_container form .materialize-red-text::placeholder, .login_or_register_container form .input-field input.materialize-red-text[type="text"]:focus,
-.login_or_register_container form .input-field input.materialize-red-text[type="password"]:focus,
-.login_or_register_container form .input-field input.materialize-red-text[type="email"]:focus, .login_or_register_container .materialize-red-text.forgot_creds_form {
+.materialize-red-text.text-lighten-3, .login_or_register_container .materialize-red-text.forgot_creds_form {
   color: #f3989b !important; }
 
 .materialize-red.lighten-2 {
   background-color: #ee6e73 !important; }
 
-.materialize-red-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.materialize-red-text,
-.login_or_register_container form .register_footer_hrefs a.materialize-red-text {
+.materialize-red-text.text-lighten-2, .login_or_register_container form a.materialize-red-text, .login_or_register_container form .materialize-red-text::placeholder, .login_or_register_container form input.materialize-red-text, .login_or_register_container form .input-field input.materialize-red-text[type="text"]:focus,
+.login_or_register_container form .input-field input.materialize-red-text[type="password"]:focus,
+.login_or_register_container form .input-field input.materialize-red-text[type="email"]:focus, .login_or_register_container .materialize-red-text.helper-text {
   color: #ee6e73 !important; }
 
 .materialize-red.lighten-1 {
@@ -6610,16 +6609,15 @@ input[type=range]::-ms-thumb {
 .red.lighten-3 {
   background-color: #EF9A9A !important; }
 
-.red-text.text-lighten-3, .login_or_register_container form .red-text::placeholder, .login_or_register_container form .input-field input.red-text[type="text"]:focus,
-.login_or_register_container form .input-field input.red-text[type="password"]:focus,
-.login_or_register_container form .input-field input.red-text[type="email"]:focus, .login_or_register_container .red-text.forgot_creds_form {
+.red-text.text-lighten-3, .login_or_register_container .red-text.forgot_creds_form {
   color: #EF9A9A !important; }
 
 .red.lighten-2 {
   background-color: #E57373 !important; }
 
-.red-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.red-text,
-.login_or_register_container form .register_footer_hrefs a.red-text {
+.red-text.text-lighten-2, .login_or_register_container form a.red-text, .login_or_register_container form .red-text::placeholder, .login_or_register_container form input.red-text, .login_or_register_container form .input-field input.red-text[type="text"]:focus,
+.login_or_register_container form .input-field input.red-text[type="password"]:focus,
+.login_or_register_container form .input-field input.red-text[type="email"]:focus, .login_or_register_container .red-text.helper-text {
   color: #E57373 !important; }
 
 .red.lighten-1 {
@@ -6697,16 +6695,15 @@ input[type=range]::-ms-thumb {
 .pink.lighten-3 {
   background-color: #f48fb1 !important; }
 
-.pink-text.text-lighten-3, .login_or_register_container form .pink-text::placeholder, .login_or_register_container form .input-field input.pink-text[type="text"]:focus,
-.login_or_register_container form .input-field input.pink-text[type="password"]:focus,
-.login_or_register_container form .input-field input.pink-text[type="email"]:focus, .login_or_register_container .pink-text.forgot_creds_form {
+.pink-text.text-lighten-3, .login_or_register_container .pink-text.forgot_creds_form {
   color: #f48fb1 !important; }
 
 .pink.lighten-2 {
   background-color: #f06292 !important; }
 
-.pink-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.pink-text,
-.login_or_register_container form .register_footer_hrefs a.pink-text {
+.pink-text.text-lighten-2, .login_or_register_container form a.pink-text, .login_or_register_container form .pink-text::placeholder, .login_or_register_container form input.pink-text, .login_or_register_container form .input-field input.pink-text[type="text"]:focus,
+.login_or_register_container form .input-field input.pink-text[type="password"]:focus,
+.login_or_register_container form .input-field input.pink-text[type="email"]:focus, .login_or_register_container .pink-text.helper-text {
   color: #f06292 !important; }
 
 .pink.lighten-1 {
@@ -6784,16 +6781,15 @@ input[type=range]::-ms-thumb {
 .purple.lighten-3 {
   background-color: #ce93d8 !important; }
 
-.purple-text.text-lighten-3, .login_or_register_container form .purple-text::placeholder, .login_or_register_container form .input-field input.purple-text[type="text"]:focus,
-.login_or_register_container form .input-field input.purple-text[type="password"]:focus,
-.login_or_register_container form .input-field input.purple-text[type="email"]:focus, .login_or_register_container .purple-text.forgot_creds_form {
+.purple-text.text-lighten-3, .login_or_register_container .purple-text.forgot_creds_form {
   color: #ce93d8 !important; }
 
 .purple.lighten-2 {
   background-color: #ba68c8 !important; }
 
-.purple-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.purple-text,
-.login_or_register_container form .register_footer_hrefs a.purple-text {
+.purple-text.text-lighten-2, .login_or_register_container form a.purple-text, .login_or_register_container form .purple-text::placeholder, .login_or_register_container form input.purple-text, .login_or_register_container form .input-field input.purple-text[type="text"]:focus,
+.login_or_register_container form .input-field input.purple-text[type="password"]:focus,
+.login_or_register_container form .input-field input.purple-text[type="email"]:focus, .login_or_register_container .purple-text.helper-text {
   color: #ba68c8 !important; }
 
 .purple.lighten-1 {
@@ -6871,16 +6867,15 @@ input[type=range]::-ms-thumb {
 .deep-purple.lighten-3 {
   background-color: #b39ddb !important; }
 
-.deep-purple-text.text-lighten-3, .login_or_register_container form .deep-purple-text::placeholder, .login_or_register_container form .input-field input.deep-purple-text[type="text"]:focus,
-.login_or_register_container form .input-field input.deep-purple-text[type="password"]:focus,
-.login_or_register_container form .input-field input.deep-purple-text[type="email"]:focus, .login_or_register_container .deep-purple-text.forgot_creds_form {
+.deep-purple-text.text-lighten-3, .login_or_register_container .deep-purple-text.forgot_creds_form {
   color: #b39ddb !important; }
 
 .deep-purple.lighten-2 {
   background-color: #9575cd !important; }
 
-.deep-purple-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.deep-purple-text,
-.login_or_register_container form .register_footer_hrefs a.deep-purple-text {
+.deep-purple-text.text-lighten-2, .login_or_register_container form a.deep-purple-text, .login_or_register_container form .deep-purple-text::placeholder, .login_or_register_container form input.deep-purple-text, .login_or_register_container form .input-field input.deep-purple-text[type="text"]:focus,
+.login_or_register_container form .input-field input.deep-purple-text[type="password"]:focus,
+.login_or_register_container form .input-field input.deep-purple-text[type="email"]:focus, .login_or_register_container .deep-purple-text.helper-text {
   color: #9575cd !important; }
 
 .deep-purple.lighten-1 {
@@ -6937,88 +6932,87 @@ input[type=range]::-ms-thumb {
 .deep-purple-text.text-accent-4 {
   color: #6200ea !important; }
 
-.indigo, .login_or_register_container form {
+.indigo, .login_or_register_container form, .home_container nav, .home_container #mainSidenav .btn, .home_container #mainSidenav .btn-large, .home_container #mainSidenav .btn-small {
   background-color: #3f51b5 !important; }
 
 .indigo-text {
   color: #3f51b5 !important; }
 
-.indigo.lighten-5, .login_or_register_container form.lighten-5 {
+.indigo.lighten-5, .login_or_register_container form.lighten-5, .home_container nav.lighten-5, .home_container #mainSidenav .lighten-5.btn, .home_container #mainSidenav .lighten-5.btn-large, .home_container #mainSidenav .lighten-5.btn-small {
   background-color: #e8eaf6 !important; }
 
 .indigo-text.text-lighten-5 {
   color: #e8eaf6 !important; }
 
-.indigo.lighten-4, .login_or_register_container form.lighten-4 {
+.indigo.lighten-4, .login_or_register_container form.lighten-4, .home_container nav.lighten-4, .home_container #mainSidenav .lighten-4.btn, .home_container #mainSidenav .lighten-4.btn-large, .home_container #mainSidenav .lighten-4.btn-small {
   background-color: #c5cae9 !important; }
 
 .indigo-text.text-lighten-4 {
   color: #c5cae9 !important; }
 
-.indigo.lighten-3, .login_or_register_container form.lighten-3 {
+.indigo.lighten-3, .login_or_register_container form.lighten-3, .home_container nav.lighten-3, .home_container #mainSidenav .lighten-3.btn, .home_container #mainSidenav .lighten-3.btn-large, .home_container #mainSidenav .lighten-3.btn-small {
   background-color: #9fa8da !important; }
 
-.indigo-text.text-lighten-3, .login_or_register_container form .indigo-text::placeholder, .login_or_register_container form .input-field input.indigo-text[type="text"]:focus,
-.login_or_register_container form .input-field input.indigo-text[type="password"]:focus,
-.login_or_register_container form .input-field input.indigo-text[type="email"]:focus, .login_or_register_container .indigo-text.forgot_creds_form {
+.indigo-text.text-lighten-3, .login_or_register_container .indigo-text.forgot_creds_form {
   color: #9fa8da !important; }
 
-.indigo.lighten-2, .login_or_register_container form.lighten-2 {
+.indigo.lighten-2, .login_or_register_container form.lighten-2, .home_container nav.lighten-2, .home_container #mainSidenav .lighten-2.btn, .home_container #mainSidenav .lighten-2.btn-large, .home_container #mainSidenav .lighten-2.btn-small {
   background-color: #7986cb !important; }
 
-.indigo-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.indigo-text,
-.login_or_register_container form .register_footer_hrefs a.indigo-text {
+.indigo-text.text-lighten-2, .login_or_register_container form a.indigo-text, .login_or_register_container form .indigo-text::placeholder, .login_or_register_container form input.indigo-text, .login_or_register_container form .input-field input.indigo-text[type="text"]:focus,
+.login_or_register_container form .input-field input.indigo-text[type="password"]:focus,
+.login_or_register_container form .input-field input.indigo-text[type="email"]:focus, .login_or_register_container .indigo-text.helper-text {
   color: #7986cb !important; }
 
-.indigo.lighten-1, .login_or_register_container form.lighten-1 {
+.indigo.lighten-1, .login_or_register_container form.lighten-1, .home_container nav.lighten-1, .home_container #mainSidenav .lighten-1.btn, .home_container #mainSidenav .lighten-1.btn-large, .home_container #mainSidenav .lighten-1.btn-small {
   background-color: #5c6bc0 !important; }
 
 .indigo-text.text-lighten-1 {
   color: #5c6bc0 !important; }
 
-.indigo.darken-1, .login_or_register_container form.darken-1 {
+.indigo.darken-1, .login_or_register_container form.darken-1, .home_container nav.darken-1, .home_container #mainSidenav .darken-1.btn, .home_container #mainSidenav .darken-1.btn-large, .home_container #mainSidenav .darken-1.btn-small {
   background-color: #3949ab !important; }
 
 .indigo-text.text-darken-1 {
   color: #3949ab !important; }
 
-.indigo.darken-2, .login_or_register_container form.darken-2 {
+.indigo.darken-2, .login_or_register_container form.darken-2, .home_container nav.darken-2, .home_container #mainSidenav .darken-2.btn, .home_container #mainSidenav .darken-2.btn-large, .home_container #mainSidenav .darken-2.btn-small {
   background-color: #303f9f !important; }
 
 .indigo-text.text-darken-2 {
   color: #303f9f !important; }
 
-.indigo.darken-3, .login_or_register_container form.darken-3 {
+.indigo.darken-3, .login_or_register_container form.darken-3, .home_container nav.darken-3, .home_container #mainSidenav .darken-3.btn, .home_container #mainSidenav .darken-3.btn-large, .home_container #mainSidenav .darken-3.btn-small {
   background-color: #283593 !important; }
 
 .indigo-text.text-darken-3 {
   color: #283593 !important; }
 
-.indigo.darken-4, .login_or_register_container form.darken-4 {
+.indigo.darken-4, .login_or_register_container form.darken-4, .home_container nav.darken-4, .home_container #mainSidenav .darken-4.btn, .home_container #mainSidenav .darken-4.btn-large, .home_container #mainSidenav .darken-4.btn-small {
   background-color: #1a237e !important; }
 
 .indigo-text.text-darken-4 {
   color: #1a237e !important; }
 
-.indigo.accent-1, .login_or_register_container form.accent-1 {
+.indigo.accent-1, .login_or_register_container form.accent-1, .home_container nav.accent-1, .home_container #mainSidenav .accent-1.btn, .home_container #mainSidenav .accent-1.btn-large, .home_container #mainSidenav .accent-1.btn-small {
   background-color: #8c9eff !important; }
 
 .indigo-text.text-accent-1 {
   color: #8c9eff !important; }
 
-.indigo.accent-2, .login_or_register_container form {
+.indigo.accent-2, .login_or_register_container form, .home_container nav.accent-2, .home_container #mainSidenav .accent-2.btn, .home_container #mainSidenav .accent-2.btn-large, .home_container #mainSidenav .login_or_register_container form.btn-large, .login_or_register_container .home_container #mainSidenav form.btn-large, .home_container #mainSidenav .accent-2.btn-small, .home_container #mainSidenav .login_or_register_container form.btn-small, .login_or_register_container .home_container #mainSidenav form.btn-small, .home_container #mainSidenav .login_or_register_container form.btn, .login_or_register_container .home_container #mainSidenav form.btn {
   background-color: #536dfe !important; }
 
 .indigo-text.text-accent-2 {
   color: #536dfe !important; }
 
-.indigo.accent-3, .login_or_register_container form.accent-3 {
+.indigo.accent-3, .login_or_register_container form.accent-3, .home_container nav.accent-3, .home_container #mainSidenav .accent-3.btn, .home_container #mainSidenav .accent-3.btn-large, .home_container #mainSidenav .accent-3.btn-small {
   background-color: #3d5afe !important; }
 
 .indigo-text.text-accent-3 {
   color: #3d5afe !important; }
 
-.indigo.accent-4, .login_or_register_container form.accent-4 {
+.indigo.accent-4, .login_or_register_container form.accent-4, .home_container nav.accent-4, .home_container #mainSidenav .accent-4.btn, .home_container #mainSidenav .accent-4.btn-large, .home_container #mainSidenav .accent-4.btn-small {
   background-color: #304ffe !important; }
 
 .indigo-text.text-accent-4 {
@@ -7045,16 +7039,15 @@ input[type=range]::-ms-thumb {
 .blue.lighten-3 {
   background-color: #90CAF9 !important; }
 
-.blue-text.text-lighten-3, .login_or_register_container form .blue-text::placeholder, .login_or_register_container form .input-field input.blue-text[type="text"]:focus,
-.login_or_register_container form .input-field input.blue-text[type="password"]:focus,
-.login_or_register_container form .input-field input.blue-text[type="email"]:focus, .login_or_register_container .blue-text.forgot_creds_form {
+.blue-text.text-lighten-3, .login_or_register_container .blue-text.forgot_creds_form {
   color: #90CAF9 !important; }
 
 .blue.lighten-2 {
   background-color: #64B5F6 !important; }
 
-.blue-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.blue-text,
-.login_or_register_container form .register_footer_hrefs a.blue-text {
+.blue-text.text-lighten-2, .login_or_register_container form a.blue-text, .login_or_register_container form .blue-text::placeholder, .login_or_register_container form input.blue-text, .login_or_register_container form .input-field input.blue-text[type="text"]:focus,
+.login_or_register_container form .input-field input.blue-text[type="password"]:focus,
+.login_or_register_container form .input-field input.blue-text[type="email"]:focus, .login_or_register_container .blue-text.helper-text {
   color: #64B5F6 !important; }
 
 .blue.lighten-1 {
@@ -7132,16 +7125,15 @@ input[type=range]::-ms-thumb {
 .light-blue.lighten-3 {
   background-color: #81d4fa !important; }
 
-.light-blue-text.text-lighten-3, .login_or_register_container form .light-blue-text::placeholder, .login_or_register_container form .input-field input.light-blue-text[type="text"]:focus,
-.login_or_register_container form .input-field input.light-blue-text[type="password"]:focus,
-.login_or_register_container form .input-field input.light-blue-text[type="email"]:focus, .login_or_register_container .light-blue-text.forgot_creds_form {
+.light-blue-text.text-lighten-3, .login_or_register_container .light-blue-text.forgot_creds_form {
   color: #81d4fa !important; }
 
 .light-blue.lighten-2 {
   background-color: #4fc3f7 !important; }
 
-.light-blue-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.light-blue-text,
-.login_or_register_container form .register_footer_hrefs a.light-blue-text {
+.light-blue-text.text-lighten-2, .login_or_register_container form a.light-blue-text, .login_or_register_container form .light-blue-text::placeholder, .login_or_register_container form input.light-blue-text, .login_or_register_container form .input-field input.light-blue-text[type="text"]:focus,
+.login_or_register_container form .input-field input.light-blue-text[type="password"]:focus,
+.login_or_register_container form .input-field input.light-blue-text[type="email"]:focus, .login_or_register_container .light-blue-text.helper-text {
   color: #4fc3f7 !important; }
 
 .light-blue.lighten-1 {
@@ -7219,16 +7211,15 @@ input[type=range]::-ms-thumb {
 .cyan.lighten-3 {
   background-color: #80deea !important; }
 
-.cyan-text.text-lighten-3, .login_or_register_container form .cyan-text::placeholder, .login_or_register_container form .input-field input.cyan-text[type="text"]:focus,
-.login_or_register_container form .input-field input.cyan-text[type="password"]:focus,
-.login_or_register_container form .input-field input.cyan-text[type="email"]:focus, .login_or_register_container .cyan-text.forgot_creds_form {
+.cyan-text.text-lighten-3, .login_or_register_container .cyan-text.forgot_creds_form {
   color: #80deea !important; }
 
 .cyan.lighten-2 {
   background-color: #4dd0e1 !important; }
 
-.cyan-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.cyan-text,
-.login_or_register_container form .register_footer_hrefs a.cyan-text {
+.cyan-text.text-lighten-2, .login_or_register_container form a.cyan-text, .login_or_register_container form .cyan-text::placeholder, .login_or_register_container form input.cyan-text, .login_or_register_container form .input-field input.cyan-text[type="text"]:focus,
+.login_or_register_container form .input-field input.cyan-text[type="password"]:focus,
+.login_or_register_container form .input-field input.cyan-text[type="email"]:focus, .login_or_register_container .cyan-text.helper-text {
   color: #4dd0e1 !important; }
 
 .cyan.lighten-1 {
@@ -7306,16 +7297,15 @@ input[type=range]::-ms-thumb {
 .teal.lighten-3 {
   background-color: #80cbc4 !important; }
 
-.teal-text.text-lighten-3, .login_or_register_container form .teal-text::placeholder, .login_or_register_container form .input-field input.teal-text[type="text"]:focus,
-.login_or_register_container form .input-field input.teal-text[type="password"]:focus,
-.login_or_register_container form .input-field input.teal-text[type="email"]:focus, .login_or_register_container .teal-text.forgot_creds_form {
+.teal-text.text-lighten-3, .login_or_register_container .teal-text.forgot_creds_form {
   color: #80cbc4 !important; }
 
 .teal.lighten-2 {
   background-color: #4db6ac !important; }
 
-.teal-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.teal-text,
-.login_or_register_container form .register_footer_hrefs a.teal-text {
+.teal-text.text-lighten-2, .login_or_register_container form a.teal-text, .login_or_register_container form .teal-text::placeholder, .login_or_register_container form input.teal-text, .login_or_register_container form .input-field input.teal-text[type="text"]:focus,
+.login_or_register_container form .input-field input.teal-text[type="password"]:focus,
+.login_or_register_container form .input-field input.teal-text[type="email"]:focus, .login_or_register_container .teal-text.helper-text {
   color: #4db6ac !important; }
 
 .teal.lighten-1 {
@@ -7393,16 +7383,15 @@ input[type=range]::-ms-thumb {
 .green.lighten-3 {
   background-color: #A5D6A7 !important; }
 
-.green-text.text-lighten-3, .login_or_register_container form .green-text::placeholder, .login_or_register_container form .input-field input.green-text[type="text"]:focus,
-.login_or_register_container form .input-field input.green-text[type="password"]:focus,
-.login_or_register_container form .input-field input.green-text[type="email"]:focus, .login_or_register_container .green-text.forgot_creds_form {
+.green-text.text-lighten-3, .login_or_register_container .green-text.forgot_creds_form {
   color: #A5D6A7 !important; }
 
 .green.lighten-2 {
   background-color: #81C784 !important; }
 
-.green-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.green-text,
-.login_or_register_container form .register_footer_hrefs a.green-text {
+.green-text.text-lighten-2, .login_or_register_container form a.green-text, .login_or_register_container form .green-text::placeholder, .login_or_register_container form input.green-text, .login_or_register_container form .input-field input.green-text[type="text"]:focus,
+.login_or_register_container form .input-field input.green-text[type="password"]:focus,
+.login_or_register_container form .input-field input.green-text[type="email"]:focus, .login_or_register_container .green-text.helper-text {
   color: #81C784 !important; }
 
 .green.lighten-1 {
@@ -7480,16 +7469,15 @@ input[type=range]::-ms-thumb {
 .light-green.lighten-3 {
   background-color: #c5e1a5 !important; }
 
-.light-green-text.text-lighten-3, .login_or_register_container form .light-green-text::placeholder, .login_or_register_container form .input-field input.light-green-text[type="text"]:focus,
-.login_or_register_container form .input-field input.light-green-text[type="password"]:focus,
-.login_or_register_container form .input-field input.light-green-text[type="email"]:focus, .login_or_register_container .light-green-text.forgot_creds_form {
+.light-green-text.text-lighten-3, .login_or_register_container .light-green-text.forgot_creds_form {
   color: #c5e1a5 !important; }
 
 .light-green.lighten-2 {
   background-color: #aed581 !important; }
 
-.light-green-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.light-green-text,
-.login_or_register_container form .register_footer_hrefs a.light-green-text {
+.light-green-text.text-lighten-2, .login_or_register_container form a.light-green-text, .login_or_register_container form .light-green-text::placeholder, .login_or_register_container form input.light-green-text, .login_or_register_container form .input-field input.light-green-text[type="text"]:focus,
+.login_or_register_container form .input-field input.light-green-text[type="password"]:focus,
+.login_or_register_container form .input-field input.light-green-text[type="email"]:focus, .login_or_register_container .light-green-text.helper-text {
   color: #aed581 !important; }
 
 .light-green.lighten-1 {
@@ -7567,16 +7555,15 @@ input[type=range]::-ms-thumb {
 .lime.lighten-3 {
   background-color: #e6ee9c !important; }
 
-.lime-text.text-lighten-3, .login_or_register_container form .lime-text::placeholder, .login_or_register_container form .input-field input.lime-text[type="text"]:focus,
-.login_or_register_container form .input-field input.lime-text[type="password"]:focus,
-.login_or_register_container form .input-field input.lime-text[type="email"]:focus, .login_or_register_container .lime-text.forgot_creds_form {
+.lime-text.text-lighten-3, .login_or_register_container .lime-text.forgot_creds_form {
   color: #e6ee9c !important; }
 
 .lime.lighten-2 {
   background-color: #dce775 !important; }
 
-.lime-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.lime-text,
-.login_or_register_container form .register_footer_hrefs a.lime-text {
+.lime-text.text-lighten-2, .login_or_register_container form a.lime-text, .login_or_register_container form .lime-text::placeholder, .login_or_register_container form input.lime-text, .login_or_register_container form .input-field input.lime-text[type="text"]:focus,
+.login_or_register_container form .input-field input.lime-text[type="password"]:focus,
+.login_or_register_container form .input-field input.lime-text[type="email"]:focus, .login_or_register_container .lime-text.helper-text {
   color: #dce775 !important; }
 
 .lime.lighten-1 {
@@ -7654,16 +7641,15 @@ input[type=range]::-ms-thumb {
 .yellow.lighten-3 {
   background-color: #fff59d !important; }
 
-.yellow-text.text-lighten-3, .login_or_register_container form .yellow-text::placeholder, .login_or_register_container form .input-field input.yellow-text[type="text"]:focus,
-.login_or_register_container form .input-field input.yellow-text[type="password"]:focus,
-.login_or_register_container form .input-field input.yellow-text[type="email"]:focus, .login_or_register_container .yellow-text.forgot_creds_form {
+.yellow-text.text-lighten-3, .login_or_register_container .yellow-text.forgot_creds_form {
   color: #fff59d !important; }
 
 .yellow.lighten-2 {
   background-color: #fff176 !important; }
 
-.yellow-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.yellow-text,
-.login_or_register_container form .register_footer_hrefs a.yellow-text {
+.yellow-text.text-lighten-2, .login_or_register_container form a.yellow-text, .login_or_register_container form .yellow-text::placeholder, .login_or_register_container form input.yellow-text, .login_or_register_container form .input-field input.yellow-text[type="text"]:focus,
+.login_or_register_container form .input-field input.yellow-text[type="password"]:focus,
+.login_or_register_container form .input-field input.yellow-text[type="email"]:focus, .login_or_register_container .yellow-text.helper-text {
   color: #fff176 !important; }
 
 .yellow.lighten-1 {
@@ -7741,16 +7727,15 @@ input[type=range]::-ms-thumb {
 .amber.lighten-3 {
   background-color: #ffe082 !important; }
 
-.amber-text.text-lighten-3, .login_or_register_container form .amber-text::placeholder, .login_or_register_container form .input-field input.amber-text[type="text"]:focus,
-.login_or_register_container form .input-field input.amber-text[type="password"]:focus,
-.login_or_register_container form .input-field input.amber-text[type="email"]:focus, .login_or_register_container .amber-text.forgot_creds_form {
+.amber-text.text-lighten-3, .login_or_register_container .amber-text.forgot_creds_form {
   color: #ffe082 !important; }
 
 .amber.lighten-2 {
   background-color: #ffd54f !important; }
 
-.amber-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.amber-text,
-.login_or_register_container form .register_footer_hrefs a.amber-text {
+.amber-text.text-lighten-2, .login_or_register_container form a.amber-text, .login_or_register_container form .amber-text::placeholder, .login_or_register_container form input.amber-text, .login_or_register_container form .input-field input.amber-text[type="text"]:focus,
+.login_or_register_container form .input-field input.amber-text[type="password"]:focus,
+.login_or_register_container form .input-field input.amber-text[type="email"]:focus, .login_or_register_container .amber-text.helper-text {
   color: #ffd54f !important; }
 
 .amber.lighten-1 {
@@ -7828,16 +7813,15 @@ input[type=range]::-ms-thumb {
 .orange.lighten-3 {
   background-color: #ffcc80 !important; }
 
-.orange-text.text-lighten-3, .login_or_register_container form .orange-text::placeholder, .login_or_register_container form .input-field input.orange-text[type="text"]:focus,
-.login_or_register_container form .input-field input.orange-text[type="password"]:focus,
-.login_or_register_container form .input-field input.orange-text[type="email"]:focus, .login_or_register_container .orange-text.forgot_creds_form {
+.orange-text.text-lighten-3, .login_or_register_container .orange-text.forgot_creds_form {
   color: #ffcc80 !important; }
 
 .orange.lighten-2 {
   background-color: #ffb74d !important; }
 
-.orange-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.orange-text,
-.login_or_register_container form .register_footer_hrefs a.orange-text {
+.orange-text.text-lighten-2, .login_or_register_container form a.orange-text, .login_or_register_container form .orange-text::placeholder, .login_or_register_container form input.orange-text, .login_or_register_container form .input-field input.orange-text[type="text"]:focus,
+.login_or_register_container form .input-field input.orange-text[type="password"]:focus,
+.login_or_register_container form .input-field input.orange-text[type="email"]:focus, .login_or_register_container .orange-text.helper-text {
   color: #ffb74d !important; }
 
 .orange.lighten-1 {
@@ -7915,16 +7899,15 @@ input[type=range]::-ms-thumb {
 .deep-orange.lighten-3 {
   background-color: #ffab91 !important; }
 
-.deep-orange-text.text-lighten-3, .login_or_register_container form .deep-orange-text::placeholder, .login_or_register_container form .input-field input.deep-orange-text[type="text"]:focus,
-.login_or_register_container form .input-field input.deep-orange-text[type="password"]:focus,
-.login_or_register_container form .input-field input.deep-orange-text[type="email"]:focus, .login_or_register_container .deep-orange-text.forgot_creds_form {
+.deep-orange-text.text-lighten-3, .login_or_register_container .deep-orange-text.forgot_creds_form {
   color: #ffab91 !important; }
 
 .deep-orange.lighten-2 {
   background-color: #ff8a65 !important; }
 
-.deep-orange-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.deep-orange-text,
-.login_or_register_container form .register_footer_hrefs a.deep-orange-text {
+.deep-orange-text.text-lighten-2, .login_or_register_container form a.deep-orange-text, .login_or_register_container form .deep-orange-text::placeholder, .login_or_register_container form input.deep-orange-text, .login_or_register_container form .input-field input.deep-orange-text[type="text"]:focus,
+.login_or_register_container form .input-field input.deep-orange-text[type="password"]:focus,
+.login_or_register_container form .input-field input.deep-orange-text[type="email"]:focus, .login_or_register_container .deep-orange-text.helper-text {
   color: #ff8a65 !important; }
 
 .deep-orange.lighten-1 {
@@ -8002,16 +7985,15 @@ input[type=range]::-ms-thumb {
 .brown.lighten-3 {
   background-color: #bcaaa4 !important; }
 
-.brown-text.text-lighten-3, .login_or_register_container form .brown-text::placeholder, .login_or_register_container form .input-field input.brown-text[type="text"]:focus,
-.login_or_register_container form .input-field input.brown-text[type="password"]:focus,
-.login_or_register_container form .input-field input.brown-text[type="email"]:focus, .login_or_register_container .brown-text.forgot_creds_form {
+.brown-text.text-lighten-3, .login_or_register_container .brown-text.forgot_creds_form {
   color: #bcaaa4 !important; }
 
 .brown.lighten-2 {
   background-color: #a1887f !important; }
 
-.brown-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.brown-text,
-.login_or_register_container form .register_footer_hrefs a.brown-text {
+.brown-text.text-lighten-2, .login_or_register_container form a.brown-text, .login_or_register_container form .brown-text::placeholder, .login_or_register_container form input.brown-text, .login_or_register_container form .input-field input.brown-text[type="text"]:focus,
+.login_or_register_container form .input-field input.brown-text[type="password"]:focus,
+.login_or_register_container form .input-field input.brown-text[type="email"]:focus, .login_or_register_container .brown-text.helper-text {
   color: #a1887f !important; }
 
 .brown.lighten-1 {
@@ -8065,16 +8047,15 @@ input[type=range]::-ms-thumb {
 .blue-grey.lighten-3 {
   background-color: #b0bec5 !important; }
 
-.blue-grey-text.text-lighten-3, .login_or_register_container form .blue-grey-text::placeholder, .login_or_register_container form .input-field input.blue-grey-text[type="text"]:focus,
-.login_or_register_container form .input-field input.blue-grey-text[type="password"]:focus,
-.login_or_register_container form .input-field input.blue-grey-text[type="email"]:focus, .login_or_register_container .blue-grey-text.forgot_creds_form {
+.blue-grey-text.text-lighten-3, .login_or_register_container .blue-grey-text.forgot_creds_form {
   color: #b0bec5 !important; }
 
 .blue-grey.lighten-2 {
   background-color: #90a4ae !important; }
 
-.blue-grey-text.text-lighten-2, .login_or_register_container form .login_footer_hrefs a.blue-grey-text,
-.login_or_register_container form .register_footer_hrefs a.blue-grey-text {
+.blue-grey-text.text-lighten-2, .login_or_register_container form a.blue-grey-text, .login_or_register_container form .blue-grey-text::placeholder, .login_or_register_container form input.blue-grey-text, .login_or_register_container form .input-field input.blue-grey-text[type="text"]:focus,
+.login_or_register_container form .input-field input.blue-grey-text[type="password"]:focus,
+.login_or_register_container form .input-field input.blue-grey-text[type="email"]:focus, .login_or_register_container .blue-grey-text.helper-text {
   color: #90a4ae !important; }
 
 .blue-grey.lighten-1 {
@@ -8110,92 +8091,81 @@ input[type=range]::-ms-thumb {
 .grey {
   background-color: #9e9e9e !important; }
 
-.grey-text, .login_or_register_container form ::placeholder, .login_or_register_container form .input-field input[type="text"]:focus,
+.grey-text, .login_or_register_container form a, .login_or_register_container form ::placeholder, .login_or_register_container form input, .login_or_register_container form .input-field input[type="text"]:focus,
 .login_or_register_container form .input-field input[type="password"]:focus,
-.login_or_register_container form .input-field input[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a,
-.login_or_register_container form .register_footer_hrefs a, .login_or_register_container .forgot_creds_form {
+.login_or_register_container form .input-field input[type="email"]:focus, .login_or_register_container .helper-text, .login_or_register_container .forgot_creds_form {
   color: #9e9e9e !important; }
 
 .grey.lighten-5 {
   background-color: #fafafa !important; }
 
-.grey-text.text-lighten-5, .login_or_register_container form .text-lighten-5::placeholder, .login_or_register_container form .input-field input.text-lighten-5[type="text"]:focus,
+.grey-text.text-lighten-5, .login_or_register_container form a.text-lighten-5, .login_or_register_container form .text-lighten-5::placeholder, .login_or_register_container form input.text-lighten-5, .login_or_register_container form .input-field input.text-lighten-5[type="text"]:focus,
 .login_or_register_container form .input-field input.text-lighten-5[type="password"]:focus,
-.login_or_register_container form .input-field input.text-lighten-5[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a.text-lighten-5,
-.login_or_register_container form .register_footer_hrefs a.text-lighten-5, .login_or_register_container .text-lighten-5.forgot_creds_form {
+.login_or_register_container form .input-field input.text-lighten-5[type="email"]:focus, .login_or_register_container .text-lighten-5.helper-text, .login_or_register_container .text-lighten-5.forgot_creds_form {
   color: #fafafa !important; }
 
 .grey.lighten-4 {
   background-color: #f5f5f5 !important; }
 
-.grey-text.text-lighten-4, .login_or_register_container form .text-lighten-4::placeholder, .login_or_register_container form .input-field input.text-lighten-4[type="text"]:focus,
+.grey-text.text-lighten-4, .login_or_register_container form a.text-lighten-4, .login_or_register_container form .text-lighten-4::placeholder, .login_or_register_container form input.text-lighten-4, .login_or_register_container form .input-field input.text-lighten-4[type="text"]:focus,
 .login_or_register_container form .input-field input.text-lighten-4[type="password"]:focus,
-.login_or_register_container form .input-field input.text-lighten-4[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a.text-lighten-4,
-.login_or_register_container form .register_footer_hrefs a.text-lighten-4, .login_or_register_container .text-lighten-4.forgot_creds_form {
+.login_or_register_container form .input-field input.text-lighten-4[type="email"]:focus, .login_or_register_container .text-lighten-4.helper-text, .login_or_register_container .text-lighten-4.forgot_creds_form {
   color: #f5f5f5 !important; }
 
 .grey.lighten-3 {
   background-color: #eeeeee !important; }
 
-.grey-text.text-lighten-3, .login_or_register_container form ::placeholder, .login_or_register_container form .input-field input[type="text"]:focus,
-.login_or_register_container form .input-field input[type="password"]:focus,
-.login_or_register_container form .input-field input[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a.text-lighten-3, .login_or_register_container form .login_footer_hrefs a::placeholder, .login_or_register_container form .login_footer_hrefs a.forgot_creds_form,
-.login_or_register_container form .register_footer_hrefs a.text-lighten-3, .login_or_register_container form .register_footer_hrefs a::placeholder, .login_or_register_container form .register_footer_hrefs a.forgot_creds_form, .login_or_register_container .forgot_creds_form {
+.grey-text.text-lighten-3, .login_or_register_container form a.text-lighten-3, .login_or_register_container form .text-lighten-3::placeholder, .login_or_register_container form .forgot_creds_form::placeholder, .login_or_register_container form input.text-lighten-3, .login_or_register_container form .input-field input.text-lighten-3[type="text"]:focus, .login_or_register_container form .input-field input.forgot_creds_form[type="text"]:focus,
+.login_or_register_container form .input-field input.text-lighten-3[type="password"]:focus, .login_or_register_container form .input-field input.forgot_creds_form[type="password"]:focus,
+.login_or_register_container form .input-field input.text-lighten-3[type="email"]:focus, .login_or_register_container form .input-field input.forgot_creds_form[type="email"]:focus, .login_or_register_container .text-lighten-3.helper-text, .login_or_register_container .forgot_creds_form {
   color: #eeeeee !important; }
 
 .grey.lighten-2 {
   background-color: #e0e0e0 !important; }
 
-.grey-text.text-lighten-2, .login_or_register_container form .text-lighten-2::placeholder, .login_or_register_container form .login_footer_hrefs a::placeholder,
-.login_or_register_container form .register_footer_hrefs a::placeholder, .login_or_register_container form .input-field input.text-lighten-2[type="text"]:focus,
-.login_or_register_container form .input-field input.text-lighten-2[type="password"]:focus,
-.login_or_register_container form .input-field input.text-lighten-2[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a,
-.login_or_register_container form .register_footer_hrefs a, .login_or_register_container .text-lighten-2.forgot_creds_form {
+.grey-text.text-lighten-2, .login_or_register_container form a, .login_or_register_container form ::placeholder, .login_or_register_container form input, .login_or_register_container form .input-field input[type="text"]:focus,
+.login_or_register_container form .input-field input[type="password"]:focus,
+.login_or_register_container form .input-field input[type="email"]:focus, .login_or_register_container .helper-text, .login_or_register_container .text-lighten-2.forgot_creds_form, .login_or_register_container form a.forgot_creds_form, .login_or_register_container form .forgot_creds_form::placeholder, .login_or_register_container form input.forgot_creds_form {
   color: #e0e0e0 !important; }
 
 .grey.lighten-1 {
   background-color: #bdbdbd !important; }
 
-.grey-text.text-lighten-1, .login_or_register_container form .text-lighten-1::placeholder, .login_or_register_container form .input-field input.text-lighten-1[type="text"]:focus,
+.grey-text.text-lighten-1, .login_or_register_container form a.text-lighten-1, .login_or_register_container form .text-lighten-1::placeholder, .login_or_register_container form input.text-lighten-1, .login_or_register_container form .input-field input.text-lighten-1[type="text"]:focus,
 .login_or_register_container form .input-field input.text-lighten-1[type="password"]:focus,
-.login_or_register_container form .input-field input.text-lighten-1[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a.text-lighten-1,
-.login_or_register_container form .register_footer_hrefs a.text-lighten-1, .login_or_register_container .text-lighten-1.forgot_creds_form {
+.login_or_register_container form .input-field input.text-lighten-1[type="email"]:focus, .login_or_register_container .text-lighten-1.helper-text, .login_or_register_container .text-lighten-1.forgot_creds_form {
   color: #bdbdbd !important; }
 
 .grey.darken-1 {
   background-color: #757575 !important; }
 
-.grey-text.text-darken-1, .login_or_register_container form .text-darken-1::placeholder, .login_or_register_container form .input-field input.text-darken-1[type="text"]:focus,
+.grey-text.text-darken-1, .login_or_register_container form a.text-darken-1, .login_or_register_container form .text-darken-1::placeholder, .login_or_register_container form input.text-darken-1, .login_or_register_container form .input-field input.text-darken-1[type="text"]:focus,
 .login_or_register_container form .input-field input.text-darken-1[type="password"]:focus,
-.login_or_register_container form .input-field input.text-darken-1[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a.text-darken-1,
-.login_or_register_container form .register_footer_hrefs a.text-darken-1, .login_or_register_container .text-darken-1.forgot_creds_form {
+.login_or_register_container form .input-field input.text-darken-1[type="email"]:focus, .login_or_register_container .text-darken-1.helper-text, .login_or_register_container .text-darken-1.forgot_creds_form {
   color: #757575 !important; }
 
 .grey.darken-2 {
   background-color: #616161 !important; }
 
-.grey-text.text-darken-2, .login_or_register_container form .text-darken-2::placeholder, .login_or_register_container form .input-field input.text-darken-2[type="text"]:focus,
+.grey-text.text-darken-2, .login_or_register_container form a.text-darken-2, .login_or_register_container form .text-darken-2::placeholder, .login_or_register_container form input.text-darken-2, .login_or_register_container form .input-field input.text-darken-2[type="text"]:focus,
 .login_or_register_container form .input-field input.text-darken-2[type="password"]:focus,
-.login_or_register_container form .input-field input.text-darken-2[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a.text-darken-2,
-.login_or_register_container form .register_footer_hrefs a.text-darken-2, .login_or_register_container .text-darken-2.forgot_creds_form {
+.login_or_register_container form .input-field input.text-darken-2[type="email"]:focus, .login_or_register_container .text-darken-2.helper-text, .login_or_register_container .text-darken-2.forgot_creds_form {
   color: #616161 !important; }
 
 .grey.darken-3 {
   background-color: #424242 !important; }
 
-.grey-text.text-darken-3, .login_or_register_container form .text-darken-3::placeholder, .login_or_register_container form .input-field input.text-darken-3[type="text"]:focus,
+.grey-text.text-darken-3, .login_or_register_container form a.text-darken-3, .login_or_register_container form .text-darken-3::placeholder, .login_or_register_container form input.text-darken-3, .login_or_register_container form .input-field input.text-darken-3[type="text"]:focus,
 .login_or_register_container form .input-field input.text-darken-3[type="password"]:focus,
-.login_or_register_container form .input-field input.text-darken-3[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a.text-darken-3,
-.login_or_register_container form .register_footer_hrefs a.text-darken-3, .login_or_register_container .text-darken-3.forgot_creds_form {
+.login_or_register_container form .input-field input.text-darken-3[type="email"]:focus, .login_or_register_container .text-darken-3.helper-text, .login_or_register_container .text-darken-3.forgot_creds_form {
   color: #424242 !important; }
 
 .grey.darken-4 {
   background-color: #212121 !important; }
 
-.grey-text.text-darken-4, .login_or_register_container form .text-darken-4::placeholder, .login_or_register_container form .input-field input.text-darken-4[type="text"]:focus,
+.grey-text.text-darken-4, .login_or_register_container form a.text-darken-4, .login_or_register_container form .text-darken-4::placeholder, .login_or_register_container form input.text-darken-4, .login_or_register_container form .input-field input.text-darken-4[type="text"]:focus,
 .login_or_register_container form .input-field input.text-darken-4[type="password"]:focus,
-.login_or_register_container form .input-field input.text-darken-4[type="email"]:focus, .login_or_register_container form .login_footer_hrefs a.text-darken-4,
-.login_or_register_container form .register_footer_hrefs a.text-darken-4, .login_or_register_container .text-darken-4.forgot_creds_form {
+.login_or_register_container form .input-field input.text-darken-4[type="email"]:focus, .login_or_register_container .text-darken-4.helper-text, .login_or_register_container .text-darken-4.forgot_creds_form {
   color: #212121 !important; }
 
 .black {
@@ -13147,13 +13117,18 @@ html {
   overflow: hidden; }
 
 .login_or_register_container {
-  height: 100%; }
+  height: 100%;
+  position: relative; }
   .login_or_register_container form {
-    height: 48%;
+    height: 55%;
     display: flex;
     width: 100%;
     justify-content: start;
-    flex-flow: column; }
+    flex-flow: column;
+    position: relative; }
+    .login_or_register_container form a {
+      margin-top: 1%;
+      margin-bottom: 1%; }
     .login_or_register_container form .input-field input[type="text"]:focus,
     .login_or_register_container form .input-field input[type="password"]:focus,
     .login_or_register_container form .input-field input[type="email"]:focus {
@@ -13163,15 +13138,16 @@ html {
     .login_or_register_container form .register_footer_hrefs {
       display: flex;
       flex-flow: column;
-      margin-top: 7%; }
-      .login_or_register_container form .login_footer_hrefs a,
-      .login_or_register_container form .register_footer_hrefs a {
-        margin-top: 1%;
-        margin-bottom: 1%; }
+      margin-top: 4%; }
   .login_or_register_container .register_form {
-    height: 70%; }
+    height: 90%; }
+    .login_or_register_container .register_form .register_form_footer {
+      position: absolute;
+      bottom: 3%;
+      width: 80%;
+      left: 10%; }
   .login_or_register_container .forgot_creds_form {
-    height: 45%;
+    height: 50%;
     width: 100%; }
     .login_or_register_container .forgot_creds_form .forgot_creds_button_wrapper {
       margin-top: 5%;
@@ -13181,7 +13157,25 @@ html {
       justify-self: center;
       height: 100%;
       width: 100%; }
+    .login_or_register_container .forgot_creds_form a {
+      margin-top: 3%; }
     .login_or_register_container .forgot_creds_form input[type="submit"] {
       width: 80%;
       margin-top: 2.5%;
       margin-bottom: 2.5%; }
+
+.home_container {
+  height: 100%;
+  width: 100%;
+  position: relative; }
+  .home_container #mainSidenav {
+    display: grid;
+    grid-template-rows: 90% 10%; }
+    .home_container #mainSidenav .subheader {
+      margin-left: 5%; }
+    .home_container #mainSidenav .sidenav_footer {
+      display: flex;
+      align-items: center;
+      justify-content: end; }
+      .home_container #mainSidenav .sidenav_footer div {
+        margin: 1%; }

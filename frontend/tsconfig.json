@@ -7,7 +7,7 @@
     "sourceMap": true,
     "lib": ["DOM", "ES2015"],
     "allowSyntheticDefaultImports": true,
-    "types": ["jquery"],
+    "types": ["jquery", "materialize-css"],
     "typeRoots": ["../node_modules/@types"],
     "moduleResolution": "Node",
     "baseUrl": ".",

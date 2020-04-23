@@ -1,6 +1,5 @@
 import * as authManager from "../../src/managers/authManager";
 import * as databaseManager from "../../src/managers/databaseManager";
-import Docker from "dockerode";
 import { start, shutdown } from "../../src/app";
 import supertest from "supertest";
 import { ModelCtor, Model } from "sequelize/types";
