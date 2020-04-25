@@ -26,6 +26,11 @@ const UserModel = User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    rank: {
+      type: DataTypes.ENUM("civilian", "police_officer", "police_admin"),
+      allowNull: false,
+      defaultValue: "civilian",
+    },
   },
   { sequelize: databaseManager.sequelize(), modelName: "users" }
 );

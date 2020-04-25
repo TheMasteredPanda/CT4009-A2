@@ -61,6 +61,45 @@ function logout()
     }
 }
 
+function getRank()
+{
+    $payload = json_decode($_COOKIE['ct4009Auth']);
+    $curl = curl_init('http://localhost:555/user/rank?userId=' . $payload->id);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
+    $result = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($status !== 200) {
+        print $result;
+    }
+
+    return $result;
+}
+
+function setRank($rank)
+{
+    if (!in_array($rank, array('civilian', 'police_officer', 'police_admin'))) {
+        print "Rank must be 'civilian', 'police_officer', 'police_admin'";
+    }
+
+    $payload = json_decode($_COOKIE['ct4009Auth']);
+    $curl = curl_init('http://localhost:555/user/rank/set?userId=' . $payload->id);
+    $body = json_decode(array('rank' => $rank));
+    curl_setopt($curl, CURLOPT_PORT, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token, 'Content-Length: ' . strlen($body), 'Content-Type: application/json'));
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+    curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+    $result = curl_exec($curl);
+    $status = curl_exec($curl, CURLINFO_HTTP_CODE, true);
+    curl_close($curl);
+
+    if ($status !== 200) {
+        print $result;
+    }
+}
+
 if (!hasAuthCookie()) {
     if (!startsWith($currentScript, '/login.php')) {
         header('Location: /login.php');

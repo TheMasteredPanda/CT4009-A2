@@ -289,4 +289,28 @@ router.post("/user/refresh", (req: Request, res: Response) => {
     });
 });
 
+router.get("/user/rank", (req: Request, res: Response) => {
+  actions.getRank(req.user.id).then((rank) => {
+    res.status(200).send(rank);
+  });
+});
+
+router.get("/user/rank/set", (req: Request, res: Response) => {
+  let body = req.body;
+
+  if (!body.hasOwnProperty("rank")) {
+    res.error.client.badRequest(
+      "Client",
+      "Parameters not found",
+      `Body parameter 'rank' not found.`
+    );
+    return;
+  }
+
+  actions
+    .setRank(req.user.id, body.rank)
+    .then(() => res.sendStatus(200))
+    .catch((err) => handleInternalError(res, err));
+});
+
 export default router;
