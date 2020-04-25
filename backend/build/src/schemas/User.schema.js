@@ -25,5 +25,10 @@ const UserModel = User.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
+    rank: {
+        type: sequelize_1.DataTypes.ENUM("civilian", "police_officer", "police_admin"),
+        allowNull: false,
+        defaultValue: "civilian",
+    },
 }, { sequelize: databaseManager.sequelize(), modelName: "users" });
 exports.default = databaseManager.sequelize().models.users;

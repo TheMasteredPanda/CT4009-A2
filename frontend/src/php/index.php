@@ -2,6 +2,9 @@
 if (isset($_POST['logout'])) {
     logout();
 }
+
+$rank = getRank();
+
 ?>
 
 <div class="home_container">
@@ -11,10 +14,28 @@ if (isset($_POST['logout'])) {
             <a href="#" class="sidenav-trigger" data-target="mainSidenav"><i class="material-icons">menu</i></a>
         </div>
         <ul class="left hide-on-med-and-down">
-            <li class="hoverable"><a href="#"> Registered Bikes</a></li>
-            <li><a href="#">Investigations</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Vulnerability Map</a></li>
+            <li><a href="#">Account</a></li>
+            <li>
+                <div class="divider"></div>
+            </li>
+            <li>
+                <div class="subheader">Sections</div>
+            </li>
+            <?php if (in_array($rank, array('police_officer', 'police_admin'))) : ?>
+                <?php if ($rank === 'police_admin') : ?>
+                    <li><a href="#">Admin Panel</a></li>
+                <?php endif; ?>
+
+                <li><a href="#">Investigations</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">E-Commerce Matching</a></li>
+                <li><a href="#">Vulnerability Map</a></li>
+                <li><a href="#">Registered Bikes</a></li>
+            <?php else : ?>
+                <li><a href="#">Registered Bikes</a></li>
+                <li><a href="#">Investigations</a></li>
+                <li><a href="#">Reports</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
 
@@ -24,11 +45,24 @@ if (isset($_POST['logout'])) {
             <li>
                 <div class="divider"></div>
             </li>
-            <li><div class="subheader">Pages</div></li>
-            <li><a href="#">Registered Bikes</a></li>
-            <li><a href="#">Investigations</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Vulnerability Map</a></li>
+            <li>
+                <div class="subheader">Sections</div>
+            </li>
+            <?php if (in_array($rank, array('police_officer', 'police_admin'))) : ?>
+                <?php if ($rank === 'police_admin') : ?>
+                    <li><a href="#">Admin Panel</a></li>
+                <?php endif; ?>
+
+                <li><a href="#">Investigations</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">E-Commerce Matching</a></li>
+                <li><a href="#">Vulnerability Map</a></li>
+                <li><a href="#">Registered Bikes</a></li>
+            <?php else : ?>
+                <li><a href="#">Registered Bikes</a></li>
+                <li><a href="#">Investigations</a></li>
+                <li><a href="#">Reports</a></li>
+            <?php endif; ?>
         </div>
 
         <div class="sidenav_footer container">

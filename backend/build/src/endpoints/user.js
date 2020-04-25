@@ -91,11 +91,11 @@ router.post("/user/login", (req, res) => {
     console.log("Hit /user/login");
     console.log(body);
     if (!body.hasOwnProperty("username")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found.`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found.`, { parameter: "username" });
         return;
     }
     if (!body.hasOwnProperty("password")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'password' was not found.`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'password' was not found.`, { parameter: "password" });
         return;
     }
     actions
@@ -108,15 +108,15 @@ router.post("/user/login", (req, res) => {
 router.post("/user/register", (req, res) => {
     let body = req.body;
     if (!body.hasOwnProperty("username")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found`, { parameter: "username" });
         return;
     }
     if (!body.hasOwnProperty("password")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'password' was not found.`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'password' was not found.`, { parameter: "password" });
         return;
     }
     if (!body.hasOwnProperty("email")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'email' was not found.`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'email' was not found.`, { parameter: "email" });
         return;
     }
     actions
@@ -164,5 +164,21 @@ router.post("/user/refresh", (req, res) => {
         let jwt = value;
         res.status(200).send(jwt.token);
     });
+});
+router.get("/user/rank", (req, res) => {
+    actions.getRank(req.user.id).then((rank) => {
+        res.status(200).send(rank);
+    });
+});
+router.get("/user/rank/set", (req, res) => {
+    let body = req.body;
+    if (!body.hasOwnProperty("rank")) {
+        res.error.client.badRequest("Client", "Parameters not found", `Body parameter 'rank' not found.`);
+        return;
+    }
+    actions
+        .setRank(req.user.id, body.rank)
+        .then(() => res.sendStatus(200))
+        .catch((err) => errorhandler_1.handleInternalError(res, err));
 });
 exports.default = router;

@@ -9,7 +9,6 @@ import {
   ClientNotAcceptableError,
   ClientNotFoundError,
 } from "../utils/errorhandler";
-import { BADHINTS } from "dns";
 
 /**
  * This script contains all functions that will be used in the endpoints/users.ts script.
@@ -138,4 +137,34 @@ export async function verify(token: string, userId: number) {
 export function logout(userId: number) {
   if (!authManager.hasHandler(userId)) return;
   authManager.remove(userId);
+}
+
+export async function getRank(userId: string) {
+  let user: any = await Users.findOne({ where: { id: userId } });
+
+  if (!user) {
+    throw new ClientNotFoundError(
+      "Client",
+      `Couldn't find user.`,
+      `Couldn't find user ${userId}, who are you?`
+    );
+  }
+
+  return user.rank;
+}
+
+export async function setRank(userId: string, rank: string) {
+  if (
+    rank !== "civilian" &&
+    rank !== "police_officer" &&
+    rank !== "police_admin"
+  ) {
+    throw new ClientNotAcceptableError(
+      "Client",
+      "Rank id not acceptable",
+      `The rank id must be either 'civilian', 'police_officer', or 'police_admin'`
+    );
+  }
+
+  await Users.update({ rank }, { where: { id: userId }, fields: ["rank"] });
 }

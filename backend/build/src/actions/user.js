@@ -128,3 +128,24 @@ function logout(userId) {
     authManager.remove(userId);
 }
 exports.logout = logout;
+function getRank(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let user = yield User_schema_1.default.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new errorhandler_1.ClientNotFoundError("Client", `Couldn't find user.`, `Couldn't find user ${userId}, who are you?`);
+        }
+        return user.rank;
+    });
+}
+exports.getRank = getRank;
+function setRank(userId, rank) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (rank !== "civilian" &&
+            rank !== "police_officer" &&
+            rank !== "police_admin") {
+            throw new errorhandler_1.ClientNotAcceptableError("Client", "Rank id not acceptable", `The rank id must be either 'civilian', 'police_officer', or 'police_admin'`);
+        }
+        yield User_schema_1.default.update({ rank }, { where: { id: userId }, fields: ["rank"] });
+    });
+}
+exports.setRank = setRank;
