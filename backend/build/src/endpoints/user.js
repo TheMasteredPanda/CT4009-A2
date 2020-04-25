@@ -91,11 +91,11 @@ router.post("/user/login", (req, res) => {
     console.log("Hit /user/login");
     console.log(body);
     if (!body.hasOwnProperty("username")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found.`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found.`, { parameter: "username" });
         return;
     }
     if (!body.hasOwnProperty("password")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'password' was not found.`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'password' was not found.`, { parameter: "password" });
         return;
     }
     actions
@@ -108,15 +108,15 @@ router.post("/user/login", (req, res) => {
 router.post("/user/register", (req, res) => {
     let body = req.body;
     if (!body.hasOwnProperty("username")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'username' was not found`, { parameter: "username" });
         return;
     }
     if (!body.hasOwnProperty("password")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'password' was not found.`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'password' was not found.`, { parameter: "password" });
         return;
     }
     if (!body.hasOwnProperty("email")) {
-        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'email' was not found.`);
+        res.error.client.badRequest("Client", "Parameter not found", `Parameter 'email' was not found.`, { parameter: "email" });
         return;
     }
     actions
