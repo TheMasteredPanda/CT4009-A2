@@ -34,6 +34,10 @@ afterEach(async (done) => {
   } = databaseManager.sequelize().models;
 
   await models.users_contacts.drop();
+  await models.registry_images.drop();
+  await models.investigation_images.drop();
+  await models.report_images.drop();
+  await models.bike_images.drop();
   await models.bikes.drop();
   await models.users.drop();
   await authManager.flushAll();
@@ -45,8 +49,13 @@ afterAll(async (done) => {
     [key: string]: ModelCtor<Model<any, any>>;
   } = databaseManager.sequelize().models;
   await models.users_contacts.drop();
-  await models.users.drop();
+  await models.registry_images.drop();
+  await models.investigation_images.drop();
+  await models.report_images.drop();
+  await models.bike_images.drop();
   await models.bikes.drop();
+  await models.users.drop();
+  await authManager.flushAll();
   await shutdown();
   done();
 });
@@ -70,9 +79,8 @@ function createJohnDoe() {
 
 //
 describe("Testing Bike Endpoints: ", () => {
-  it.only("/biking/register", (done) => {
+  it("/bike/register", (done) => {
     createJohnDoe().then((authPayload: any) => {
-      console.log(authPayload);
       request
         .post(`/bike/register?userId=${authPayload.id}`)
         .set("Authorization", `Bearer ${authPayload.token}`)
@@ -81,34 +89,53 @@ describe("Testing Bike Endpoints: ", () => {
           if (err) throw err;
           expect(res.status).toBe(200);
           expect(res.body).toBeDefined();
-          done();
+
+          request
+            .post(
+              `/bike/images/upload?userId=${authPayload.id}&bikeId=${res.body.id}`
+            )
+            .set("Authorization", `Bearer ${authPayload.token}`)
+            .attach("testImage", "../test/assets/bike_1.jpg")
+            .attach("testImage", "../test/assets/bike_2.jpg")
+            .end((err, res) => {
+              if (err) throw err;
+              expect(res.status).toBe(200);
+              expect(res.body).toBeDefined();
+              done();
+            });
         });
     });
-  });
+  }, 15000);
 
   it("/bike/bikes", (done) => {
     createJohnDoe().then((authPayload: any) => {
-      let images = [
-        fs.readFileSync("../assets/bike_1.jpg").toString("utf8"),
-        fs.readFileSync("../assets/bike_2.jpg").toString("utf8"),
-      ];
       request
-        .post(`http://localhost:4000/bike/register?userId=${authPayload.id}`)
-        .send({ brand: "Test Brand", wheel_size: 24.3, gear_count: 8, images })
+        .post(`/bike/register?userId=${authPayload.id}`)
+        .set("Authorization", `Bearer ${authPayload.token}`)
+        .send({ brand: "Test Bike", wheel_size: 24.8, gear_count: 8 })
         .end((err, res) => {
           if (err) throw err;
-
           expect(res.status).toBe(200);
-          expect(res.body).toBeDefined();
-
+          expect(res.body.id).toBeDefined();
           request
-            .get(`http://localhost:4000/bike/bikes?userId=${authPayload.id}`)
-            .end((err, bikesRes) => {
+            .post(
+              `/bike/images/upload?userId=${authPayload.id}&bikeId=${res.body.id}`
+            )
+            .attach("testImage", "../test/assets/bike_1.jpg")
+            .set("Authorization", `Bearer ${authPayload.token}`)
+            .end((err, res) => {
               if (err) throw err;
-              expect(bikesRes.status).toBe(200);
-              expect(bikesRes.body).toBeDefined();
-              expect(bikesRes.body[0]).toBe(res.body);
-              done();
+              expect(res.status).toBe(200);
+              expect(res.body).toBeDefined();
+              request
+                .get(`/bike/bikes?userId=${authPayload.id}`)
+                .set("Authorization", `Bearer ${authPayload.token}`)
+                .end((err, res) => {
+                  if (err) throw err;
+                  expect(res.status).toBe(200);
+                  expect(res.body).toBeDefined();
+                  done();
+                });
             });
         });
     });
@@ -116,28 +143,34 @@ describe("Testing Bike Endpoints: ", () => {
 
   it("/bike", (done) => {
     createJohnDoe().then((authPayload: any) => {
-      let images = [
-        fs.readFileSync("../assets/bike_1.jpg").toString("utf8"),
-        fs.readFileSync("../assets/bike_2.jpg").toString("utf8"),
-      ];
       request
-        .post(`http://localhost:4000/bike/register?userId=${authPayload.id}`)
-        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8, images })
+        .post(`/bike/register?userId=${authPayload.id}`)
+        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8 })
+        .set("Authorization", `Bearer ${authPayload.token}`)
         .end((err, res) => {
           if (err) throw err;
           expect(res.status).toBe(200);
-          expect(res.body).toBeDefined();
-
+          expect(res.body.id).toBeDefined();
+          let id = res.body.id;
           request
-            .get(
-              `http://localhost:4000/bike?userId=${authPayload.id}&bikeId=${res.body}`
+            .post(
+              `/bike/images/upload?userId=${authPayload.id}&bikeId=${res.body.id}`
             )
-            .end((err, bikeRes) => {
+            .attach("testImage", "../test/assets/bike_1.jpg")
+            .set("Authorization", `Bearer ${authPayload.token}`)
+            .end((err, res) => {
               if (err) throw err;
-              expect(bikeRes.status).toBe(200);
-              expect(bikeRes.body).toBeDefined();
-              expect(bikeRes.body.id).toBe(res.body);
-              done();
+              expect(res.status).toBe(200);
+              request
+                .get(`/bike?userId=${authPayload.id}&bikeId=${id}`)
+                .set("Authorization", `Bearer ${authPayload.token}`)
+                .end((err, res) => {
+                  if (err) throw err;
+                  expect(res.status).toBe(200);
+                  expect(res.body).toBeDefined();
+                  expect(res.body.id).toBe(id);
+                  done();
+                });
             });
         });
     });
@@ -145,26 +178,31 @@ describe("Testing Bike Endpoints: ", () => {
 
   it("/bike/unregister", (done) => {
     createJohnDoe().then((authPayload: any) => {
-      let images = [
-        fs.readFileSync("../assets/bike_1.jph").toString("utf8"),
-        fs.readFileSync("../assets/bike_2.jph").toString("utf8"),
-      ];
-
       request
-        .post(`http://localhost:4000/bike/register?userId=${authPayload.id}`)
-        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8, images })
+        .post(`/bike/register?userId=${authPayload.id}`)
+        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8 })
+        .set("Authorization", `Bearer ${authPayload.token}`)
         .end((err, res) => {
           if (err) throw err;
           expect(res.status).toBe(200);
-          expect(res.body).toBeDefined();
+          expect(res.body.id).toBeDefined();
+          let id = res.body.id;
           request
             .post(
-              `http://localhost:4000/bike/unregister?userId=${authPayload.id}&bikeId=${res.body}`
+              `/bike/images/upload?userId=${authPayload.id}&bikeId=${res.body.id}`
             )
+            .set("Authorization", `Bearer ${authPayload.token}`)
             .end((err, res) => {
               if (err) throw err;
-              expect(res.status).toBe(200);
-              done();
+              expect(res.status).toBeDefined();
+              request
+                .post(`/bike/unregister?userId=${authPayload.id}&bikeId=${id}`)
+                .set("Authorization", `Bearer ${authPayload.token}`)
+                .end((err, res) => {
+                  if (err) throw err;
+                  expect(res.status).toBe(200);
+                  done();
+                });
             });
         });
     });
@@ -172,28 +210,33 @@ describe("Testing Bike Endpoints: ", () => {
 
   it("/bike/update", (done) => {
     createJohnDoe().then((authPayload: any) => {
-      let images = [
-        fs.readFileSync("../assets/bike.jpg").toString("utf8"),
-        fs.readFileSync("../assets/bike_2.jpg").toString("utf8"),
-      ];
       request
-        .post(`http://localhost:4000/bike/register?userId=${authPayload.id}`)
-        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8, images })
+        .post(`/bike/register?userId=${authPayload.id}`)
+        .set("Authorization", `Bearer ${authPayload.token}`)
+        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8 })
         .end((err, res) => {
           if (err) throw err;
           expect(res.status).toBe(200);
-          expect(res.body).toBeDefined();
-
+          expect(res.body.id).toBeDefined();
+          let id = res.body.id;
           request
-            .post(
-              `http://localhost:4000/bike/update?userId=${authPayload.id}&bikeId=${res.body}`
-            )
-            .send({ brand: "Revving" })
-            .end((err, updatedRes) => {
+            .post(`/bike/images/upload?userId=${authPayload.id}&bikeId=${id}`)
+            .attach("testImage", "../test/assets/bike_1.jpg")
+            .set("Authorization", `Bearer ${authPayload.token}`)
+            .end((err, res) => {
               if (err) throw err;
-              expect(updatedRes.status).toBe(200);
-              expect(updatedRes.body.id).toBe(res.body.id);
-              done();
+              expect(res.status).toBe(200);
+
+              request
+                .post(`/bike/update?userId=${authPayload.id}&bikeId=${id}`)
+                .set("Authorization", `Bearer ${authPayload.token}`)
+                .send({ brand: "Riking" })
+                .end((err, res) => {
+                  if (err) throw err;
+                  expect(res.status).toBe(200);
+                  expect(res.body.brand).toBe("Riking");
+                  done();
+                });
             });
         });
     });

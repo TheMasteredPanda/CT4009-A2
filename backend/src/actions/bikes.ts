@@ -1,7 +1,11 @@
 import Bikes from "../schemas/Bikes.schema";
-import * as imageManager from "../managers/imageManager";
-import { Directory } from "../managers/imageManager";
+import BikeImages from "../schemas/BikeImages.schema";
+import RegistryImages from "../schemas/RegistryImages.schema";
 import { Model } from "sequelize/types";
+import multer from "multer";
+import path from "path";
+import crypto from "crypto";
+import * as fs from "fs";
 
 /**
  * A suite of functions managing the storing of bike information and images.
@@ -100,8 +104,10 @@ interface UpdateBikeOptions {
   suspension?: SuspensionType;
   gender?: BikeGender;
   ageGroup?: AgeGroup;
-  deletedImages?: string[];
-  addedImages?: string[];
+}
+
+if (!fs.existsSync("images")) {
+  fs.mkdirSync("images");
 }
 
 /**
@@ -126,7 +132,7 @@ export async function register({
   ageGroup = AgeGroup.ADULT,
 }: RegisterBikeOptions): Promise<string> {
   let bike: any = await Bikes.create({
-    owner: userId,
+    user_id: userId,
     part_number: partNumber,
     brand,
     model,
@@ -144,12 +150,32 @@ export async function register({
 }
 
 /**
+ * Stores the url of an image for a registered bike entry in the relevent database.
+ *
+ * @param bikeId - The id of the bike.
+ * @param url - The url of the image.
+ *
+ * @returns {object} the most recently inserted image.
+ */
+export async function addImage(bikeId: string, url: string) {
+  let model: any = await BikeImages.create({ uri: url });
+  let image: any = await RegistryImages.create({
+    bike_id: bikeId,
+    image_id: model.toJSON().id,
+  });
+  return image.toJSON();
+}
+
+export async function removeImage(imageId: string) {
+  await BikeImages.destroy({ where: { id: imageId } });
+}
+
+/**
  * Removes a registered bike entry.
  *
  * @param bikeId - The id of the bike to unregister.
  */
 export async function unregister(bikeId: string) {
-  await imageManager.deleteAllImages(bikeId, Directory.REGISTRY);
   await Bikes.destroy({ where: { id: bikeId } });
 }
 
@@ -172,9 +198,8 @@ export async function getRegisteredBike(bikeId: string) {
   if (!bike) throw new Error(`Couldn't find bike ${bikeId}`);
 
   let data = bike.toJSON();
-  let images = await imageManager.getBikeImages(bikeId, Directory.REGISTRY);
 
-  return { data, images };
+  return data;
 }
 
 /**
@@ -184,11 +209,12 @@ export async function getRegisteredBike(bikeId: string) {
  *
  * @returns {string[]} an array of bike ids.
  */
-export async function getAllRegisteredBikes(userId: string) {
+export async function getAllRegisteredBikes(userId: number) {
   let bikes: Model[] | null;
 
+
   try {
-    bikes = await Bikes.findAll({ where: { owner: userId } });
+    bikes = await Bikes.findAll({ where: { user_id: userId } });
   } catch (err) {
     throw err;
   }
@@ -226,21 +252,7 @@ export async function updateRegisteredBike(
 
   if (!bike) throw new Error(`Couldn't find ${bikeId}.`);
 
-  let sqlData: any = bike.toJSON();
-
-  if (data.deletedImages)
-    imageManager.deleteImages(
-      sqlData.id,
-      Directory.REGISTRY,
-      data.deletedImages
-    );
-  if (data.addedImages)
-    imageManager.addBikeImages(
-      sqlData.id,
-      Directory.REGISTRY,
-      data.addedImages
-    );
-
   await Bikes.update(data, { where: { id: bikeId } });
-  return await Bikes.findOne({ where: { id: bikeId } });
+  let result = await Bikes.findOne({ where: { id: bikeId } });
+  return result?.toJSON();
 }

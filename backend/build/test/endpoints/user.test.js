@@ -41,19 +41,30 @@ beforeAll((done) => __awaiter(void 0, void 0, void 0, function* () {
 afterEach((done) => __awaiter(void 0, void 0, void 0, function* () {
     let models = databaseManager.sequelize().models;
     yield models.users_contacts.drop();
+    yield models.registry_images.drop();
+    yield models.investigation_images.drop();
+    yield models.report_images.drop();
+    yield models.bike_images.drop();
+    yield models.bikes.drop();
     yield models.users.drop();
     yield authManager.flushAll();
     yield done();
 }));
-beforeEach((done) => __awaiter(void 0, void 0, void 0, function* () {
-    yield databaseManager.sequelize().sync();
-    done();
-}));
 afterAll((done) => __awaiter(void 0, void 0, void 0, function* () {
     let models = databaseManager.sequelize().models;
     yield models.users_contacts.drop();
+    yield models.registry_images.drop();
+    yield models.investigation_images.drop();
+    yield models.report_images.drop();
+    yield models.bike_images.drop();
+    yield models.bikes.drop();
     yield models.users.drop();
+    yield authManager.flushAll();
     yield app_1.shutdown();
+    done();
+}));
+beforeEach((done) => __awaiter(void 0, void 0, void 0, function* () {
+    yield databaseManager.sequelize().sync();
     done();
 }));
 describe("Testing Auth Endpoints: ", () => {

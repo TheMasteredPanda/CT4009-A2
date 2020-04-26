@@ -28,14 +28,14 @@ afterEach(async (done) => {
   } = databaseManager.sequelize().models;
 
   await models.users_contacts.drop();
+  await models.registry_images.drop();
+  await models.investigation_images.drop();
+  await models.report_images.drop();
+  await models.bike_images.drop();
+  await models.bikes.drop();
   await models.users.drop();
   await authManager.flushAll();
   await done();
-});
-
-beforeEach(async (done) => {
-  await databaseManager.sequelize().sync();
-  done();
 });
 
 afterAll(async (done) => {
@@ -43,8 +43,19 @@ afterAll(async (done) => {
     [key: string]: ModelCtor<Model<any, any>>;
   } = databaseManager.sequelize().models;
   await models.users_contacts.drop();
+  await models.registry_images.drop();
+  await models.investigation_images.drop();
+  await models.report_images.drop();
+  await models.bike_images.drop();
+  await models.bikes.drop();
   await models.users.drop();
+  await authManager.flushAll();
   await shutdown();
+  done();
+});
+
+beforeEach(async (done) => {
+  await databaseManager.sequelize().sync();
   done();
 });
 

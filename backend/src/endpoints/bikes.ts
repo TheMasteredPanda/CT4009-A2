@@ -4,18 +4,24 @@ import { handleInternalError } from "../utils/errorhandler";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
+import { brotliDecompressSync } from "zlib";
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) =>
+  destination: "images",
+  filename: (req, file, cb) =>
     cb(
       null,
-      crypto.randomBytes(48).toString("base64") + path.extname(file.originalname)
+      (Math.random() + 1).toString(36).substring(7) +
+        Date.now() +
+        path.extname(file.originalname)
     ),
 });
+
+const upload = multer({ storage: storage }).any();
+
 const router = Router();
 
 router.post("/bike/register", (req: Request, res: Response) => {
-  console.log("Hit bikes/register.");
   let body = req.body;
 
   if (!body.hasOwnProperty("brand")) {
@@ -45,13 +51,49 @@ router.post("/bike/register", (req: Request, res: Response) => {
     return;
   }
 
+  body.userId = req.user.id;
   actions
     .register(body)
     .then((id) => res.status(200).send({ id }))
     .catch((err) => handleInternalError(res, err));
 });
 
-router.post("/bike/images/upload", (req: Request, res: Response) => {});
+router.post("/bike/images/upload", (req: Request, res: Response) => {
+  let query = req.query;
+
+  if (!query.hasOwnProperty("bikeId")) {
+    res.error.client.badRequest(
+      "Client",
+      "Parameter not found",
+      `Query parameter 'bikeId' was not found.`
+    );
+    return;
+  }
+
+  let promises: Promise<any>[] = [];
+
+  upload(req, res, (err) => {
+    if (err) throw err;
+
+    for (let i = 0; i < req.files.length; i++) {
+      const file = (req.files as any[])[i];
+      promises.push(actions.addImage(query.bikeId as string, file.path));
+    }
+
+    Promise.all(promises)
+      .then((models) => {
+        let result: { [key: string]: string } = {};
+
+        for (let j = 0; j < models.length; j++) {
+          const model = models[j];
+          result[model.id] = model.uri;
+        }
+
+        res.status(200).send(result);
+      })
+      .catch((err) => handleInternalError(res, err));
+  });
+});
 
 router.get("/bike/bikes", (req: Request, res: Response) => {
   actions
@@ -60,7 +102,7 @@ router.get("/bike/bikes", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
-router.get("/bikes", (req: Request, res: Response) => {
+router.get("/bike", (req: Request, res: Response) => {
   let query = req.query;
 
   if (!query.hasOwnProperty("bikeId")) {

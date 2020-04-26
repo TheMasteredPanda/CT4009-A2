@@ -80,6 +80,8 @@ function start() {
         yield databaseManager.createAssociations();
         yield databaseManager.sequelize().sync();
         app.use(errorhandler_1.errorResponser);
+        yield Promise.resolve().then(() => __importStar(require("./utils/userMiddleware"))).then((module) => app.use(module.default));
+        yield Promise.resolve().then(() => __importStar(require("./utils/authMiddleware"))).then((module) => app.use(module.default));
         app.use(cors_1.default());
         app.use(body_parser_1.default.json());
         let scriptRoutes = fileUtils

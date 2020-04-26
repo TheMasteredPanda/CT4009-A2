@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { Sequelize } from "sequelize";
 import * as configUtils from "../utils/config";
+
 /**
  * A manager to manager the loading, table to table relations, and unloading of the Sequelize client.
  */
@@ -59,14 +60,20 @@ export async function createAssociations() {
   let Users = client.models.users;
   let Contacts = client.models.users_contacts;
   let Bikes = client.models.bikes;
-  Users.hasMany(Contacts);
+  let BikeImages = client.models.bike_images;
+  let InvestigationImages = client.models.investigation_images;
+  let ReportImages = client.models.report_images;
+  let RegistryImages = client.models.registry_images;
   Contacts.belongsTo(Users, {
     foreignKey: "user_id",
     onDelete: "cascade",
   });
-  Users.hasMany(Bikes);
   Bikes.belongsTo(Users, {
     foreignKey: "user_id",
+    onDelete: "cascade",
+  });
+  BikeImages.belongsToMany(Bikes, {
+    through: RegistryImages,
     onDelete: "cascade",
   });
 }

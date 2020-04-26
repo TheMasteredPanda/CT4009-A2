@@ -73,6 +73,13 @@ export async function start() {
   await databaseManager.sequelize().sync();
 
   app.use(errorResponser);
+
+  await import("./utils/userMiddleware").then((module) =>
+    app.use(module.default)
+  );
+  await import("./utils/authMiddleware").then((module) =>
+    app.use(module.default)
+  );
   app.use(cors()); //Middleware for Connect/Express
   app.use(bodyParser.json()); //Middleware for parsing request body content to json.
   let scriptRoutes = fileUtils
@@ -94,6 +101,7 @@ export async function start() {
       names.length > 0 ? names.join(", ") : "None"
     }`
   );
+
   app.use(errorHandler);
 
   server = app.listen(configUtils.get().server.port, () => {
