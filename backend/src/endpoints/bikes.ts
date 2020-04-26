@@ -1,5 +1,5 @@
 import * as actions from "../actions/bikes";
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, request } from "express";
 import { handleInternalError } from "../utils/errorhandler";
 import multer from "multer";
 import crypto from "crypto";
@@ -77,22 +77,40 @@ router.post("/bike/images/upload", (req: Request, res: Response) => {
 
     for (let i = 0; i < req.files.length; i++) {
       const file = (req.files as any[])[i];
-      promises.push(actions.addImage(query.bikeId as string, file.path));
+      promises.push(actions.addImage(Number(query.bikeId), file.path));
     }
 
     Promise.all(promises)
       .then((models) => {
-        let result: { [key: string]: string } = {};
+        let result: any[] = [];
 
         for (let j = 0; j < models.length; j++) {
-          const model = models[j];
-          result[model.id] = model.uri;
+          const model: any = models[j];
+          result.push(model);
         }
 
         res.status(200).send(result);
       })
       .catch((err) => handleInternalError(res, err));
   });
+});
+
+router.post("/bike/images/delete", (req: Request, res: Response) => {
+  let query = req.query;
+
+  if (!query.hasOwnProperty("imageId")) {
+    res.error.client.badRequest(
+      "Client",
+      "Parameter not found.",
+      `Query parameter 'imageId' was not found.`
+    );
+    return;
+  }
+
+  actions
+    .removeImage(Number(query.imageId))
+    .then(() => res.sendStatus(200))
+    .catch((err) => handleInternalError(res, err));
 });
 
 router.get("/bike/bikes", (req: Request, res: Response) => {

@@ -5,6 +5,7 @@ import supertest from "supertest";
 import * as authManager from "../../src/managers/authManager";
 
 import { ModelCtor, Model } from "sequelize/types";
+import { doesNotMatch } from "assert";
 let request = supertest("http://localhost:4000");
 
 beforeAll(async (done) => {
@@ -107,6 +108,39 @@ describe("Testing Bike Endpoints: ", () => {
     });
   }, 15000);
 
+  it("/bike/images/delete", (done) => {
+    createJohnDoe().then((authPayload: any) => {
+      request
+        .post(`/bike/register?userId=${authPayload.id}`)
+        .set("Authorization", `Bearer ${authPayload.token}`)
+        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8 })
+        .end((err, res) => {
+          if (err) throw err;
+          request
+            .post(
+              `/bike/images/upload?bikeId=${res.body.id}&userId=${authPayload.id}`
+            )
+            .set("Authorization", `Bearer ${authPayload.token}`)
+            .attach("testImage", "../test/assets/bike_1.jpg")
+            .end((err, res) => {
+              if (err) throw err;
+              console.log(res.body);
+              expect(res.status).toBe(200);
+              expect(res.body).toBeDefined();
+              request
+                .post(
+                  `/bike/images/delete?userId=${authPayload.id}&imageId=${res.body[0].image_id}`
+                )
+                .set("Authorization", `Bearer ${authPayload.token}`)
+                .end((err, res) => {
+                  if (err) throw err;
+                  expect(res.status).toBe(200);
+                  done();
+                });
+            });
+        });
+    });
+  });
   it("/bike/bikes", (done) => {
     createJohnDoe().then((authPayload: any) => {
       request

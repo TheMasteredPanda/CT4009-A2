@@ -6,6 +6,7 @@ import multer from "multer";
 import path from "path";
 import crypto from "crypto";
 import * as fs from "fs";
+import { ClientNotFoundError } from "../utils/errorhandler";
 
 /**
  * A suite of functions managing the storing of bike information and images.
@@ -157,7 +158,7 @@ export async function register({
  *
  * @returns {object} the most recently inserted image.
  */
-export async function addImage(bikeId: string, url: string) {
+export async function addImage(bikeId: number, url: string) {
   let model: any = await BikeImages.create({ uri: url });
   let image: any = await RegistryImages.create({
     bike_id: bikeId,
@@ -166,7 +167,16 @@ export async function addImage(bikeId: string, url: string) {
   return image.toJSON();
 }
 
-export async function removeImage(imageId: string) {
+export async function removeImage(imageId: number) {
+  let model = await RegistryImages.findOne({ where: { image_id: imageId } });
+
+  if (!model)
+    new ClientNotFoundError(
+      "Client",
+      `Couldn't find resgistry image ${imageId}.`
+    );
+
+  await RegistryImages.destroy({ where: { image_id: imageId } });
   await BikeImages.destroy({ where: { id: imageId } });
 }
 
@@ -211,7 +221,6 @@ export async function getRegisteredBike(bikeId: string) {
  */
 export async function getAllRegisteredBikes(userId: number) {
   let bikes: Model[] | null;
-
 
   try {
     bikes = await Bikes.findAll({ where: { user_id: userId } });

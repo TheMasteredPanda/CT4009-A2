@@ -69,6 +69,8 @@ function createAssociations() {
         BikeImages.belongsToMany(Bikes, {
             through: RegistryImages,
             onDelete: "cascade",
+            foreignKey: "image_id",
+            otherKey: "bike_id",
         });
     });
 }

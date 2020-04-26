@@ -1,0 +1,23 @@
+{
+    "mariadb": {
+        "username": "root",
+        "password": "password",
+        "host": "127.0.0.1",
+        "port": 27017,
+        "database": "test",
+        "dialect": "mysql",
+        "timezone": "Etc/GMT0",
+        "pool": {
+            "min": 5,
+            "max": 10
+        }
+    },
+    "server": {
+        "port": 3000
+    },
+    "auth": {
+        "secretExp": "5m",
+        "refreshExp": "5m",
+        "refreshOffset": "2m"
+    }
+}
