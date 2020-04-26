@@ -19,6 +19,7 @@ const dmz = [
 ];
 const authDmz = ["/user/refresh"];
 router.use((req, res, next) => {
+    console.log(req.originalUrl);
     if (dmz.some((endpoint) => req.url.startsWith(endpoint))) {
         next();
         return;

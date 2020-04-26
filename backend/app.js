@@ -39,14 +39,12 @@ function shutdown() {
 exports.shutdown = shutdown;
 function start() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(process.env.NODE_ENV);
         if (!configUtils.exists() && process.env.NODE_ENV !== "development") {
             configUtils.create();
             console.log(`Created config.json. Please populate it.`);
             process.exit(0);
         }
         if (process.env.NODE_ENV === "development") {
-            console.log("Is development.");
             configUtils.set({
                 mariadb: {
                     username: process.env.TEST_MARIADB_USERNAME,
@@ -96,7 +94,7 @@ function start() {
         console.log(`Successfully Loaded Action Modules: ${names.length > 0 ? names.join(", ") : "None"}`);
         app.use(errorhandler_1.errorHandler);
         server = app.listen(configUtils.get().server.port, () => {
-            console.log(`Server online. Port: ${configUtils.get().server.port}`);
+            console.log(`Server online.`);
         });
     });
 }

@@ -53,8 +53,14 @@ function createAssociations() {
         }
         let Users = client.models.users;
         let Contacts = client.models.users_contacts;
+        let Bikes = client.models.bikes;
         Users.hasMany(Contacts);
         Contacts.belongsTo(Users, {
+            foreignKey: "user_id",
+            onDelete: "cascade",
+        });
+        Users.hasMany(Bikes);
+        Bikes.belongsTo(Users, {
             foreignKey: "user_id",
             onDelete: "cascade",
         });

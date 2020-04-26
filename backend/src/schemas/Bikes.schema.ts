@@ -8,10 +8,7 @@ let BikesModel = Bikes.init(
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-    },
-    owner: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
+      primaryKey: true,
     },
     part_number: {
       type: DataTypes.STRING,

@@ -80,13 +80,12 @@ interface RegisterBikeOptions {
   model: string;
   type: BikeType;
   wheelSize: number;
-  colours: string[];
+  colours: string;
   gearCount: number;
   brakeType: BrakeType;
   suspension: SuspensionType;
   gender: BikeGender;
   ageGroup: AgeGroup;
-  images: string[];
 }
 
 interface UpdateBikeOptions {
@@ -95,7 +94,7 @@ interface UpdateBikeOptions {
   model?: string;
   type?: BikeType;
   wheelSize?: number;
-  colours?: string[];
+  colours?: string;
   gearCount?: number;
   brakeType?: BrakeType;
   suspension?: SuspensionType;
@@ -120,12 +119,11 @@ export async function register({
   type = BikeType.HYBRID_OR_COMMUTER,
   partNumber = "N/A",
   model = "N/A",
-  colours = [],
+  colours = "[]",
   brakeType = BrakeType.VBRAKE,
   suspension = SuspensionType.NONE,
   gender = BikeGender.UNISEX,
   ageGroup = AgeGroup.ADULT,
-  images,
 }: RegisterBikeOptions): Promise<string> {
   let bike: any = await Bikes.create({
     owner: userId,
@@ -142,7 +140,6 @@ export async function register({
     age_group: ageGroup,
   });
 
-  imageManager.addBikeImages(bike.id, Directory.REGISTRY, images);
   return bike.id;
 }
 

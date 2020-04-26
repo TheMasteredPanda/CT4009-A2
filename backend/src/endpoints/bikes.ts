@@ -1,10 +1,21 @@
 import * as actions from "../actions/bikes";
 import { Router, Request, Response } from "express";
 import { handleInternalError } from "../utils/errorhandler";
+import multer from "multer";
+import crypto from "crypto";
+import path from "path";
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) =>
+    cb(
+      null,
+      crypto.randomBytes(48).toString("base64") + path.extname(file.originalname)
+    ),
+});
 const router = Router();
 
 router.post("/bike/register", (req: Request, res: Response) => {
+  console.log("Hit bikes/register.");
   let body = req.body;
 
   if (!body.hasOwnProperty("brand")) {
@@ -34,20 +45,13 @@ router.post("/bike/register", (req: Request, res: Response) => {
     return;
   }
 
-  if (!body.hasOwnProperty("images")) {
-    res.error.client.badRequest(
-      "Client",
-      "Parameter not found",
-      `Body parameter 'images' not found.`
-    );
-    return;
-  }
-
   actions
     .register(body)
-    .then((id) => res.status(200).send(id))
+    .then((id) => res.status(200).send({ id }))
     .catch((err) => handleInternalError(res, err));
 });
+
+router.post("/bike/images/upload", (req: Request, res: Response) => {});
 
 router.get("/bike/bikes", (req: Request, res: Response) => {
   actions
@@ -56,7 +60,7 @@ router.get("/bike/bikes", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
-router.get("/bike", (req: Request, res: Response) => {
+router.get("/bikes", (req: Request, res: Response) => {
   let query = req.query;
 
   if (!query.hasOwnProperty("bikeId")) {

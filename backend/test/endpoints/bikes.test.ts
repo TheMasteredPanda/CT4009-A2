@@ -5,9 +5,7 @@ import supertest from "supertest";
 import * as authManager from "../../src/managers/authManager";
 
 import { ModelCtor, Model } from "sequelize/types";
-import { createDecipher } from "crypto";
-
-const request = supertest("http://localhost:4000");
+let request = supertest("http://localhost:4000");
 
 beforeAll(async (done) => {
   process.env.TEST_MARIADB_USERNAME = "root";
@@ -56,7 +54,7 @@ afterAll(async (done) => {
 function createJohnDoe() {
   return new Promise((resolve, reject) => {
     request
-      .post("http://localhost:4000/user/register")
+      .post("/user/register")
       .send({
         username: "johndoe",
         password: "passwd",
@@ -70,19 +68,17 @@ function createJohnDoe() {
   });
 }
 
+//
 describe("Testing Bike Endpoints: ", () => {
-  it("/user/register", (done) => {
+  it.only("/biking/register", (done) => {
     createJohnDoe().then((authPayload: any) => {
-      let images = [
-        fs.readFileSync("../assets/bike_1.jpg").toString("utf8"),
-        fs.readFileSync("../assets/bike_2.jpg").toString("utf8"),
-      ];
+      console.log(authPayload);
       request
-        .post(`http://localhost:4000/user/register?userId=${authPayload.id}`)
-        .send({ brand: "Test Brand", wheel_size: 24.3, gear_count: 8, images })
+        .post(`/bike/register?userId=${authPayload.id}`)
+        .set("Authorization", `Bearer ${authPayload.token}`)
+        .send({ brand: "Test Brand", wheel_size: 24.3, gear_count: 8 })
         .end((err, res) => {
           if (err) throw err;
-
           expect(res.status).toBe(200);
           expect(res.body).toBeDefined();
           done();

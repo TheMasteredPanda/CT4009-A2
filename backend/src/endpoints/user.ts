@@ -2,7 +2,6 @@ import { Router, Request, Response } from "express";
 import * as actions from "../actions/user";
 import * as authManager from "../managers/authManager";
 import { handleInternalError } from "../utils/errorhandler";
-import { resolveMx } from "dns";
 
 /**
  * This script contains all user specific endpoints, that includes:
@@ -23,6 +22,7 @@ const authDmz = ["/user/refresh"]; //Demilitarized endpoints for the authenticat
  * store it in the request object for reference.
  */
 router.use((req: Request, res: Response, next: Function) => {
+  console.log(req.originalUrl);
   if (dmz.some((endpoint) => req.url.startsWith(endpoint))) {
     next();
     return;

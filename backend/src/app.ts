@@ -29,6 +29,7 @@ export async function shutdown() {
 }
 
 export async function start() {
+  console.log(process.env.NODE_ENV);
   if (!configUtils.exists() && process.env.NODE_ENV !== "development") {
     configUtils.create();
     console.log(`Created config.json. Please populate it.`);
@@ -36,6 +37,7 @@ export async function start() {
   }
 
   if (process.env.NODE_ENV === "development") {
+    console.log("Is development.");
     configUtils.set({
       mariadb: {
         username: process.env.TEST_MARIADB_USERNAME,
@@ -95,7 +97,7 @@ export async function start() {
   app.use(errorHandler);
 
   server = app.listen(configUtils.get().server.port, () => {
-    console.log(`Server online.`);
+    console.log(`Server online. Port: ${configUtils.get().server.port}`);
   });
 }
 
