@@ -2,9 +2,7 @@ import * as actions from "../actions/bikes";
 import { Router, Request, Response, request } from "express";
 import { handleInternalError } from "../utils/errorhandler";
 import multer from "multer";
-import crypto from "crypto";
 import path from "path";
-import { brotliDecompressSync } from "zlib";
 
 const storage = multer.diskStorage({
   destination: "images",
