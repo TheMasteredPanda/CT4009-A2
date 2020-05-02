@@ -1,5 +1,7 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 
+$detect = new Mobile_Detect();
 /**
  * Checks if a string starts with a string.
  */
@@ -39,7 +41,7 @@ function verifyAuth()
         print $result;
     }
 
-    return $result;
+    return $result == 'true';
 }
 
 function logout()
@@ -64,16 +66,18 @@ function logout()
 function getRank()
 {
     $payload = json_decode($_COOKIE['ct4009Auth']);
-    $curl = curl_init('http://localhost:555/user/rank?userId=' . $payload->id);
+    $curl = curl_init('http://localhost:5555/user/rank?userId=' . $payload->id);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
     $result = curl_exec($curl);
     $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     if ($status !== 200) {
-        print $result;
+        print curl_error($curl);
+        return;
     }
 
+    curl_close($curl);
     return $result;
 }
 
@@ -105,7 +109,9 @@ if (!hasAuthCookie()) {
         header('Location: /login.php');
     }
 } else {
-    if (!verifyAuth()) {
+    $verified = verifyAuth();
+
+    if (!$verified) {
         setcookie('ct4009Auth', "", time() - 3600); //Deletes the cookie.
         if (!startsWith($currentScript, '/login.php')) header('Location: /login.php');
     }
@@ -119,10 +125,13 @@ if (!hasAuthCookie()) {
 <html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <link rel="stylesheet" href="./styles/master.bundle.css">
+    <link rel="stylesheet" href="http://localhost:3000/styles/master.bundle.css">
+    <script src="http://localhost:3000/scripts/master.bundle.js"></script>
 </head>
+
 
 <body class="grey lighten-3">

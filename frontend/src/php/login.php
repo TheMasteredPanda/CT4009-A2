@@ -87,6 +87,6 @@ include "./actions/register.php";
         </form>
     <?php endif; ?>
 </div>
-<?php include('./components/mainScript.php'); ?>
-<script type="text/javascript" src="../scripts/login.bundle.js"></script>
+
+<script type="text/javascript" src="http://localhost:3000/scripts/login.bundle.js"></script>
 <?php include('./components/footer.php'); ?>

@@ -8,9 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -18,7 +15,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const path = __importStar(require("path"));
 const express_1 = __importDefault(require("express"));
 const fileUtils = __importStar(require("./utils/files"));
 const actionManager = __importStar(require("./managers/actionsManager"));
@@ -80,10 +81,10 @@ function start() {
         yield databaseManager.createAssociations();
         yield databaseManager.sequelize().sync();
         app.use(errorhandler_1.errorResponser);
-        yield Promise.resolve().then(() => __importStar(require("./utils/userMiddleware"))).then((module) => app.use(module.default));
-        yield Promise.resolve().then(() => __importStar(require("./utils/authMiddleware"))).then((module) => app.use(module.default));
         app.use(cors_1.default());
         app.use(body_parser_1.default.json());
+        yield Promise.resolve().then(() => __importStar(require("./utils/userMiddleware"))).then((module) => app.use(module.default));
+        yield Promise.resolve().then(() => __importStar(require("./utils/authMiddleware"))).then((module) => app.use(module.default));
         let scriptRoutes = fileUtils
             .map("endpoints")
             .filter((path) => path.endsWith(".js"));
@@ -96,6 +97,7 @@ function start() {
         }
         let names = yield actionManager.load();
         console.log(`Successfully Loaded Action Modules: ${names.length > 0 ? names.join(", ") : "None"}`);
+        app.use("/images", express_1.default.static(path.join(__dirname, "images")));
         app.use(errorhandler_1.errorHandler);
         server = app.listen(configUtils.get().server.port, () => {
             console.log(`Server online. Port: ${configUtils.get().server.port}`);

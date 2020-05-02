@@ -24,7 +24,10 @@ curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Length: ' . strlen($body), 'Content-Type: application/json'));
 curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
 curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+echo 'test';
 $result = curl_exec($curl);
+echo 'test';
+print curl_error($curl);
 $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 curl_close($curl);
 

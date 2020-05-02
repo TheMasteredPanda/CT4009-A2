@@ -1,3 +1,4 @@
+import * as path from "path";
 import * as fs from "fs";
 import express from "express";
 import * as fileUtils from "./utils/files";
@@ -73,6 +74,8 @@ export async function start() {
   await databaseManager.sequelize().sync();
 
   app.use(errorResponser);
+  app.use(cors()); //Middleware for Connect/Express
+  app.use(bodyParser.json()); //Middleware for parsing request body content to json.
 
   await import("./utils/userMiddleware").then((module) =>
     app.use(module.default)
@@ -80,8 +83,6 @@ export async function start() {
   await import("./utils/authMiddleware").then((module) =>
     app.use(module.default)
   );
-  app.use(cors()); //Middleware for Connect/Express
-  app.use(bodyParser.json()); //Middleware for parsing request body content to json.
   let scriptRoutes = fileUtils
     .map("endpoints")
     .filter((path: string) => path.endsWith(".js"));
@@ -102,6 +103,7 @@ export async function start() {
     }`
   );
 
+  app.use("/images", express.static(path.join(__dirname, "images")));
   app.use(errorHandler);
 
   server = app.listen(configUtils.get().server.port, () => {

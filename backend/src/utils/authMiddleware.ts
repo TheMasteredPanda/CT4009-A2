@@ -5,11 +5,12 @@ const dmz = [
   "/user/register",
   "/user/login",
   "/user/verify",
+  "/images",
 ]; /*Demilitarized endpoints, used to stop requests to these endpoints 
   from being processed through the middleware below.*/
 const authDmz = ["/user/refresh"]; //Demilitarized endpoints for the authentication middleware only.
 
-export default function(req: Request, res: Response, next: Function) {
+export default function (req: Request, res: Response, next: Function) {
   if (
     dmz.some((endpoint) => req.url.startsWith(endpoint)) ||
     authDmz.some((endpoint) => req.url.startsWith(endpoint))

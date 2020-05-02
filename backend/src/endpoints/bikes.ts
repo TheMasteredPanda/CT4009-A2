@@ -1,5 +1,5 @@
 import * as actions from "../actions/bikes";
-import { Router, Request, Response, request } from "express";
+import { Router, Request, Response } from "express";
 import { handleInternalError } from "../utils/errorhandler";
 import multer from "multer";
 import path from "path";
@@ -21,7 +21,6 @@ const router = Router();
 
 router.post("/bike/register", (req: Request, res: Response) => {
   let body = req.body;
-
   if (!body.hasOwnProperty("brand")) {
     res.error.client.badRequest(
       "Client",
@@ -31,7 +30,7 @@ router.post("/bike/register", (req: Request, res: Response) => {
     return;
   }
 
-  if (!body.hasOwnProperty("wheel_size")) {
+  if (!body.hasOwnProperty("wheelSize")) {
     res.error.client.badRequest(
       "Client",
       "Parameter not fouond",
@@ -40,7 +39,7 @@ router.post("/bike/register", (req: Request, res: Response) => {
     return;
   }
 
-  if (!body.hasOwnProperty("gear_count")) {
+  if (!body.hasOwnProperty("gearCount")) {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
@@ -52,7 +51,9 @@ router.post("/bike/register", (req: Request, res: Response) => {
   body.userId = req.user.id;
   actions
     .register(body)
-    .then((id) => res.status(200).send({ id }))
+    .then((id) => {
+      res.status(200).send({ id });
+    })
     .catch((err) => handleInternalError(res, err));
 });
 
@@ -71,6 +72,7 @@ router.post("/bike/images/upload", (req: Request, res: Response) => {
   let promises: Promise<any>[] = [];
 
   upload(req, res, (err) => {
+    console.log(err);
     if (err) throw err;
 
     for (let i = 0; i < req.files.length; i++) {
@@ -94,19 +96,25 @@ router.post("/bike/images/upload", (req: Request, res: Response) => {
 });
 
 router.post("/bike/images/delete", (req: Request, res: Response) => {
-  let query = req.query;
+  let body = req.body;
 
-  if (!query.hasOwnProperty("imageId")) {
+  if (!body.hasOwnProperty("imageIds")) {
     res.error.client.badRequest(
       "Client",
       "Parameter not found.",
-      `Query parameter 'imageId' was not found.`
+      `Body parameter 'imageIds' was not found.`
     );
     return;
   }
 
-  actions
-    .removeImage(Number(query.imageId))
+  let promises: Promise<any>[] = [];
+
+  for (let i = 0; i < body.imageIds.length; i++) {
+    const imageId = body.imageIds[i];
+    promises.push(actions.removeImage(Number(imageId)));
+  }
+
+  Promise.all(promises)
     .then(() => res.sendStatus(200))
     .catch((err) => handleInternalError(res, err));
 });
@@ -132,7 +140,10 @@ router.get("/bike", (req: Request, res: Response) => {
 
   actions
     .getRegisteredBike(query.bikeId as string)
-    .then((bike) => res.status(200).send(bike))
+    .then((bike) => {
+      console.log(bike);
+      res.status(200).send(bike);
+    })
     .catch((err) => handleInternalError(res, err));
 });
 

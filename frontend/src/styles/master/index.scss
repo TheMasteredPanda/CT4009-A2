@@ -4,7 +4,6 @@
 body,
 html {
   height: 100%;
-  overflow: hidden;
 }
 
 .login_or_register_container {
@@ -91,37 +90,163 @@ html {
   }
 }
 
-
 .home_container {
   height: 100%;
   width: 100%;
   position: relative;
+}
 
-  nav {
-    @extend .indigo;
+nav {
+  @extend .indigo;
+}
 
+#mainSidenav {
+  display: grid;
+  grid-template-rows: 90% 10%;
+
+  .subheader {
+    margin-left: 5%;
   }
 
-  #mainSidenav {
-    display: grid;
-    grid-template-rows: 90% 10%;
+  .btn {
+    @extend .indigo;
+  }
 
-    .subheader {
-      margin-left: 5%;
+  .sidenav_footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+
+    div {
+      margin: 1%;
     }
+  }
+}
+
+.bikes_container {
+  height: 100%;
+  width: 100%;
+
+  .no_bikes_registered_wrapper {
+    height: 90%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.bikes_container {
+  ul {
+    height: max-content;
+    li {
+      margin-bottom: 2%;
+      margin-top: 2%;
+    }
+
+    .card {
+      .card-title {
+        margin-left: 1%;
+      }
+      position: relative;
+      .card-img {
+        position: relative;
+        width: 100%;
+        img {
+          width: 100%;
+          height: max-content;
+        }
+      }
+
+      .buttons {
+        padding: 3%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .btn {
+          @extend .indigo;
+        }
+      }
+    }
+  }
+}
+
+.bike_info_container {
+  #bikeInfoImageCarousel {
+    margin-top: 4%;
+  }
+
+  .button_wrapper {
+    padding-bottom: 4%;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      margin: 2%;
+    }
+  }
+}
+
+.bike_edit_form {
+  margin-top: 8%;
+  .carousel {
+    height: 180px;
+  }
+
+  .carousel-item.active {
+    min-height: 160px;
+  }
+
+  .carousel-item {
+    min-height: 20%;
+    img {
+      z-index: 9;
+    }
+
+    .button_wrapper {
+      z-index: 10;
+      position: absolute;
+      top: 0;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin: 2%;
+
+      .delete_button {
+        @extend .red;
+      }
+
+      .undo_button {
+        @extend .indigo;
+      }
+    }
+  }
+
+  .edit_bike_button_wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     .btn {
       @extend .indigo;
     }
+  }
 
+  #uploadImagesCarouselItem {
+    @extend .orange;
+    display: flex;
+    justify-content: center;
+    height: 161px !important;
+    min-height: 161px;
 
-    .sidenav_footer {
-      display: flex;
-      align-items: center;
-      justify-content: end;
-
-      div {
-        margin: 1%;
+    .input-field {
+      margin-top: 20%;
+      .btn-small {
+        @extend .indigo;
       }
     }
   }

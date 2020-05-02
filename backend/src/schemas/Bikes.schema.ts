@@ -19,7 +19,7 @@ let BikesModel = Bikes.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    model: {
+    modal: {
       type: DataTypes.STRING,
       allowNull: false,
     },

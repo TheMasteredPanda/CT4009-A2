@@ -82,10 +82,10 @@ interface RegisterBikeOptions {
   userId: number;
   partNumber: string;
   brand: string;
-  model: string;
+  modal: string;
   type: BikeType;
   wheelSize: number;
-  colours: string;
+  colours: [];
   gearCount: number;
   brakeType: BrakeType;
   suspension: SuspensionType;
@@ -99,7 +99,7 @@ interface UpdateBikeOptions {
   model?: string;
   type?: BikeType;
   wheelSize?: number;
-  colours?: string;
+  colours?: string[];
   gearCount?: number;
   brakeType?: BrakeType;
   suspension?: SuspensionType;
@@ -125,21 +125,22 @@ export async function register({
   gearCount,
   type = BikeType.HYBRID_OR_COMMUTER,
   partNumber = "N/A",
-  model = "N/A",
-  colours = "[]",
+  modal = "N/A",
+  colours = [],
   brakeType = BrakeType.VBRAKE,
   suspension = SuspensionType.NONE,
   gender = BikeGender.UNISEX,
   ageGroup = AgeGroup.ADULT,
 }: RegisterBikeOptions): Promise<string> {
+  let csvColours = colours.join(", ");
   let bike: any = await Bikes.create({
     user_id: userId,
     part_number: partNumber,
     brand,
-    model,
+    modal,
     type,
     wheel_size: wheelSize,
-    colours,
+    colours: csvColours,
     gear_count: gearCount,
     brake_type: brakeType,
     suspension,
@@ -207,7 +208,37 @@ export async function getRegisteredBike(bikeId: string) {
 
   if (!bike) throw new Error(`Couldn't find bike ${bikeId}`);
 
-  let data = bike.toJSON();
+  let imageIds = [];
+  let images = [];
+
+  try {
+    let result: Model<any, any>[] = await RegistryImages.findAll({
+      where: { bike_id: bikeId },
+    });
+
+    for (let i = 0; i < result.length; i++) {
+      const entry = result[i];
+      let data = entry.toJSON();
+      imageIds.push(data);
+    }
+
+    if (imageIds.length > 0) {
+      for (let i = 0; i < imageIds.length; i++) {
+        const entry: any = imageIds[i];
+        let result: Model<any, any> | null = await BikeImages.findOne({
+          where: { id: entry.image_id },
+        });
+        if (!result) continue;
+        let data = result.toJSON();
+        images.push(data);
+      }
+    }
+  } catch (err) {
+    throw err;
+  }
+
+  let data: any = bike.toJSON();
+  data.images = images;
 
   return data;
 }
@@ -220,6 +251,7 @@ export async function getRegisteredBike(bikeId: string) {
  * @returns {string[]} an array of bike ids.
  */
 export async function getAllRegisteredBikes(userId: number) {
+
   let bikes: Model[] | null;
 
   try {
