@@ -7,12 +7,14 @@ $bike = getBike($_GET['bikeId']);
 ?>
 
 <div class="bike_info_container container">
-    <div id="bikeInfoImageCarousel" class="carousel carousel-slider center">
-        <?php for ($i = 0; $i < count($bike->images); $i++) : ?>
-            <a href="#" class="carousel-item" href="#one!">
-                <img src=<?php echo 'http://localhost:5555/' . $bike->images[$i]->uri ?>>
-            </a>
-        <?php endfor; ?>
+    <div class="input-field">
+        <div id="bikeInfoImageCarousel" class="carousel carousel-slider center">
+            <?php for ($i = 0; $i < count($bike->images); $i++) : ?>
+                <a href="#" class="carousel-item" href="#one!">
+                    <img src=<?php echo 'http://localhost:5555/' . $bike->images[$i]->uri ?>>
+                </a>
+            <?php endfor; ?>
+        </div>
     </div>
 
     <h5 class="center-align">Bike Information</h5>

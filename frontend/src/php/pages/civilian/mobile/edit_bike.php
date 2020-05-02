@@ -15,7 +15,7 @@ $bike_colours = explode(', ', $bike->colours);
 ?>
 
 <div class="bike_edit_container">
-    <form action="http://localhost:3000/actions/update_bike.php" method="POST" class="bike_edit_form">
+    <form action=<?php echo "http://localhost:3000/actions/update_bike.php?bikeId=" . $bike->id ?> method="POST" enctype="multipart/form-data" class="bike_edit_form">
         <div class="row s10 pull-s1 container">
             <div class="carousel-wrapper">
                 <div class="input-field ">

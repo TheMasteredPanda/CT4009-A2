@@ -104,16 +104,12 @@ function createItem(
   imageId: string,
   src: string | ArrayBuffer,
   buffer: boolean,
-  notYetUploaded: boolean = false,
-  imgLastModified: number = 0,
-  imgName: string = "",
-  imgSize: number = 0,
-  type: string = ""
+  notYetUploaded: boolean = false
 ) {
   return `
     <div class="carousel-item">
       <img src=${buffer ? src : `http://localhost:5555/${src}`}>
-      <input type="file" class="hidden_tmp_file_info[]" style="display: none;" data-file-lastModified=${imgLastModified} data-file-name=${imgName} data-file-size=${imgSize} data-file-type=${type}></div>
+      <input hidden type="file" name="hidden_tmp_file_input[]"></input>
       <div class="button_wrapper">
         <button class="btn-small delete_undo_button delete_button" data-uploaded=${
           notYetUploaded ? 1 : 0
@@ -146,6 +142,19 @@ $(".edit_images_carousel_slider").ready(() => {
   );
 });
 
+// https://stackoverflow.com/questions/52078853/is-it-possible-to-update-filelist
+function FileListItem(a: any) {
+  a = [].slice.call(Array.isArray(a) ? a : arguments);
+  for (var c, b = (c = a.length), d = !0; b-- && d; ) d = a[b] instanceof File;
+  if (!d)
+    throw new TypeError(
+      "expected argument to FileList is File or array of File objects"
+    );
+  for (b = new ClipboardEvent("").clipboardData || new DataTransfer(); c--; )
+    b.items.add(a[c]);
+  return b.files;
+}
+
 $("#uploadImageCarouselItemInput").change((e) => {
   // @ts-ignore
   let files = e.currentTarget.files;
@@ -156,18 +165,16 @@ $("#uploadImageCarouselItemInput").change((e) => {
   let reader = new FileReader();
   reader.onload = (e) => {
     $(".edit_images_carousel_slider").prepend(
-      createItem(
-        "##",
-        e.target.result,
-        true,
-        false,
-        files[0].lastModified,
-        files[0].name,
-        files[0].size,
-        files[0].type
-      )
+      createItem("##", e.target.result, true, false)
     );
 
+    let carousel = document.getElementsByClassName(
+      "edit_images_carousel_slider"
+    )[0];
+
+    let input = carousel.children[0].children[1] as HTMLInputElement;
+    let list = FileListItem([files[0]]);
+    input.files = list;
     $(".edit_images_carousel_slider").carousel({
       fullWidth: true,
       indicators: true,

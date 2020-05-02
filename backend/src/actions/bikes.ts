@@ -85,7 +85,7 @@ interface RegisterBikeOptions {
   modal: string;
   type: BikeType;
   wheelSize: number;
-  colours: [];
+  colours: string[];
   gearCount: number;
   brakeType: BrakeType;
   suspension: SuspensionType;
@@ -99,7 +99,7 @@ interface UpdateBikeOptions {
   model?: string;
   type?: BikeType;
   wheelSize?: number;
-  colours?: string[];
+  colours?: string[] | string;
   gearCount?: number;
   brakeType?: BrakeType;
   suspension?: SuspensionType;
@@ -251,7 +251,6 @@ export async function getRegisteredBike(bikeId: string) {
  * @returns {string[]} an array of bike ids.
  */
 export async function getAllRegisteredBikes(userId: number) {
-
   let bikes: Model[] | null;
 
   try {
@@ -284,6 +283,14 @@ export async function updateRegisteredBike(
   data: UpdateBikeOptions
 ) {
   let bike: Model | null;
+  let colourString;
+
+  if (data.hasOwnProperty("colours") && typeof data.colours === "object") {
+    colourString = data.colours?.join(", ");
+
+    delete data.colours;
+    data.colours = colourString;
+  }
 
   try {
     bike = await Bikes.findOne({ where: { id: bikeId } });
