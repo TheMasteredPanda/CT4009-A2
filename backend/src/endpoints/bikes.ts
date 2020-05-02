@@ -72,7 +72,6 @@ router.post("/bike/images/upload", (req: Request, res: Response) => {
   let promises: Promise<any>[] = [];
 
   upload(req, res, (err) => {
-    console.log(err);
     if (err) throw err;
 
     for (let i = 0; i < req.files.length; i++) {
@@ -141,7 +140,6 @@ router.get("/bike", (req: Request, res: Response) => {
   actions
     .getRegisteredBike(query.bikeId as string)
     .then((bike) => {
-      console.log(bike);
       res.status(200).send(bike);
     })
     .catch((err) => handleInternalError(res, err));
