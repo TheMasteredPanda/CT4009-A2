@@ -18,12 +18,27 @@ export async function createOfficerAccount(
       "Client",
       "Username already taken",
       `The username ${username} has already been taken.`,
-      { parameters: { username } }
+      { parameters: ["username"] }
+    );
+  }
+
+  let emailExists = await Contacts.findOne({ where: { contact_value: email } });
+
+  if (emailExists) {
+    throw new ClientNotAcceptableError(
+      "Client",
+      "Email address already in use",
+      `The email address ${email} is being used by another account.`,
+      { parameters: ["email"] }
     );
   }
 
   let hashedPassword = await bcrypt.hash(password, 10);
-  let userModal = await Users.create({ username, password: hashedPassword });
+  let userModal = await Users.create({
+    username,
+    password: hashedPassword,
+    rank: "police_officer",
+  });
   let user: any = userModal.toJSON();
   await Contacts.create({
     userId: user.id,

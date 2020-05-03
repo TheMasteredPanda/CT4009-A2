@@ -29,7 +29,8 @@ router.post("/admin/accounts/create", (req: Request, res: Response) => {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
-      `Body parameter 'username' was not found.`
+      `Body parameter 'username' was not found.`,
+      { parameters: ["username"] }
     );
     return;
   }
@@ -38,7 +39,8 @@ router.post("/admin/accounts/create", (req: Request, res: Response) => {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
-      `Body parameter 'password' was not found.`
+      `Body parameter 'password' was not found.`,
+      { parameters: ["password"] }
     );
     return;
   }
@@ -47,7 +49,8 @@ router.post("/admin/accounts/create", (req: Request, res: Response) => {
     res.error.client.badRequest(
       "Client",
       "Parameter not found",
-      `Body parameter 'email' was not found.`
+      `Body parameter 'email' was not found.`,
+      { parameters: ["email"] }
     );
     return;
   }
