@@ -6,6 +6,10 @@ $rank = getRank();
 <nav class="nav-wrapper">
     <div class="container">
         <a href="#" class="sidenav-trigger" data-target="mainSidenav"><i class="material-icons">menu</i></a>
+        <?php if (in_array($currentScript, array('/pages/police/admin_panel.php', '/pages/police/mobile/create_officer_account.php')) && $detect->isMobile()) : ?>
+            <a href="#" class="sidenav-trigger" data-target="adminPanelSidenav" id="adminSidenavButton"><i class="material-icons">menu</i></i></a>
+        <?php endif; ?>
+
     </div>
 
     <?php if ($currentScript === '/pages/civilian/bikes.php') : ?>
@@ -24,11 +28,11 @@ $rank = getRank();
             <div class="divider"></div>
         </li>
         <li>
-            <div class="subheader">Sections</div>
+            <div class="subheader">Pages</div>
         </li>
         <?php if (in_array($rank, array('police_officer', 'police_admin'))) : ?>
             <?php if ($rank === 'police_admin') : ?>
-                <li><a href="http://localhost:3000/pages/police/admin.php">Admin Panel</a></li>
+                <li><a href="http://localhost:3000/pages/police/admin_panel.php">Admin Panel</a></li>
             <?php endif; ?>
 
             <li><a href="http://localhost:3000/pages/police/investigations.php">>Investigations</a></li>
@@ -44,6 +48,14 @@ $rank = getRank();
     </ul>
 </nav>
 
+<ul class="sidenav" id="adminPanelSidenav">
+    <div class="sidenav_buttons">
+        <li><a href="http://localhost:3000/pages/police/admin_panel.php?section=accounts">Accounts</a></li>
+    </div>
+    <div class="sidenav_footer container">
+        <div class="btn indigo" name="close_admin_sidenav_button">Close</div>
+    </div>
+</ul>
 <ul class="sidenav" id="mainSidenav">
     <div class="sidenav_buttons">
         <li><a href="#">Account</a></li>
@@ -51,11 +63,11 @@ $rank = getRank();
             <div class="divider"></div>
         </li>
         <li>
-            <div class="subheader">Sections</div>
+            <div class="subheader">Pages</div>
         </li>
         <?php if (in_array($rank, array('police_officer', 'police_admin'))) : ?>
             <?php if ($rank === 'police_admin') : ?>
-                <li><a href="http://localhost:3000/pages/police/admin.php">Admin Panel</a></li>
+                <li><a href="http://localhost:3000/pages/police/admin_panel.php">Admin Panel</a></li>
             <?php endif; ?>
 
             <li><a href="http://localhost:3000/pages/police/investigations.php">Investigations</a></li>

@@ -172,7 +172,6 @@ nav {
 }
 
 .bike_info_container {
-
   .button_wrapper {
     padding-bottom: 4%;
     display: flex;
@@ -243,6 +242,76 @@ nav {
       margin-top: 20%;
       .btn-small {
         @extend .indigo;
+      }
+    }
+  }
+}
+
+#adminSidenavButton {
+  @extend .right;
+}
+
+#adminPanelSidenav {
+  display: grid;
+  grid-template-rows: 90% 10%;
+
+}
+
+.admin_panel_container {
+  height: 90%;
+  .admin_panel_accounts_section {
+    display: grid;
+    grid-template-rows: 27% 83%;
+    height: 90%;
+
+    .accounts_header {
+      @extend .grey, .lighten-2;
+      margin-top: 4%;
+
+      .button_wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+        a {
+          @extend .indigo;
+        }
+      }
+    }
+
+    .entry_titles {
+      text-align: center !important;
+    }
+    .account_entry {
+      @extend .grey, .lighten-2;
+      display: grid;
+      grid-template-columns: 60% 40%;
+      text-align: left;
+
+      h6 {
+        padding-left: 10%;
+      }
+    }
+  }
+}
+
+.create_officer_account_container {
+  margin-top: 8%;
+
+  .create_officer_account_form {
+    .button_wrapper {
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+
+      input {
+        margin-right: 3%;
+      }
+       
+      a {
+        margin-left: 3%;
       }
     }
   }
