@@ -5,7 +5,6 @@ import supertest from "supertest";
 import * as authManager from "../../src/managers/authManager";
 
 import { ModelCtor, Model } from "sequelize/types";
-import { doesNotMatch } from "assert";
 let request = supertest("http://localhost:4000");
 
 beforeAll(async (done) => {
@@ -18,7 +17,9 @@ beforeAll(async (done) => {
   process.env.TEST_SERVER_AUTH_SECRETEXP = "60s";
   process.env.TEST_SERVER_AUTH_REFRESHEXP = "20s";
   process.env.TEST_SERVER_AUTH_REFRESHOFFSET = "20s";
-
+  process.env.OWNER_ACCOUNT_USERNAME = "owner";
+  process.env.OWNER_ACCOUNT_PASSWORD = "passwd";
+  
   process.chdir(process.cwd() + `/build/src`);
   await start();
   done();

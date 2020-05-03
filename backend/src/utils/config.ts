@@ -46,6 +46,9 @@ export interface ConfigFile {
     /**
      * Values for the connection pool.
      */
+    dialectOptions: {
+      timezone: string
+    }
     pool: {
       /**
        * Minimum number of actual connections allowed open.
@@ -65,6 +68,10 @@ export interface ConfigFile {
     refreshExp: string;
     refreshOffset: string;
   };
+  ownerAccount: {
+    username: string,
+    password: string
+  }
 }
 
 /**
@@ -81,6 +88,9 @@ export function create() {
       database: "test",
       dialect: "mysql",
       timezone: "Etc/GMT0",
+      dialectOptions: {
+        timezone: 'Etc/GMT0'
+      },
       pool: {
         min: 5,
         max: 10,
@@ -94,6 +104,10 @@ export function create() {
       refreshExp: "5m",
       refreshOffset: "2m",
     },
+    ownerAccount: {
+      username: 'admin',
+      password: 'passwd'
+    }
   };
 
   writeFileSync("config.json", JSON.stringify(config, null, 4));

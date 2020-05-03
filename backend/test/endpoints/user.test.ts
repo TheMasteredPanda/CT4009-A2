@@ -16,6 +16,8 @@ beforeAll(async (done) => {
   process.env.TEST_SERVER_AUTH_SECRETEXP = "60s";
   process.env.TEST_SERVER_AUTH_REFRESHEXP = "20s";
   process.env.TEST_SERVER_AUTH_REFRESHOFFSET = "20s";
+  process.env.OWNER_ACCOUNT_USERNAME = "owner";
+  process.env.OWNER_ACCOUNT_PASSWORD = "passwd";
 
   process.chdir(process.cwd() + `/build/src`);
   await start();
@@ -70,7 +72,7 @@ describe("Testing Auth Endpoints: ", () => {
       })
       .end((err, res) => {
         if (err) {
-          throw err;
+          fail(err);
         }
 
         expect(res.body).toBeDefined();
@@ -78,7 +80,7 @@ describe("Testing Auth Endpoints: ", () => {
         expect(res.body.token).toBeDefined();
         done();
       });
-  });
+  }, 2000);
 
   it("/user/register with some parameters", async (done) => {
     request

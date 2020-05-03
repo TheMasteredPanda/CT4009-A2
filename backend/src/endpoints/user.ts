@@ -13,8 +13,6 @@ const router = Router();
 
 router.post("/user/login", (req: Request, res: Response) => {
   let body = req.body;
-  console.log("Hit /user/login");
-  console.log(body);
 
   if (!body.hasOwnProperty("username")) {
     res.error.client.badRequest(
@@ -79,7 +77,16 @@ router.post("/user/register", (req: Request, res: Response) => {
 
   actions
     .register(body)
-    .then((data) => res.status(200).send(data))
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((err) => handleInternalError(res, err));
+});
+
+router.post("/user/delete", (req: Request, res: Response) => {
+  actions
+    .remove(req.user.id)
+    .then(() => res.sendStatus(200))
     .catch((err) => handleInternalError(res, err));
 });
 

@@ -3,6 +3,7 @@ import * as databaseManager from "../managers/databaseManager";
 import * as authManager from "../managers/authManager";
 import Users from "../schemas/User.schema";
 import Contacts from "../schemas/Contacts.schema";
+import * as config from "../utils/config";
 import {
   ServerGenericError,
   ClientUnauthorizedError,
@@ -167,4 +168,10 @@ export async function setRank(userId: string, rank: string) {
   }
 
   await Users.update({ rank }, { where: { id: userId }, fields: ["rank"] });
+}
+
+export async function remove(userId: number) {
+  await Users.destroy({ where: { id: userId } });
+  if (!authManager.hasHandler(userId)) return;
+  authManager.remove(userId);
 }

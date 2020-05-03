@@ -9,6 +9,8 @@ import { errorResponser, errorHandler } from "./utils/errorhandler";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { Server } from "http";
+import bcrypt from "bcrypt";
+import { Model, ModelCtor } from "sequelize/types";
 
 let server: Server | null = null;
 const app = express();
@@ -66,12 +68,38 @@ export async function start() {
         refreshExp: process.env.TEST_SERVER_AUTH_REFRESHEXP,
         refreshOffset: process.env.TEST_SERVER_AUTH_REFRESHOFFSET,
       },
+      ownerAccount: {
+        username: process.env.OWNER_ACCOUNT_USERNAME,
+        password: process.env.OWNER_ACCOUNT_PASSWORD,
+      },
     });
   }
 
   await databaseManager.load();
   await databaseManager.createAssociations();
   await databaseManager.sequelize().sync();
+  let Users: ModelCtor<Model<any, any>> = await new Promise(
+    (resolve, reject) => {
+      import("./schemas/User.schema")
+        .then((schema) => resolve(schema.default as any))
+        .catch(reject);
+    }
+  );
+
+  let ownerAccount = await Users.findOne({
+    where: { username: configUtils.get().ownerAccount.username },
+  });
+  if (!ownerAccount) {
+    let hashedPassword = await bcrypt.hash(
+      configUtils.get().ownerAccount.password,
+      10
+    );
+    await Users.create({
+      username: configUtils.get().ownerAccount.username,
+      password: hashedPassword,
+      rank: "police_admin",
+    });
+  }
 
   app.use(errorResponser);
   app.use(cors()); //Middleware for Connect/Express

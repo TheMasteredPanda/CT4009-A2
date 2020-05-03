@@ -5,7 +5,7 @@ const dmz = [
   "/user/register",
   "/user/login",
   "/user/verify",
-  "/images"
+  "/images",
 ]; /*Demilitarized endpoints, used to stop requests to these endpoints 
   from being processed through the middleware below.*/
 
@@ -13,13 +13,12 @@ const dmz = [
  * Uses the 'userId' query parameter to fetch user informaton and
  * store it in the request object for reference.
  */
-export default function(req: Request, res: Response, next: Function) {
+export default function (req: Request, res: Response, next: Function) {
   if (dmz.some((endpoint) => req.url.startsWith(endpoint))) {
     next();
     return;
   }
 
-  console.log(req.url);
   let query = req.query;
 
   if (!query.hasOwnProperty("userId")) {
