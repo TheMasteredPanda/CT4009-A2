@@ -4,7 +4,10 @@ import Users from "../schemas/User.schema";
 import Contacts from "../schemas/Contacts.schema";
 import Bikes from "../schemas/Bikes.schema";
 import bcrypt from "bcrypt";
-import { ClientNotAcceptableError } from "../utils/errorhandler";
+import {
+  ClientNotAcceptableError,
+  ClientNotFoundError,
+} from "../utils/errorhandler";
 import { Model } from "sequelize";
 
 export async function createOfficerAccount(
@@ -78,6 +81,31 @@ export async function getAllAccounts(ids: number[] = []) {
     userObject.contacts = userContacts;
     return userObject;
   });
+}
+
+export async function getAccountDetails(userId: number) {
+  let user = await Users.findOne({ where: { id: userId } });
+  let contacts = await Contacts.findAll({
+    where: { user_id: userId },
+    attributes: ["contact_value"],
+  });
+  let bikes = await Bikes.findAll({ where: { user_id: userId } });
+
+  if (!user) {
+    throw new ClientNotFoundError(
+      "Client",
+      "User not found",
+      `Couldn't find user ${userId}.`,
+      { parameters: ["userId"] }
+    );
+  }
+
+  let object: any = user.toJSON();
+  object.contacts = _.map(contacts, (contact) => contact.toJSON());
+  object.bike_count = bikes.length;
+  object.reports_count = 0;
+  object.investigations_count = 0;
+  return object;
 }
 
 export async function getAllRegisteredBikes() {

@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { handleInternalError } from "../utils/errorhandler";
-import * as UserActions from "../actions/user";
-import * as AdminActions from "../actions/admin";
+import * as userActions from "../actions/user";
+import * as adminActions from "../actions/admin";
 
 const router = Router();
 
@@ -55,7 +55,8 @@ router.post("/admin/accounts/create", (req: Request, res: Response) => {
     return;
   }
 
-  AdminActions.createOfficerAccount(body.username, body.password, body.email)
+  adminActions
+    .createOfficerAccount(body.username, body.password, body.email)
     .then((id: string) => {
       res.status(200).send({ id });
     })
@@ -69,8 +70,27 @@ router.post("/admin/accounts", (req: Request, res: Response) => {
     accounts = req.body.accounts;
   }
 
-  AdminActions.getAllAccounts(accounts)
+  adminActions
+    .getAllAccounts(accounts)
     .then((accounts) => res.status(200).send({ accounts }))
+    .catch((err) => handleInternalError(res, err));
+});
+
+router.get("/admin/accounts/account", (req: Request, res: Response) => {
+  let query = req.query;
+
+  if (!query.hasOwnProperty("accountId")) {
+    res.error.client.badRequest(
+      "Client",
+      "Parameter not found",
+      `Query parameter 'accountId' was not found.`
+    );
+    return;
+  }
+
+  adminActions
+    .getAccountDetails(Number(query.accountId))
+    .then((account) => res.status(200).send({ account }))
     .catch((err) => handleInternalError(res, err));
 });
 
