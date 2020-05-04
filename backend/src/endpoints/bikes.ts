@@ -1,4 +1,5 @@
 import * as actions from "../actions/bikes";
+import * as adminActions from "../actions/admin";
 import { Router, Request, Response } from "express";
 import { handleInternalError } from "../utils/errorhandler";
 import multer from "multer";
@@ -121,6 +122,22 @@ router.post("/bike/images/delete", (req: Request, res: Response) => {
 router.get("/bike/bikes", (req: Request, res: Response) => {
   actions
     .getAllRegisteredBikes(req.user.id)
+    .then((bikeIds) => res.status(200).send(bikeIds))
+    .catch((err) => handleInternalError(res, err));
+});
+
+router.get("/bike/bikes/all", (req: Request, res: Response) => {
+  if (req.user.rank === "civilian") {
+    res.error.client.unauthorized(
+      "Auth",
+      "Access denied.",
+      `You do not have access to this endpoint.`
+    );
+    return;
+  }
+
+  adminActions
+    .getAllRegisteredBikes()
     .then((bikeIds) => res.status(200).send(bikeIds))
     .catch((err) => handleInternalError(res, err));
 });

@@ -2,6 +2,7 @@ import _ from "lodash";
 import * as databaseManager from "../managers/databaseManager";
 import Users from "../schemas/User.schema";
 import Contacts from "../schemas/Contacts.schema";
+import Bikes from "../schemas/Bikes.schema";
 import bcrypt from "bcrypt";
 import { ClientNotAcceptableError } from "../utils/errorhandler";
 import { Model } from "sequelize";
@@ -55,4 +56,9 @@ export async function getAllAccounts() {
   });
 
   return _.map(users, (user) => user.toJSON());
+}
+
+export async function getAllRegisteredBikes() {
+  let bikeIds = await Bikes.findAll({ attributes: ["id"] });
+  return _.map(bikeIds, (bike: any) => bike.toJSON().id);
 }

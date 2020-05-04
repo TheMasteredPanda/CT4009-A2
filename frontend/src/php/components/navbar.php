@@ -83,7 +83,7 @@ $rank = getRank();
     </div>
 
     <div class="sidenav_footer container">
-        <div class="btn" name="logout_button">Logout</div>
+        <a href="http://localhost:3000/index.php?logout=true" class="btn" name="logout_button">Logout</a>
         <div class="btn" name="close_sidenav_button">Close</div>
     </div>
 </ul>

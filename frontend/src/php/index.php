@@ -1,5 +1,5 @@
 <?php include('./components/header.php');
-if (isset($_POST['logout'])) {
+if (isset($_GET['logout'])) {
     logout();
 }
 
