@@ -3,6 +3,8 @@ import * as databaseManager from "../managers/databaseManager";
 import Users from "../schemas/User.schema";
 import Contacts from "../schemas/Contacts.schema";
 import Bikes from "../schemas/Bikes.schema";
+import RegistryImages from "../schemas/RegistryImages.schema";
+import BikeImages from "../schemas/BikeImages.schema";
 import bcrypt from "bcrypt";
 import {
   ClientNotAcceptableError,
@@ -111,4 +113,20 @@ export async function getAccountDetails(userId: number) {
 export async function getAllRegisteredBikes() {
   let bikeIds = await Bikes.findAll({ attributes: ["id"] });
   return _.map(bikeIds, (bike: any) => bike.toJSON().id);
+}
+
+export async function deleteAccount(userId: number) {
+  let bikes = await Bikes.findAll({ where: { user_id: userId } });
+  let bikeIds = bikes.map((bike) => (bike.toJSON() as any).id);
+  let registryImageEntries = await RegistryImages.findAll({
+    where: { bike_id: bikeIds },
+  });
+  let imageIds = registryImageEntries.map(
+    (entry) => (entry.toJSON() as any).image_id
+  );
+  await RegistryImages.destroy({ where: { image_id: imageIds } });
+  await BikeImages.destroy({ where: { id: imageIds } });
+  await Bikes.destroy({ where: { user_id: userId } });
+  await Contacts.destroy({ where: { user_id: userId } });
+  await Users.destroy({ where: { id: userId } });
 }

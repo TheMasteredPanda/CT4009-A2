@@ -31,7 +31,7 @@ function getAccountDetails($id)
     $payload = json_decode($_COOKIE['ct4009Auth']);
     $curl = curl_init('http://localhost:5555/admin/accounts/account?userId=' . $payload->id . '&accountId=' . $id);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer: ' . $payload->token));
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
     $result = curl_exec($curl);
     $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 

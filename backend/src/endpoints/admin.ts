@@ -94,4 +94,21 @@ router.get("/admin/accounts/account", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
+router.get("/admin/accounts/delete", (req: Request, res: Response) => {
+  let query = req.query;
+
+  if (!query.hasOwnProperty("accountId")) {
+    res.error.client.badRequest(
+      "Client",
+      "Parameter not found",
+      `Query parameter 'accountId' was not found.`
+    );
+    return;
+  }
+
+  adminActions
+    .deleteAccount(Number(query.accountId))
+    .then(() => res.sendStatus(200))
+    .catch((err) => handleInternalError(res, err));
+});
 export default router;
