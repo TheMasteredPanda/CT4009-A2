@@ -62,8 +62,14 @@ router.post("/admin/accounts/create", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
-router.get("/admin/accounts", (req: Request, res: Response) => {
-  AdminActions.getAllAccounts()
+router.post("/admin/accounts", (req: Request, res: Response) => {
+  let accounts = [];
+
+  if (req.body.accounts) {
+    accounts = req.body.accounts;
+  }
+
+  AdminActions.getAllAccounts(accounts)
     .then((accounts) => res.status(200).send({ accounts }))
     .catch((err) => handleInternalError(res, err));
 });

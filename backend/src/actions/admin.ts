@@ -42,7 +42,7 @@ export async function createOfficerAccount(
   });
   let user: any = userModal.toJSON();
   await Contacts.create({
-    userId: user.id,
+    user_id: user.id,
     contact_value: email,
     contact_type: "email",
     contact_hierarchy_position: 1,
@@ -50,12 +50,34 @@ export async function createOfficerAccount(
   return user.id;
 }
 
-export async function getAllAccounts() {
-  let users: Model<any, any>[] = await Users.findAll({
-    attributes: ["id", "username"],
-  });
+export async function getAllAccounts(ids: number[] = []) {
+  let users: Model<any, any>[];
+  let contacts: Model<any, any>[];
 
-  return _.map(users, (user) => user.toJSON());
+  if (ids.length > 0) {
+    users = await Users.findAll({
+      where: { id: ids },
+      attributes: ["id", "username"],
+    });
+    contacts = await Contacts.findAll({
+      where: { user_id: ids },
+      attributes: ["user_id", "contact_value"],
+    });
+  } else {
+    users = await Users.findAll({
+      attributes: ["id", "username"],
+    });
+  }
+
+  return _.map(users, (user) => {
+    let userObject: any = user.toJSON();
+    let userContacts = _.filter(contacts, (contact) => {
+      (contact.toJSON() as any).user_id === userObject.id;
+    }).map((model: any) => model.toJSON());
+
+    userObject.contacts = userContacts;
+    return userObject;
+  });
 }
 
 export async function getAllRegisteredBikes() {

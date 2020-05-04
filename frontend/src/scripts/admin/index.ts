@@ -48,3 +48,71 @@ $(document).ready(() => {
     alert("Password must be a value.");
   }
 });
+
+$('button[name="admin_account_search_button"]').click((e) => {
+  console.log("Clicked");
+  let searchValue: string = $(
+    'input[name="admin_accounts_search"]'
+  ).val() as string;
+  let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; //From https://emailregex.com/
+  let entries = $(".account_entry");
+
+  if (searchValue === "") {
+    $.post({
+      url:
+        "http://localhost:3000/pages/police/admin_panel.php?section=accounts",
+    }).done((res) => {
+      $("body").html(res);
+    });
+    return;
+  }
+  if (emailRegex.test(searchValue)) {
+    let ids = entries
+      .map((i) => {
+        let element = entries[i];
+
+        return {
+          email: $(element).attr("data-search-email"),
+          id: $(element).attr("data-entry-id"),
+        };
+      })
+      .get()
+      .filter((entry) => entry.email.startsWith(searchValue))
+      .map((entry) => entry.id);
+    $.post({
+      url:
+        "http://localhost:3000/pages/police/admin_panel.php?section=accounts",
+      data: {
+        result: ids,
+        searchValue,
+        valueType: "email",
+      },
+    });
+  } else {
+    let ids = entries
+      .map((i) => {
+        let element = entries[i];
+
+        return {
+          username: $(element).attr("data-search-username"),
+          id: $(element).attr("data-entry-id"),
+        };
+      })
+      .get()
+      .filter((entry) => {
+        if (!entry.username) return false;
+        return entry.username.startsWith(searchValue);
+      })
+      .map((entry) => entry.id);
+
+    $.post({
+      url:
+        "http://localhost:3000/pages/police/admin_panel.php?section=accounts",
+      data: {
+        accounts: ids.map((id) => Number(id)),
+      },
+    }).done((res) => {
+      $("body").html(res);
+    });
+  }
+});

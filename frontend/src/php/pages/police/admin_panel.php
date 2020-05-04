@@ -16,7 +16,15 @@ if (isset($_GET['section'])) {
 } else {
 }
 
-$accounts = getAllAccounts();
+$accounts = [];
+
+if (isset($_POST['accounts'])) {
+    global $accounts;
+    $accounts = getAllAccounts($_POST['accounts']);
+} else {
+    $accounts = getAllAccounts([]);
+}
+
 ?>
 
 <div class="admin_panel_container">
@@ -24,9 +32,15 @@ $accounts = getAllAccounts();
         <div class="admin_panel_accounts_section">
             <div class="accounts_header">
                 <div class="container">
-                    <div class="input-field">
-                        <input type="text" name="search_by_username">
-                        <label for="search_by_username">Search</label>
+                    <div class="input_field_wrapper">
+                        <div class="input-field">
+                            <input type="text" name="admin_accounts_search">
+                            <label for="search_by_username">Search</label>
+                        </div>
+                        <div class="input_field_button_wrapper">
+
+                            <button name="admin_account_search_button" class="btn-small">Search</button>
+                        </div>
                     </div>
                     <div class="button_wrapper">
                         <?php if ($detect->isMobile()) : ?>
@@ -40,17 +54,35 @@ $accounts = getAllAccounts();
             <?php if (count($accounts) > 0) : ?>
                 <ul>
                     <li class="account_entry entry_titles">
-                        <h5>Username</h5>
-                        <h5>ID</h5>
+                        <a href="#">
+
+                            <div>
+                                <h5>Username</h5>
+                            </div>
+                            <div>
+                                <h5>ID</h5>
+                            </div>
+                        </a>
                     </li>
                     <?php for ($i = 0; $i < count($accounts); $i++) : ?>
-                        <li class=" account_entry">
-                            <div>
-                                <h6><?php echo $accounts[$i]->username ?></h6>
-                            </div>
-                            <div>
-                                <h6><?php echo $accounts[$i]->id ?></h6>
-                            </div>
+                        <li class=" account_entry" data-search-username=<?php echo $accounts[$i]->username; ?> data-entry-id=<?php echo $accounts[$i]->id; ?>>
+                            <?php
+                            $view_account_href = '';
+
+                            if ($detect->isMobile()) {
+                                $view_account_href = 'http://localhost:3000/pages/police/mobile/view_account_details.php?accountId=' . $accounts[$i]->id;
+                            } else {
+                                $view_account_href = 'http://localhost:3000/pages/police/admin_panel.php?section=accounts&modal=viewAccount&accountId=' . $accounts[$i]->id;
+                            }
+                            ?>
+                            <a href=<?php echo $view_account_href; ?>>
+                                <div>
+                                    <h6><?php echo ucwords($accounts[$i]->username) ?></h6>
+                                </div>
+                                <div>
+                                    <h6><?php echo ucwords($accounts[$i]->id) ?></h6>
+                                </div>
+                            </a>
                         </li>
                     <?php endfor; ?>
                 </ul>
