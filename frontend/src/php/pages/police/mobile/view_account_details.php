@@ -14,7 +14,7 @@ $account = getAccountDetails($_GET['accountId'])->account;
             <label for="account_username">Username</label>
         </div>
         <div class="input-field">
-            <input type="text" name="account_email" value=<?php echo ''; ?> readonly>
+            <input type="text" name="account_email" value=<?php echo $account->contacts[0]->contact_value; ?> readonly>
             <label for="account_email">Email</label>
         </div>
         <div class="input-field">
@@ -31,7 +31,7 @@ $account = getAccountDetails($_GET['accountId'])->account;
         </div>
         <div class="button_wrapper">
             <a href=<?php echo "http://localhost:3000/actions/delete_account.php?accountId=" . $_GET['accountId'] ?> class="btn-small">Delete</a>
-            <a href="http://localhost:3000/pages/police/admin_panel.php?section=accounts">Back</a>
+            <a href="http://localhost:3000/pages/police/admin_panel.php?section=accounts" class="btn-small">Back</a>
         </div>
     </div>
 </div>

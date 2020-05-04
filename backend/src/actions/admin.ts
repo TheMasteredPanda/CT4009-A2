@@ -64,6 +64,7 @@ export async function getAllAccounts(ids: number[] = []) {
       where: { id: ids },
       attributes: ["id", "username"],
     });
+
     contacts = await Contacts.findAll({
       where: { user_id: ids },
       attributes: ["user_id", "contact_value"],
@@ -72,12 +73,18 @@ export async function getAllAccounts(ids: number[] = []) {
     users = await Users.findAll({
       attributes: ["id", "username"],
     });
+
+    contacts = await Contacts.findAll({
+      attributes: ["user_id", "contact_value"],
+    });
   }
+  console.log("Contacts: ");
+  console.log(contacts.length);
 
   return _.map(users, (user) => {
     let userObject: any = user.toJSON();
     let userContacts = _.filter(contacts, (contact) => {
-      (contact.toJSON() as any).user_id === userObject.id;
+      return (contact.toJSON() as any).user_id == userObject.id;
     }).map((model: any) => model.toJSON());
 
     userObject.contacts = userContacts;

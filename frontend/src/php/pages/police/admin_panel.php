@@ -65,7 +65,7 @@ if (isset($_POST['accounts'])) {
                         </a>
                     </li>
                     <?php for ($i = 0; $i < count($accounts); $i++) : ?>
-                        <li class=" account_entry" data-search-username=<?php echo $accounts[$i]->username; ?> data-entry-id=<?php echo $accounts[$i]->id; ?>>
+                        <li class=" account_entry" data-search-username=<?php echo $accounts[$i]->username; ?> data-search-email=<?php echo '"' . $accounts[$i]->contacts[0]->contact_value . '"'; ?> data-entry-id=<?php echo $accounts[$i]->id; ?>>
                             <?php
                             $view_account_href = '';
 

@@ -340,3 +340,20 @@ nav {
     }
   }
 }
+
+.admin_view_account_details_container {
+  .container {
+    margin-top: 10%;
+  }
+  .button_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      @extend .indigo;
+      margin-left: 2%;
+      margin-right: 2%;
+    }
+  }
+}

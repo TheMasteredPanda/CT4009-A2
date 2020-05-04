@@ -77,16 +77,17 @@ $('button[name="admin_account_search_button"]').click((e) => {
         };
       })
       .get()
+      .filter((entry) => entry.email)
       .filter((entry) => entry.email.startsWith(searchValue))
       .map((entry) => entry.id);
     $.post({
       url:
         "http://localhost:3000/pages/police/admin_panel.php?section=accounts",
       data: {
-        result: ids,
-        searchValue,
-        valueType: "email",
+        accounts: ids.map((id) => Number(id)),
       },
+    }).done((res) => {
+      $("body").html(res);
     });
   } else {
     let ids = entries
