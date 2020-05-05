@@ -44,10 +44,12 @@ afterEach(async (done) => {
     [key: string]: ModelCtor<Model<any, any>>;
   } = databaseManager.sequelize().models;
 
+
   await models.users_contacts.drop();
   await models.registry_images.drop();
   await models.investigation_images.drop();
-  await models.report_images.drop();
+  await models.reports.drop();
+  await models.reports_comments.drop();
   await models.bike_images.drop();
   await models.bikes.drop();
   await models.users.drop();
@@ -59,14 +61,16 @@ afterAll(async (done) => {
   let models: {
     [key: string]: ModelCtor<Model<any, any>>;
   } = databaseManager.sequelize().models;
+
   await models.users_contacts.drop();
   await models.registry_images.drop();
   await models.investigation_images.drop();
-  await models.report_images.drop();
+  await models.reports.drop();
+  await models.reports_comments.drop();
   await models.bike_images.drop();
   await models.bikes.drop();
   await models.users.drop();
-  await authManager.flushAll();
+  await authManager.flushAll();;
   await shutdown();
   done();
 });
