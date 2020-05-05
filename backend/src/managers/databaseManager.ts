@@ -60,23 +60,37 @@ export async function createAssociations() {
   let Users = client.models.users;
   let Contacts = client.models.users_contacts;
   let Bikes = client.models.bikes;
+  let Reports = client.models.reports;
+  let ReportsComments = client.models.reports_comments;
   let BikeImages = client.models.bike_images;
   let InvestigationImages = client.models.investigation_images;
-  let ReportImages = client.models.report_images;
   let RegistryImages = client.models.registry_images;
+
   Contacts.belongsTo(Users, {
-    foreignKey: "user_id",
+    foreignKey: { name: "user_id", allowNull: false },
+    onDelete: "cascade",
+  });
+  Reports.belongsTo(Users, {
+    foreignKey: { name: "author", allowNull: false },
+    onDelete: "cascade",
+  });
+  Reports.hasMany(ReportsComments, {
+    foreignKey: { name: "report_id", allowNull: false },
     onDelete: "cascade",
   });
   Bikes.belongsTo(Users, {
-    foreignKey: "user_id",
+    foreignKey: { name: "user_id", allowNull: false },
+    onDelete: "cascade",
+  });
+  Reports.belongsTo(Bikes, {
+    foreignKey: { name: "bike_id", allowNull: false },
     onDelete: "cascade",
   });
   BikeImages.belongsToMany(Bikes, {
     through: RegistryImages,
     onDelete: "cascade",
-    foreignKey: "image_id",
-    otherKey: "bike_id",
+    foreignKey: { name: "image_id", allowNull: false },
+    otherKey: { name: "bike_id", allowNull: false },
   });
 }
 
