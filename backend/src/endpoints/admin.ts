@@ -94,7 +94,7 @@ router.get("/admin/accounts/account", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
-router.get("/admin/accounts/delete", (req: Request, res: Response) => {
+router.post("/admin/accounts/delete", (req: Request, res: Response) => {
   let query = req.query;
 
   if (!query.hasOwnProperty("accountId")) {

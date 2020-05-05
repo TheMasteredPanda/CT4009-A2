@@ -78,8 +78,6 @@ export async function getAllAccounts(ids: number[] = []) {
       attributes: ["user_id", "contact_value"],
     });
   }
-  console.log("Contacts: ");
-  console.log(contacts.length);
 
   return _.map(users, (user) => {
     let userObject: any = user.toJSON();

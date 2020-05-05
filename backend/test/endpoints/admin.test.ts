@@ -91,7 +91,7 @@ function login() {
 }
 
 describe("Testing Admin Endpoints", () => {
-  it("/admin/accounts/create", async (done) => {
+  it("/admin/accounts/create", (done) => {
     login().then((authPayload: any) => {
       request
         .post(`/admin/accounts/create?userId=${authPayload.id}`)
@@ -111,10 +111,10 @@ describe("Testing Admin Endpoints", () => {
     });
   });
 
-  it("/admin/accounts", async (done) => {
+  it("/admin/accounts", (done) => {
     login().then((authPayload: any) => {
       request
-        .get(`/admin/accounts?userId=${authPayload.id}`)
+        .post(`/admin/accounts?userId=${authPayload.id}`)
         .set("Authorization", `Bearer ${authPayload.token}`)
         .end((err, res) => {
           if (err) {
@@ -124,6 +124,68 @@ describe("Testing Admin Endpoints", () => {
           expect(res.status).toBe(200);
           expect(res.body).toBeDefined();
           done();
+        });
+    });
+  });
+
+  it("/admin/accounts/account", (done) => {
+    login().then((authPayload: any) => {
+      request
+        .post(`/admin/accounts/create?userId=${authPayload.id}`)
+        .send({
+          username: "johndoe",
+          password: "password1",
+          email: "johndoe@gmail.com",
+        })
+        .set("Authorization", `Bearer ${authPayload.token}`)
+        .end((err, res) => {
+          if (err) throw err;
+          expect(res.status).toBe(200);
+          expect(res.body).toBeDefined();
+          let id = res.body.id;
+          request
+            .get(
+              `/admin/accounts/account?userId=${authPayload.id}&accountId=${id}`
+            )
+            .set("Authorization", `Bearer ${authPayload.token}`)
+            .end((err, res) => {
+              if (err) throw err;
+              expect(res.status).toBe(200);
+              expect(res.body).toBeDefined();
+              done(0);
+            });
+        });
+    });
+  });
+
+  it("/admin/accounts/delete", (done) => {
+    login().then((authPayload: any) => {
+      request
+        .post(`/admin/accounts/create?userId=${authPayload.id}`)
+        .send({
+          username: "johndoe",
+          password: "password1",
+          email: "johndoe@gmail.com",
+        })
+        .set("Authorization", `Bearer ${authPayload.token}`)
+        .end((err, res) => {
+          if (err) {
+            throw err;
+          }
+
+          expect(res.status).toBe(200);
+          expect(res.body).toBeDefined();
+          let id = res.body.id;
+          request
+            .post(
+              `/admin/accounts/delete?userId=${authPayload.id}&accountId=${id}`
+            )
+            .set("Authorization", `Bearer ${authPayload.token}`)
+            .end((err, res) => {
+              if (err) throw err;
+              expect(res.status).toBe(200);
+              done();
+            });
         });
     });
   });
