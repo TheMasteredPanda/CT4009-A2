@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { Sequelize } from "sequelize";
+import { Sequelize, DataTypes, ModelCtor, Model } from "sequelize";
 import * as configUtils from "../utils/config";
 
 /**
@@ -38,6 +38,36 @@ export async function load() {
   }
 }
 
+export async function sync() {
+  let User: any = await import("../schemas/User.schema");
+  await User.default.sync();
+  let UserContacts: any = await import("../schemas/Contacts.schema");
+  await UserContacts.default.sync();
+  let Bikes: any = await import("../schemas/Bikes.schema");
+  await Bikes.default.sync();
+  let BikeImages: any = await import("../schemas/BikeImages.schema");
+  await BikeImages.default.sync();
+  let Reports: any = await import("../schemas/Reports.schema");
+  await Reports.default.sync();
+  let ReportComments: any = await import("../schemas/ReportComments.schema");
+  await ReportComments.default.sync();
+  let RegistryImages: any = await import("../schemas/RegistryImages.schema");
+  await RegistryImages.default.sync();
+}
+
+export async function drop() {
+  if (!client) return [];
+  let models: { [key: string]: ModelCtor<Model<any, any>> } = client.models;
+
+  await models.reports_comments.drop();
+  await models.registry_images.drop();
+  await models.bike_images.drop();
+  await models.reports.drop();
+  await models.bikes.drop();
+  await models.users_contacts.drop();
+  await models.users.drop();
+}
+
 /**
  * Creates the associatoins between Sequelize models. This is
  * translated into the references on the server.
@@ -63,7 +93,6 @@ export async function createAssociations() {
   let Reports = client.models.reports;
   let ReportsComments = client.models.reports_comments;
   let BikeImages = client.models.bike_images;
-  let InvestigationImages = client.models.investigation_images;
   let RegistryImages = client.models.registry_images;
 
   Contacts.belongsTo(Users, {

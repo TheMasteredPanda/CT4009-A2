@@ -4,8 +4,8 @@ import * as databaseManager from "../../src/managers/databaseManager";
 import supertest from "supertest";
 import * as authManager from "../../src/managers/authManager";
 import { ModelCtor, Model } from "sequelize/types";
-import { endianness } from "os";
-let request = supertest("http://localhost:4000");
+import { getReportIds } from "src/actions/reports";
+let request = supertest("http://localhost:4005");
 
 beforeAll(async (done) => {
   process.env.TEST_MARIADB_USERNAME = "root";
@@ -13,7 +13,7 @@ beforeAll(async (done) => {
   process.env.TEST_MARIADB_HOST = "172.17.0.2";
   process.env.TEST_MARIADB_PORT = "3306";
   process.env.TEST_MARIADB_DATABASE = "test";
-  process.env.TEST_SERVER_PORT = "4000";
+  process.env.TEST_SERVER_PORT = "4005";
   process.env.TEST_SERVER_AUTH_SECRETEXP = "60s";
   process.env.TEST_SERVER_AUTH_REFRESHEXP = "20s";
   process.env.TEST_SERVER_AUTH_REFRESHOFFSET = "20s";
@@ -26,39 +26,18 @@ beforeAll(async (done) => {
 });
 
 beforeEach(async (done) => {
-  await databaseManager.sequelize().sync();
+  await databaseManager.sync();
   done();
 });
 
 afterEach(async (done) => {
-  let models: {
-    [key: string]: ModelCtor<Model<any, any>>;
-  } = databaseManager.sequelize().models;
-
-  await models.users_contacts.drop();
-  await models.registry_images.drop();
-  await models.investigation_images.drop();
-  await models.reports.drop();
-  await models.reports_comments.drop();
-  await models.bike_images.drop();
-  await models.bikes.drop();
-  await models.users.drop();
+  await databaseManager.drop();
   await authManager.flushAll();
   await done();
 });
 
 afterAll(async (done) => {
-  let models: {
-    [key: string]: ModelCtor<Model<any, any>>;
-  } = databaseManager.sequelize().models;
-  await models.users_contacts.drop();
-  await models.registry_images.drop();
-  await models.investigation_images.drop();
-  await models.reports.drop();
-  await models.reports_comments.drop();
-  await models.bike_images.drop();
-  await models.bikes.drop();
-  await models.users.drop();
+  await databaseManager.drop();
   await authManager.flushAll();
   await shutdown();
   done();
@@ -88,8 +67,9 @@ function createJohnDoe() {
 function createBikeEntry(authPayload: any) {
   return new Promise((resolve, reject) => {
     request
-      .post(`/bikes/register?bikeId=${authPayload.id}`)
-      .send({ brand: "Test Brand", wheel_size: 24.3, gear_count: 8 })
+      .post(`/bike/register?userId=${authPayload.id}&bikeId=${authPayload.id}`)
+      .set("Authorization", `Bearer ${authPayload.token}`)
+      .send({ brand: "Test Brand", wheelSize: 24, gearCount: 8 })
       .end((err, res) => {
         if (err) {
           reject(err);
@@ -108,7 +88,7 @@ describe("Testing Report Endpoints", () => {
       createBikeEntry(authPayload).then((bikeId: any) => {
         request
           .post(`/reports/create?userId=${authPayload.id}&bikeId=${bikeId}`)
-          .set({ content: "Test Report" })
+          .send({ content: "Test Report" })
           .set("Authorization", `Bearer ${authPayload.token}`)
           .end((err, res) => {
             if (err) throw err;
@@ -132,7 +112,7 @@ describe("Testing Report Endpoints", () => {
             expect(res.status).toBe(200);
             expect(res.body).toBeDefined();
             request
-              .get(`/reports?userId=${authPayload.id}`)
+              .post(`/reports?userId=${authPayload.id}`)
               .set("Authorization", `Bearer ${authPayload.token}`)
               .end((err, res) => {
                 if (err) throw err;
@@ -160,7 +140,7 @@ describe("Testing Report Endpoints", () => {
               .get(
                 `/reports/report?userId=${authPayload.id}&reportId=${res.body.id}`
               )
-              .set("Authorizatin", `Bearer ${authPayload.token}`)
+              .set("Authorization", `Bearer ${authPayload.token}`)
               .end((err, res) => {
                 if (err) throw err;
                 expect(res.status).toBe(200);
@@ -185,10 +165,10 @@ describe("Testing Report Endpoints", () => {
             expect(res.body).toBeDefined();
             request
               .post(
-                `/reports/comments/create?userId=${authPayload.id}&bikeId=${bikeId}`
+                `/reports/comments/create?userId=${authPayload.id}&reportId=${res.body.id}&bikeId=${bikeId}&type=civilian`
               )
               .set("Authorization", `Bearer ${authPayload.token}`)
-              .send({ comment: "This is a test comment", type: "civilian" })
+              .send({ comment: "This is a test comment" })
               .end((err, res) => {
                 if (err) throw err;
                 expect(res.status).toBe(200);
@@ -214,9 +194,9 @@ describe("Testing Report Endpoints", () => {
             let reportId = res.body.id;
             request
               .post(
-                `/reports/comments/create?userId=${authPayload.id}&bikeId=${bikeId}`
+                `/reports/comments/create?userId=${authPayload.id}&reportId=${reportId}&bikeId=${bikeId}&type=civilian`
               )
-              .send({ comment: "This is a test comment.", type: "civilian" })
+              .send({ comment: "This is a test comment." })
               .set("Authorization", `Bearer ${authPayload.token}`)
               .end((err, res) => {
                 if (err) throw err;
@@ -251,7 +231,9 @@ describe("Testing Report Endpoints", () => {
             expect(res.status).toBe(200);
             expect(res.body).toBeDefined();
             request
-              .post(`/reports/close?userId=${authPayload.id}&bikeId=${bikeId}`)
+              .post(
+                `/reports/close?userId=${authPayload.id}&reportId=${res.body.id}`
+              )
               .set("Authorization", `Bearer ${authPayload.token}`)
               .end((err, res) => {
                 if (err) throw err;

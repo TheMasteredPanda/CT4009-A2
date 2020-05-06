@@ -27,4 +27,4 @@ ReportComment.init(
   { sequelize: databaseManager.sequelize(), modelName: "reports_comments" }
 );
 
-export default databaseManager.sequelize().models.report_comments;
+export default databaseManager.sequelize().models.reports_comments;

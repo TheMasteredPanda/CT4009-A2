@@ -21,7 +21,7 @@ export async function create(userId: number, bikeId: number, content: string) {
   }
 
   let model = await Reports.create({
-    user_id: userId,
+    author: userId,
     bike_id: bikeId,
     content,
   });
@@ -34,7 +34,8 @@ export async function getReportIds(
     open?: boolean;
     startDate?: number;
     endDate?: number;
-  } = {}
+    attributes?: string[];
+  } = { attributes: ["id"] }
 ) {
   let query: { where: any } = { where: {} };
 
@@ -56,7 +57,7 @@ export async function getReportIds(
     query.where.author = opts.author;
   }
 
-  let reports = await Reports.findAll({ where: query, attributes: ["id"] });
+  let reports = await Reports.findAll(query);
   return _.map(reports, (report) => (report.toJSON() as any).id);
 }
 

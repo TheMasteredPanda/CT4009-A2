@@ -65,7 +65,7 @@ export async function register(params: any) {
   let model = await Users.create({ username: params.username, password: hash });
   let user: any = model.toJSON();
   await Contacts.create({
-    userId: user.id,
+    user_id: user.id,
     contact_value: params.email,
     contact_type: "email",
     contact_hierarchy_position: 1,

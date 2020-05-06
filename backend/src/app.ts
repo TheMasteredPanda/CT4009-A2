@@ -77,7 +77,8 @@ export async function start() {
 
   await databaseManager.load();
   await databaseManager.createAssociations();
-  await databaseManager.sequelize().sync();
+  await databaseManager.sync();
+
   let Users: ModelCtor<Model<any, any>> = await new Promise(
     (resolve, reject) => {
       import("./schemas/User.schema")

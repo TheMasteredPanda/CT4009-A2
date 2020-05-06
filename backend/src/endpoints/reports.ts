@@ -42,7 +42,7 @@ router.post("/reports", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
-router.post("/reports/report", (req: Request, res: Response) => {
+router.get("/reports/report", (req: Request, res: Response) => {
   let query = req.query;
 
   if (!query.reportId) {
@@ -130,7 +130,7 @@ router.get("/reports/comments", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
-router.get("/reports/close", (req: Request, res: Response) => {
+router.post("/reports/close", (req: Request, res: Response) => {
   let query = req.query;
 
   if (!query.reportId) {
