@@ -26,51 +26,19 @@ beforeAll(async (done) => {
 });
 
 beforeEach(async (done) => {
-  await databaseManager.sequelize().sync();
-  let hashedPassword = await bcrypt.hash(
-    process.env.OWNER_ACCOUNT_PASSWORD,
-    10
-  );
-  await databaseManager.sequelize().models.users.create({
-    username: process.env.OWNER_ACCOUNT_USERNAME,
-    password: hashedPassword,
-    rank: "police_admin",
-  });
+  await databaseManager.sync();
   done();
 });
 
 afterEach(async (done) => {
-  let models: {
-    [key: string]: ModelCtor<Model<any, any>>;
-  } = databaseManager.sequelize().models;
-
-
-  await models.users_contacts.drop();
-  await models.registry_images.drop();
-  await models.investigation_images.drop();
-  await models.reports.drop();
-  await models.reports_comments.drop();
-  await models.bike_images.drop();
-  await models.bikes.drop();
-  await models.users.drop();
+  await databaseManager.drop();
   await authManager.flushAll();
   await done();
 });
 
 afterAll(async (done) => {
-  let models: {
-    [key: string]: ModelCtor<Model<any, any>>;
-  } = databaseManager.sequelize().models;
-
-  await models.users_contacts.drop();
-  await models.registry_images.drop();
-  await models.investigation_images.drop();
-  await models.reports.drop();
-  await models.reports_comments.drop();
-  await models.bike_images.drop();
-  await models.bikes.drop();
-  await models.users.drop();
-  await authManager.flushAll();;
+  await databaseManager.drop();
+  await authManager.flushAll();
   await shutdown();
   done();
 });

@@ -1,10 +1,7 @@
-import * as fs from "fs";
 import { start, shutdown } from "../../src/app";
 import * as databaseManager from "../../src/managers/databaseManager";
 import supertest from "supertest";
 import * as authManager from "../../src/managers/authManager";
-import { ModelCtor, Model } from "sequelize/types";
-import { getReportIds } from "src/actions/reports";
 let request = supertest("http://localhost:4005");
 
 beforeAll(async (done) => {
