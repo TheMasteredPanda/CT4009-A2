@@ -175,3 +175,20 @@ export async function remove(userId: number) {
   if (!authManager.hasHandler(userId)) return;
   authManager.remove(userId);
 }
+
+export async function getUsername(accountId: number) {
+  let userModel = await Users.findOne({
+    where: { id: accountId },
+    attributes: ["username"],
+  });
+
+  if (!userModel) {
+    throw new ClientNotFoundError(
+      "Client",
+      `Couldn't find user`,
+      `Couldn't find user ${accountId}`
+    );
+  }
+
+  return (userModel.toJSON() as any).username;
+}

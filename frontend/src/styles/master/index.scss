@@ -176,6 +176,7 @@ nav {
     padding-bottom: 4%;
     display: flex;
     flex-flow: row;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 
@@ -279,7 +280,7 @@ nav {
         display: flex;
         justify-content: center;
         align-items: center;
-        
+
         button {
           @extend .indigo;
         }
@@ -349,6 +350,146 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    a {
+      @extend .indigo;
+      margin-left: 2%;
+      margin-right: 2%;
+    }
+  }
+}
+
+.reports_container {
+  display: flex;
+  flex-flow: column;
+  overflow-y: scroll;
+  height: 90%;
+  .reports_header {
+    margin-top: 4%;
+
+    .search_reports_form {
+      @extend .grey, .lighten-2;
+      height: max-content;
+      min-height: 30%;
+      padding-top: 5%;
+
+      .datepicker_input {
+        padding-top: 5%;
+      }
+
+      input[name="search_reports_button"] {
+        @extend .indigo;
+      }
+
+      .search_reports_form_button_wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 5%;
+      }
+    }
+  }
+
+  .no_reports_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.report_stolen_bike_form {
+  margin-top: 10%;
+  textarea {
+    height: 10% !important;
+    overflow-y: scroll;
+  }
+
+  .button_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input {
+      @extend .indigo;
+    }
+  }
+}
+
+.view_report_container {
+  min-height: 90%;
+  display: grid;
+  grid-template-rows: 10% 50% auto;
+  margin-top: 4%;
+
+  #viewReportDescription {
+    height: 100% !important;
+    overflow-y: scroll;
+  }
+
+  .comments_container {
+    min-height: 38%;
+    margin-top: 4%;
+    margin-bottom: 2%;
+    position: relative;
+
+    .comments {
+      overflow-y: scroll;
+      height: 75%;
+
+      .comment {
+        @extend .grey, .lighten-1;
+        display: flex;
+        flex-flow: column;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        padding-left: 1%;
+        padding-right: 1%;
+
+        p {
+          margin: 1%;
+          font-size: 1.2rem;
+        }
+
+        .comment_footer {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        }
+      }
+    }
+
+    form {
+      position: absolute;
+      bottom: 0;
+      margin-bottom: 1%;
+      display: grid;
+      grid-template-columns: 75% 25%;
+      margin-left: 2%;
+      margin-right: 2%;
+
+      .input-field {
+        margin: 0;
+      }
+
+      .button_wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        input {
+          @extend .indigo;
+        }
+      }
+    }
+  }
+
+  .button_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 3%;
+    padding-bottom: 5%;
 
     a {
       @extend .indigo;

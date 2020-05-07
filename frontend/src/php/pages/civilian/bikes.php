@@ -1,12 +1,11 @@
 <?php
 include "../../components/header.php";
 include "../../functions/bike_functions.php";
-
+include "../../components/navbar.php";
 $bikes = json_decode(getUsersBikes());
 ?>
 
 <div class="bikes_container">
-    <?php include "../../components/navbar.php"; ?>
     <?php if (count($bikes->result) === 0) : ?>
         <div class="no_bikes_registered_wrapper">
             <h3>No Bikes Registered</h3>

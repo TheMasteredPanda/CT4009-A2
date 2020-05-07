@@ -2,7 +2,6 @@ import * as databaseManager from "../managers/databaseManager";
 import { Op } from "sequelize";
 import Reports from "../schemas/Reports.schema";
 import ReportComments from "../schemas/ReportComments.schema";
-import Bikes from "../schemas/Bikes.schema";
 import _ from "lodash";
 import {
   ClientNotAcceptableError,

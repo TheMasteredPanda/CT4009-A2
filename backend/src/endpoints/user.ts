@@ -185,4 +185,22 @@ router.get("/user/rank/set", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
+router.get("/user/name", (req: Request, res: Response) => {
+  let accountId = req.query.accountId;
+
+  if (!accountId) {
+    res.error.client.badRequest(
+      "Client",
+      "Parameter not found",
+      `Query parameter 'accountId' was not found.`
+    );
+    return;
+  }
+
+  actions
+    .getUsername(Number(accountId))
+    .then((username) => res.status(200).send({ username }))
+    .catch((err) => handleInternalError(res, err));
+});
+
 export default router;

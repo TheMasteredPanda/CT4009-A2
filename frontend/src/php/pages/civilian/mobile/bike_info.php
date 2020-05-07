@@ -67,6 +67,7 @@ $bike = getBike($_GET['bikeId']);
             <a href="http://localhost:3000/pages/civilian/bikes.php" class="btn indigo">Back</a>
             <a href=<?php echo "http://localhost:3000/pages/civilian/mobile/edit_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Edit</a>
             <a href=<?php echo "http://localhost:3000/actions/delete_bike.php?bikeId=" . $bike->id ?> class="btn indigo">Delete</a>
+            <a href=<?php echo "http://localhost:3000/pages/civilian/mobile/report_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Report Stolen</a>
         </span>
     </div>
 
