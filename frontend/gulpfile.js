@@ -17,6 +17,7 @@ gulp.task("webpack", () => {
       }
 
       if (stats.hasErrors()) {
+        console.log(stats.compilation.errors)
         return reject(new Error(stats.compilation.errors.join("\n")));
       }
       resolve();

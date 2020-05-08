@@ -388,6 +388,10 @@ nav {
         padding-bottom: 5%;
       }
     }
+
+    .police_search_reports_form {
+      @extend .search_reports_form;
+    }
   }
 
   .no_reports_container {
@@ -416,9 +420,9 @@ nav {
 }
 
 .view_report_container {
-  min-height: 90%;
+  height: 100%;
   display: grid;
-  grid-template-rows: 10% 50% auto;
+  grid-template-rows: 10% auto 80% 10%;
   margin-top: 4%;
 
   #viewReportDescription {
@@ -427,24 +431,31 @@ nav {
   }
 
   .comments_container {
-    min-height: 38%;
     margin-top: 4%;
     margin-bottom: 2%;
-    position: relative;
+    height: 100%;
+    display: grid; 
+    grid-template-rows: 10% 15% 60% 15%;
+
+    .comments_container_header {
+      margin-bottom: 4%;
+      margin-top: 4%;
+    }
 
     .comments {
+      margin: 0;
       overflow-y: scroll;
-      height: 75%;
-
       .comment {
         @extend .grey, .lighten-1;
+        display: block;
         display: flex;
         flex-flow: column;
         margin-top: 1%;
         margin-bottom: 1%;
         padding-left: 1%;
         padding-right: 1%;
-
+        height: max-content;
+        min-height: 5%;
         p {
           margin: 1%;
           font-size: 1.2rem;
@@ -456,11 +467,15 @@ nav {
           justify-content: flex-end;
         }
       }
+
+    }
+    .new_comment_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     form {
-      position: absolute;
-      bottom: 0;
       margin-bottom: 1%;
       display: grid;
       grid-template-columns: 75% 25%;
@@ -487,9 +502,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    padding: 3%;
-    padding-bottom: 5%;
+    padding: 5%;
 
     a {
       @extend .indigo;

@@ -36,9 +36,28 @@ router.post("/reports/create", (req: Request, res: Response) => {
 });
 
 router.post("/reports", (req: Request, res: Response) => {
+  let author: string | number;
+
+  if (req.query.author) {
+    author = Number(req.query.author);
+
+    if (isNaN(author)) {
+      author = req.query.author as string;
+    }
+
+    req.query.author = author as any;
+  }
+
+  if (req.query.open) {
+    req.query.open = (Number(req.query.open) === 1) as any;
+  }
+
   actions
     .getReportIds(req.query)
-    .then((ids) => res.status(200).send({ ids }))
+    .then((ids) => {
+      console.log(ids);
+      res.status(200).send({ ids });
+    })
     .catch((err) => handleInternalError(res, err));
 });
 

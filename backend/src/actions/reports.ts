@@ -2,6 +2,8 @@ import * as databaseManager from "../managers/databaseManager";
 import { Op } from "sequelize";
 import Reports from "../schemas/Reports.schema";
 import ReportComments from "../schemas/ReportComments.schema";
+import Users from "../schemas/User.schema";
+
 import _ from "lodash";
 import {
   ClientNotAcceptableError,
@@ -53,7 +55,17 @@ export async function getReportIds(
   }
 
   if (opts.author) {
-    query.where.author = opts.author;
+    if (typeof opts.author === "string") {
+      let userModel = await Users.findOne({ where: { username: opts.author } });
+
+      if (userModel === null) {
+        return [];
+      }
+
+      query.where.author = (userModel.toJSON() as any).id;
+    } else {
+      query.where.author = opts.author;
+    }
   }
 
   let reports = await Reports.findAll(query);

@@ -5,10 +5,14 @@ include "../../../functions/report_functions.php";
 include "../../../functions/user_functions.php";
 
 $report = getReport($_GET['reportId'])->report;
-$comments = getReportComments($_GET['reportId'], 'civilian')->comments;
-$status = "Open";
 
-print_r($report->open);
+$type = 'police';
+if (isset($_POST['type'])) {
+    $type = $_POST['type'];
+}
+
+$comments = getReportComments($_GET['reportId'], $type)->comments;
+$status = "Open";
 
 if (!$report->open) {
     $status = 'Closed';
@@ -27,6 +31,10 @@ if (!$report->open) {
     <div class="comments_container">
         <h5 class="center-align">Comments</h5>
 
+        <div class="comments_container_header center-align">
+            <button class="btn-small indigo" name="comment_public_section_button">Public</button>
+            <button class="btn-small indigo" name="comment_private_section_button">Police</button>
+        </div>
         <ul class="comments">
             <?php if (count($comments) > 0) : ?>
                 <?php for ($i = 0; $i < count($comments); $i++) :
@@ -47,7 +55,7 @@ if (!$report->open) {
             <?php endif; ?>
         </ul>
         <div class="new_comment_container">
-            <form action=<?php echo "http://localhost:3000/actions/create_report_comment.php?reportId=" . $report->id . '&type=civilian'; ?> method="POST">
+            <form action=<?php echo "http://localhost:3000/actions/create_report_comment.php?reportId=" . $report->id . '&type=' . $type; ?> method="POST">
                 <div class="input-field">
                     <textarea name="new_comment_textarea" id="newCommentTextarea" class="materialize-textarea" cols="30" rows=3></textarea>
                     <label for="newCommentTextarea">New Comment</label>
@@ -70,6 +78,7 @@ if (!$report->open) {
     </div>
 </div>
 
+<script type="text/javascript" src="http://localhost:3000/scripts/reports.bundle.js"></script>
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <?php
 include "../../../components/footer.php";
