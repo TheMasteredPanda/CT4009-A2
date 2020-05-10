@@ -57,6 +57,10 @@ export async function sync() {
   await Investigations.default.sync();
   let Investigators: any = await import("../schemas/Investigatiors.schema");
   await Investigators.default.sync();
+  let InvestigationUpdates = await import(
+    "../schemas/InvestigationUpdates.schema"
+  );
+  await InvestigationUpdates.default.sync();
   let InvestigationImages: any = await import(
     "../schemas/InvestigationImages.schema"
   );
@@ -65,10 +69,6 @@ export async function sync() {
     "../schemas/InvestigationComments.schema"
   );
   await InvestigationComments.default.sync();
-  let InvestigationUpdates = await import(
-    "../schemas/InvestigationUpdates.schema"
-  );
-  await InvestigationUpdates.default.sync();
 }
 
 export async function drop() {
@@ -76,12 +76,12 @@ export async function drop() {
   let models: { [key: string]: ModelCtor<Model<any, any>> } = client.models;
 
   await models.reports_comments.drop();
-  await models.investigation_updates.drop();
   await models.investigation_comments.drop();
   await models.registry_images.drop();
   await models.investigation_images.drop();
+  await models.investigation_updates.drop();
   await models.bike_images.drop();
-  await models.investigators.drop();
+  await models.investigation_investigators.drop();
   await models.investigations.drop();
   await models.reports.drop();
   await models.bikes.drop();
@@ -116,7 +116,7 @@ export async function createAssociations() {
   let BikeImages = client.models.bike_images;
   let RegistryImages = client.models.registry_images;
   let Investigations = client.models.investigations;
-  let Investigators = client.models.investigators;
+  let Investigators = client.models.investigation_investigators;
   let InvestigationComments = client.models.investigation_comments;
   let InvestigationImages = client.models.investigation_images;
   let InvestigationUpdates = client.models.investigation_updates;

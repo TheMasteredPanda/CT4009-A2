@@ -17,4 +17,4 @@ Investigators.init(
   }
 );
 
-export default databaseManager.sequelize().models.investigators;
+export default databaseManager.sequelize().models.investigation_investigators;

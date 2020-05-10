@@ -1,6 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import * as databaseManager from "../managers/databaseManager";
-import { defaultValueSchemable } from "sequelize/types/lib/utils";
 
 class Investigation extends Model {}
 Investigation.init(
