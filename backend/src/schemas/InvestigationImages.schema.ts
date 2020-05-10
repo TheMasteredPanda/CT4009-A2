@@ -16,3 +16,5 @@ InvestigationImages.init(
   },
   { sequelize: databaseManager.sequelize(), modelName: "investigation_images" }
 );
+
+export default databaseManager.sequelize().models.investigation_images;

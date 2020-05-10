@@ -53,6 +53,22 @@ export async function sync() {
   await ReportComments.default.sync();
   let RegistryImages: any = await import("../schemas/RegistryImages.schema");
   await RegistryImages.default.sync();
+  let Investigations: any = await import("../schemas/Investigations.schema");
+  await Investigations.default.sync();
+  let Investigators: any = await import("../schemas/Investigatiors.schema");
+  await Investigators.default.sync();
+  let InvestigationImages: any = await import(
+    "../schemas/InvestigationImages.schema"
+  );
+  await InvestigationImages.default.sync();
+  let InvestigationComments: any = await import(
+    "../schemas/InvestigationComments.schema"
+  );
+  await InvestigationComments.default.sync();
+  let InvestigationUpdates = await import(
+    "../schemas/InvestigationUpdates.schema"
+  );
+  await InvestigationUpdates.default.sync();
 }
 
 export async function drop() {
@@ -60,8 +76,13 @@ export async function drop() {
   let models: { [key: string]: ModelCtor<Model<any, any>> } = client.models;
 
   await models.reports_comments.drop();
+  await models.investigation_updates.drop();
+  await models.investigation_comments.drop();
   await models.registry_images.drop();
+  await models.investigation_images.drop();
   await models.bike_images.drop();
+  await models.investigators.drop();
+  await models.investigations.drop();
   await models.reports.drop();
   await models.bikes.drop();
   await models.users_contacts.drop();
@@ -94,6 +115,11 @@ export async function createAssociations() {
   let ReportsComments = client.models.reports_comments;
   let BikeImages = client.models.bike_images;
   let RegistryImages = client.models.registry_images;
+  let Investigations = client.models.investigations;
+  let Investigators = client.models.investigators;
+  let InvestigationComments = client.models.investigation_comments;
+  let InvestigationImages = client.models.investigation_images;
+  let InvestigationUpdates = client.models.investigation_updates;
 
   Contacts.belongsTo(Users, {
     foreignKey: { name: "user_id", allowNull: false },
@@ -120,6 +146,34 @@ export async function createAssociations() {
     onDelete: "cascade",
     foreignKey: { name: "image_id", allowNull: false },
     otherKey: { name: "bike_id", allowNull: false },
+  });
+  Investigations.belongsTo(Reports, {
+    foreignKey: { name: "report_id", allowNull: false },
+  });
+  Investigations.hasMany(InvestigationComments, {
+    foreignKey: { name: "investigation_id", allowNull: false },
+    onDelete: "cascade",
+  });
+  Investigations.hasMany(Investigators, {
+    foreignKey: { name: "investigation_id", allowNull: false },
+    onDelete: "cascade",
+  });
+  Investigators.belongsTo(Users, {
+    foreignKey: { name: "investigator_id", allowNull: false },
+    onDelete: "cascade",
+  });
+  Investigations.hasMany(InvestigationUpdates, {
+    foreignKey: { name: "investigation_id", allowNull: false },
+    onDelete: "cascade",
+  });
+  InvestigationUpdates.belongsTo(Users, {
+    foreignKey: { name: "author", allowNull: false },
+  });
+  BikeImages.belongsToMany(InvestigationUpdates, {
+    through: InvestigationImages,
+    onDelete: "cascade",
+    foreignKey: { name: "image_id", allowNull: false },
+    otherKey: { name: "update_id", allowNull: false },
   });
 }
 
