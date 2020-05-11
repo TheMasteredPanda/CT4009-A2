@@ -31,6 +31,7 @@ export async function create(reportId: number, investigatorId: number) {
     investigation_id: investigationObject.id,
   });
 
+  await Reports.update({ investigating: true }, { where: { id: reportId } });
   return investigationObject.id;
 }
 

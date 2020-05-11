@@ -1,5 +1,6 @@
 import * as databaseManager from "../managers/databaseManager";
 import { Op } from "sequelize";
+import Investigations from "../schemas/Investigations.schema";
 import Reports from "../schemas/Reports.schema";
 import ReportComments from "../schemas/ReportComments.schema";
 import Users from "../schemas/User.schema";
