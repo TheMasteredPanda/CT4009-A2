@@ -3,7 +3,6 @@ import * as actions from "../actions/investigations";
 import multer from "multer";
 import path from "path";
 import { handleInternalError } from "..//utils/errorhandler";
-import { flushAll } from "src/managers/authManager";
 
 const router = Router();
 const storage = multer.diskStorage({

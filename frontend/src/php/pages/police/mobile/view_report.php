@@ -83,6 +83,8 @@ if (!$report->open) {
             <?php else : ?>
                 <a href=<?php echo 'http://localhost:3000/pages/civilian/investigations.php?model=viewInvestigation&investigationId=' . $investigation->id; ?>>View Investigation</a>
             <?php endif; ?>
+        <?php else : ?>
+            <a href=<?php echo 'http://localhost:3000/actions/create_investigation.php?reportId=' . $report->id; ?> class="btn-small">Launch Investigation</a>
         <?php endif; ?>
     </div>
 </div>

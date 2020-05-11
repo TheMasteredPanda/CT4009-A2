@@ -422,7 +422,7 @@ nav {
 .view_report_container {
   height: 100%;
   display: grid;
-  grid-template-rows: 10% auto 80% 10%;
+  grid-template-rows: 10% auto 80% auto;
   margin-top: 4%;
 
   #viewReportDescription {
@@ -434,7 +434,7 @@ nav {
     margin-top: 4%;
     margin-bottom: 2%;
     height: 100%;
-    display: grid; 
+    display: grid;
     grid-template-rows: 10% 15% 60% 15%;
 
     .comments_container_header {
@@ -467,7 +467,6 @@ nav {
           justify-content: flex-end;
         }
       }
-
     }
     .new_comment_container {
       display: flex;
@@ -502,12 +501,12 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-flow: wrap;
     padding: 5%;
 
     a {
       @extend .indigo;
-      margin-left: 2%;
-      margin-right: 2%;
+      margin: 2%;
     }
   }
 }
@@ -523,8 +522,75 @@ nav {
     justify-content: center;
     align-items: center;
   }
+
+  .investigations_list_container {
+    .investigations_list_search {
+      .button_wrapper {
+        margin-top: 6%;
+        margin-bottom: 6%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .investigations {
+      margin-top: 10%;
+      .card {
+        .card-action {
+          a {
+            @extend .indigo;
+            margin: 1%;
+          }
+        }
+      }
+    }
+  }
 }
 
 .police_investigations_container {
   @extend .investigations_container;
+}
+
+.view_investigation_container {
+  display: grid;
+  height: 100%;
+  grid-template-rows: 60% 60% 40% auto;
+
+  .updates_container {
+    display: grid;
+    grid-template-rows: 20% 80%;
+
+    .updates_container_header {
+      margin: 0;
+      display: flex;
+      align-items: center;
+
+      h4 {
+        margin: 0;
+        margin-left: 4%;
+      }
+    }
+    .updates {
+      height: 100%;
+      margin: 0;
+    }
+
+    .updates .no_updates_container {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .button_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    a {
+      margin: 5%;
+    }
+  }
 }
