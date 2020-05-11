@@ -142,6 +142,22 @@ export async function getInvestigation(investigationId: number) {
   return object;
 }
 
+export async function getInvestigationIdByReport(reportId: number) {
+  let investigation = await Investigations.findOne({
+    where: { report_id: reportId, open: true },
+  });
+
+  if (!investigation) {
+    throw new ClientNotFoundError(
+      "Client",
+      "Investigation not found",
+      `Investigation on report ${reportId} was not found.`
+    );
+  }
+
+  return (investigation.toJSON() as any).id;
+}
+
 export async function getInvestigationUpdate(updateId: any) {
   let update = await InvestigationUpdates.findOne({ where: { id: updateId } });
   if (!update)

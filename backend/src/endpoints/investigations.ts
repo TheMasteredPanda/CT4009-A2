@@ -3,6 +3,7 @@ import * as actions from "../actions/investigations";
 import multer from "multer";
 import path from "path";
 import { handleInternalError } from "..//utils/errorhandler";
+import { flushAll } from "src/managers/authManager";
 
 const router = Router();
 const storage = multer.diskStorage({
@@ -50,21 +51,34 @@ router.post("/investigations", (req: Request, res: Response) => {
 router.get("/investigations/investigation", (req: Request, res: Response) => {
   let query = req.query;
 
-  if (!query.hasOwnProperty("investigationId")) {
-    res.error.client.badRequest(
-      "Client",
-      "Parameter not found",
-      `Query parameter 'investigationId' was not found.`
-    );
-    return;
-  }
+  if (query.hasOwnProperty("reportId")) {
+    actions
+      .getInvestigationIdByReport(Number(query.reportId))
+      .then((investigationId) => {
+        actions
+          .getInvestigation(Number(investigationId))
+          .then((investigation: any) => {
+            res.status(200).send({ investigation });
+          })
+          .catch((err) => handleInternalError(res, err));
+      });
+  } else {
+    if (!query.hasOwnProperty("investigationId")) {
+      res.error.client.badRequest(
+        "Client",
+        "Parameter not found",
+        `Query parameter 'investigationId' was not found.`
+      );
+      return;
+    }
 
-  actions
-    .getInvestigation(Number(query.investigationId))
-    .then((investigation: any) => {
-      res.status(200).send({ investigation });
-    })
-    .catch((err) => handleInternalError(res, err));
+    actions
+      .getInvestigation(Number(query.investigationId))
+      .then((investigation: any) => {
+        res.status(200).send({ investigation });
+      })
+      .catch((err) => handleInternalError(res, err));
+  }
 });
 
 router.post("/investigations/close", (req: Request, res: Response) => {
@@ -261,7 +275,6 @@ router.post(
       );
       return;
     }
-
 
     let updateId = Number(query.updateId);
     console.log(updateId);
