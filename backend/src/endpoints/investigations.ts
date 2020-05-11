@@ -67,7 +67,7 @@ router.get("/investigations/investigation", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
-router.post("/investigatons/close", (req: Request, res: Response) => {
+router.post("/investigations/close", (req: Request, res: Response) => {
   let query = req.query;
 
   if (!query.hasOwnProperty("investigationId")) {
@@ -262,6 +262,9 @@ router.post(
       return;
     }
 
+
+    let updateId = Number(query.updateId);
+    console.log(updateId);
     upload(req, res, (err) => {
       if (err) throw err;
 
@@ -269,7 +272,7 @@ router.post(
 
       for (let i = 0; i < req.files.length; i++) {
         const file = (req.files as any)[i];
-        promises.push(actions.addImage(Number(query.updateId), file.path));
+        promises.push(actions.addImage(updateId, file.path));
       }
 
       Promise.all(promises)
@@ -283,7 +286,7 @@ router.post(
 
           res.status(200).send(result);
         })
-        .catch((err) => handleInternalError(res, err.catch()));
+        .catch((err) => handleInternalError(res, err));
     });
   }
 );

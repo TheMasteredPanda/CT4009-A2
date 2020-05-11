@@ -70,7 +70,7 @@ export async function getInvestigations(opts: {
 
 export async function close(investigationId: number) {
   let investigation = await Investigations.findOne({
-    where: { investigation_id: investigationId },
+    where: { id: investigationId },
     attributes: ["open"],
   });
 
@@ -94,13 +94,13 @@ export async function close(investigationId: number) {
 
   await Investigations.update(
     { open: false },
-    { where: { investigation_id: investigationId } }
+    { where: { id: investigationId } }
   );
 }
 
 export async function getInvestigation(investigationId: number) {
   let investigation = await Investigations.findOne({
-    where: { investigation_id: investigationId },
+    where: { id: investigationId },
   });
 
   if (!investigation) {
@@ -114,22 +114,51 @@ export async function getInvestigation(investigationId: number) {
   let investigators = await Investigators.findAll({
     where: { investigation_id: investigationId },
   });
-  let images = await InvestigationImages.findAll({
+  let updates = await InvestigationUpdates.findAll({
     where: { investigation_id: investigationId },
   });
-  let imageIds = _.map(images, (image) => (image.toJSON() as any).image_id);
-  let bikeImages = await BikeImages.findAll({ where: { image_id: imageIds } });
+
+  let updateIds = _.map(updates, (update) => (update.toJSON() as any).id);
+  let imagePromises: Promise<any>[] = _.map(updateIds, (id) =>
+    getInvestigationUpdate(id)
+  );
+
   let object: any = investigation.toJSON();
   object.investigators = _.map(
     investigators,
     (investigator) => (investigator.toJSON() as any).id
   );
-  object.images = _.map(bikeImages, (image) => {
-    let imageObject = image.toJSON() as any;
 
-    return { id: imageObject.id, uri: imageObject.uri };
+  await Promise.all(imagePromises).then((results) => {
+    object.updates = [];
+
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i];
+      object.updates.push(result);
+    }
   });
 
+  return object;
+}
+
+export async function getInvestigationUpdate(updateId: any) {
+  let update = await InvestigationUpdates.findOne({ where: { id: updateId } });
+  if (!update)
+    throw new ClientNotFoundError(
+      "Client",
+      `Update not found`,
+      `Investigation update under id ${updateId} was not found.`
+    );
+  let imageEntries = await InvestigationImages.findAll({
+    where: { update_id: updateId },
+  });
+  let imageIds = _.map(
+    imageEntries,
+    (entry) => (entry.toJSON() as any).image_id
+  );
+  let images = await BikeImages.findAll({ where: { id: imageIds } });
+  let object: any = update.toJSON();
+  object.images = _.map(images, (image) => image.toJSON());
   return object;
 }
 
@@ -137,7 +166,7 @@ export async function addInvestigator(
   investigationId: number,
   investigatorId: number
 ) {
-  let investigator = await Investigators.findAll({
+  let investigator = await Investigators.findOne({
     where: {
       investigation_id: investigationId,
       investigator_id: investigatorId,
@@ -192,7 +221,7 @@ export async function createComment(
   investigationId: number
 ) {
   let investigation = await Investigations.findOne({
-    where: { investigation_id: investigationId, open: true },
+    where: { id: investigationId, open: true },
   });
 
   if (!investigation) {
@@ -221,7 +250,7 @@ export async function addUpdate(
   content: string
 ) {
   let investigation = await Investigations.findOne({
-    where: { investigation_id: investigationId },
+    where: { id: investigationId },
   });
 
   if (!investigation) {

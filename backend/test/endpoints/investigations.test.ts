@@ -1,6 +1,6 @@
+import _ from "lodash";
 import * as databaseManager from "../../src/managers/databaseManager";
 import { start, shutdown } from "../../src/app";
-import { ModelCtor, Model } from "sequelize/types";
 import * as authManager from "../../src/managers/authManager";
 import supertest from "supertest";
 import bcrypt from "bcrypt";
@@ -27,6 +27,9 @@ beforeAll(async (done) => {
 
 beforeEach(async (done) => {
   await databaseManager.sync();
+  let username = process.env.OWNER_ACCOUNT_USERNAME;
+  let password = await bcrypt.hash(process.env.OWNER_ACCOUNT_PASSWORD, 10);
+  await databaseManager.sequelize().models.users.create({ username, password });
   done();
 });
 
@@ -84,6 +87,27 @@ function createJohnDoe() {
       });
   });
 }
+
+function createJaneDoe() {
+  return new Promise((resolve, reject) => {
+    request
+      .post("/user/register")
+      .send({
+        username: "janedoe",
+        password: "password1",
+        email: "janedoe@gmail.com",
+      })
+      .end((err, res) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        expect(res.status).toBe(200);
+        resolve(res.body);
+      });
+  });
+}
 function createReport(authPayload: any, bikeId: number) {
   return new Promise((resolve, reject) => {
     request
@@ -114,7 +138,6 @@ function createBike(authPayload: any) {
           return;
         }
 
-        console.log(res.body);
         expect(res.status).toBe(200);
         resolve(res.body.id);
       });
@@ -193,7 +216,7 @@ describe("Testing Investigation Endpoints", () => {
               .end((err, res) => {
                 if (err) throw err;
                 request
-                  .post(
+                  .get(
                     `/investigations/investigation?userId=${authPayload.id}&investigationId=${res.body.id}`
                   )
                   .set("Authorization", `Bearer ${authPayload.token}`)
@@ -251,17 +274,19 @@ describe("Testing Investigation Endpoints", () => {
               .set("Authorization", `Bearer ${authPayload.token}`)
               .end((err, res) => {
                 if (err) throw err;
-                request
-                  .post(
-                    `/investigations/investigations/add?userId=${authPayload.id}&investigationId=${res.body.id}&investigatorId=5`
-                  )
-                  .set("Authorization", `Bearer ${authPayload.token}`)
-                  .end((err, res) => {
-                    if (err) throw err;
-                    expect(res.status).toBe(200);
-                    expect(res.body).toBeDefined();
-                    done();
-                  });
+                createJaneDoe().then((janeAuth: any) => {
+                  request
+                    .post(
+                      `/investigations/investigators/add?userId=${authPayload.id}&investigationId=${res.body.id}&investigatorId=${janeAuth.id}`
+                    )
+                    .set("Authorization", `Bearer ${authPayload.token}`)
+                    .end((err, res) => {
+                      if (err) throw err;
+                      expect(res.status).toBe(200);
+                      expect(res.body).toBeDefined();
+                      done();
+                    });
+                });
               });
           });
         });
@@ -282,24 +307,26 @@ describe("Testing Investigation Endpoints", () => {
               .end((err, res) => {
                 if (err) throw err;
                 let investigationId = res.body.id;
-                request
-                  .post(
-                    `/investigations/investigators/add?userId=${authPayload.id}&investigationId=${investigationId}&investigatorsId=5`
-                  )
-                  .set("Authorization", `Bearer ${authPayload.token}`)
-                  .end((err, res) => {
-                    if (err) throw err;
-                    request
-                      .post(
-                        `/investigations/investigators/remove?userId=${authPayload.id}&investigationId=${investigationId}&investigatorId=5`
-                      )
-                      .set("Authorization", `Bearer ${authPayload.token}`)
-                      .end((err, res) => {
-                        if (err) throw err;
-                        expect(res.status).toBe(200);
-                        done();
-                      });
-                  });
+                createJaneDoe().then((janeAuth: any) => {
+                  request
+                    .post(
+                      `/investigations/investigators/add?userId=${authPayload.id}&investigationId=${investigationId}&investigatorId=${janeAuth.id}`
+                    )
+                    .set("Authorization", `Bearer ${authPayload.token}`)
+                    .end((err, res) => {
+                      if (err) throw err;
+                      request
+                        .post(
+                          `/investigations/investigators/remove?userId=${authPayload.id}&investigationId=${investigationId}&investigatorId=${janeAuth.id}`
+                        )
+                        .set("Authorization", `Bearer ${authPayload.token}`)
+                        .end((err, res) => {
+                          if (err) throw err;
+                          expect(res.status).toBe(200);
+                          done();
+                        });
+                    });
+                });
               });
           });
         });
@@ -321,10 +348,10 @@ describe("Testing Investigation Endpoints", () => {
                 if (err) throw err;
                 request
                   .post(
-                    `/investigations/commenets/create?userId=${authPayload.id}&investigationId=${res.body.id}`
+                    `/investigations/comments/create?userId=${authPayload.id}&investigationId=${res.body.id}`
                   )
                   .send({ comment: "This is a test comment" })
-                  .set("Authorization", `Beaerer ${authPayload.token}`)
+                  .set("Authorization", `Bearer ${authPayload.token}`)
                   .end((err, res) => {
                     if (err) throw err;
                     expect(res.status).toBe(200);
@@ -393,6 +420,7 @@ describe("Testing Investigation Endpoints", () => {
                     `/investigations/update/add?userId=${authPayload.id}&investigationId=${res.body.id}`
                   )
                   .send({ content: "This is a test update." })
+                  .set("Authorization", `Bearer ${authPayload.token}`)
                   .end((err, res) => {
                     if (err) throw err;
                     expect(res.status).toBe(200);
@@ -459,17 +487,18 @@ describe("Testing Investigation Endpoints", () => {
                 if (err) throw err;
                 request
                   .post(
-                    `/investigations/updates/add?userId=${authPayload.id}&investigationId=${res.body.id}`
+                    `/investigations/update/add?userId=${authPayload.id}&investigationId=${res.body.id}`
                   )
                   .send({ content: "This is a test update." })
                   .set("Authorization", `Bearer ${authPayload.token}`)
                   .end((err, res) => {
                     if (err) throw err;
+                    console.log(res.body);
                     request
                       .post(
                         `/investigations/evidence/upload?userId=${authPayload.id}&updateId=${res.body.id}`
                       )
-                      .attach("testImage", "../assets/bike_2.jpg")
+                      .attach("testImage", "../test/assets/bike_2.jpg")
                       .set("Authorization", `Bearer ${authPayload.token}`)
                       .end((err, res) => {
                         if (err) throw err;
