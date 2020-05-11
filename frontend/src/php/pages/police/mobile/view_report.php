@@ -75,7 +75,11 @@ if (!$report->open) {
         <?php else : ?>
             <a href=<?php echo 'http://localhost:3000/pages/civilian/bikes.php?bikeId=' . $report->bike_id . '&model=bikeInfo'; ?> class="btn-small">View Reported Bike</a>
         <?php endif; ?>
+        <?php if ($report->investigating) : ?>
 
+        <?php else : ?>
+            <a href=<?php echo 'http://localhost:3000/actions/create_investigation.php?reportId=' . $report->id; ?>>Launch Investigation</a>
+        <?php endif; ?>
     </div>
 </div>
 
