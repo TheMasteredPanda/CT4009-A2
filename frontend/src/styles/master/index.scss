@@ -555,7 +555,7 @@ nav {
 .view_investigation_container {
   display: grid;
   height: 100%;
-  grid-template-rows: 60% 60% 40% auto;
+  grid-template-rows: 60% 60% 80% auto;
 
   .updates_container {
     display: grid;
@@ -582,6 +582,38 @@ nav {
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+  }
+
+  .comments_container {
+    display: grid;
+    grid-template-rows: 20% 80%;
+
+    .comments {
+      height: 100%;
+      margin: 0;
+
+      .no_comments_container {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  .investigation_metadata_container {
+    display: grid;
+    grid-template-rows: 12% 35% 12% auto;
+    h4 {
+      margin: 0;
+    }
+
+    .metadata_container_title {
+      display: flex;
+      align-items: center;
+      margin-left: 4%;
     }
   }
 

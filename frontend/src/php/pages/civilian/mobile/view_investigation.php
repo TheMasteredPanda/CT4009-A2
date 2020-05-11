@@ -33,13 +33,33 @@ $investigation = getInvestigation($_GET['investigationId'])->investigation;
             <h4>Comments</h4>
         </div>
         <ul class="comments">
+            <?php if (count($investigation->comments) === 0) : ?>
+                <li class="center-align no_comments_container">
+                    <h5>No Comments</h5>
+                </li>
+            <?php else : ?>
+                <?php for ($i = 0; $i < count($investigation->comments); $i++) :
+                    $comment = $investigation->comments;
+                ?>
+                    <li class="comment">
+                        <div class="author"><?php echo getUsername($comment->author) ?></div>
+                        <div class="comment"><?php echo $comment->comment; ?></div>
+                    </li>
+                <?php endfor; ?>
+            <?php endif; ?>
         </ul>
     </div>
     <div class="investigation_metadata_container">
+        <div class="metadata_container_title">
+            <h4>Metadata</h4>
+        </div>
         <div class="metadata">
             <input type="text" name="start_date">
             <input type="text" name="duration">
             <input type="text" name="last_update">
+        </div>
+        <div class="metadata_container_title">
+            <h4>Investigators</h4>
         </div>
         <div class="investigators_list">
 
@@ -50,7 +70,7 @@ $investigation = getInvestigation($_GET['investigationId'])->investigation;
     </div>
 </div>
 
-<script type="text/javascript" src="http://localhost:3000/home.bundle.js"></script>
+<script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <?php
 include "../../../components/footer.php";
 ?>
