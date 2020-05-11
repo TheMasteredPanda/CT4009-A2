@@ -3,7 +3,6 @@ import * as actions from "../actions/investigations";
 import multer from "multer";
 import path from "path";
 import { handleInternalError } from "..//utils/errorhandler";
-import { ReplOptions } from "repl";
 
 const router = Router();
 const storage = multer.diskStorage({
@@ -112,7 +111,7 @@ router.post(
     actions
       .addInvestigator(
         Number(query.investigationId),
-        Number(query.investigationId)
+        Number(query.investigatorId)
       )
       .then((id) => res.status(200).send({ id }))
       .catch((err) => handleInternalError(res, err));
@@ -166,7 +165,7 @@ router.post(
       return;
     }
 
-    if (!body.hasOwnProperty("investigationId")) {
+    if (!query.hasOwnProperty("investigationId")) {
       res.error.client.badRequest(
         "Client",
         "Parameter not found",

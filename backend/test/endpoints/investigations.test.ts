@@ -238,4 +238,250 @@ describe("Testing Investigation Endpoints", () => {
       });
     });
   });
+
+  it("/investigations/investigators/add", (done) => {
+    createJohnDoe().then((johnAuth: any) => {
+      createBike(johnAuth).then((bikeId: any) => {
+        createReport(johnAuth, bikeId).then((reportId: any) => {
+          login().then((authPayload: any) => {
+            request
+              .post(
+                `/investigations/create?userId=${authPayload.id}&reportId=${reportId}`
+              )
+              .set("Authorization", `Bearer ${authPayload.token}`)
+              .end((err, res) => {
+                if (err) throw err;
+                request
+                  .post(
+                    `/investigations/investigations/add?userId=${authPayload.id}&investigationId=${res.body.id}&investigatorId=5`
+                  )
+                  .set("Authorization", `Bearer ${authPayload.token}`)
+                  .end((err, res) => {
+                    if (err) throw err;
+                    expect(res.status).toBe(200);
+                    expect(res.body).toBeDefined();
+                    done();
+                  });
+              });
+          });
+        });
+      });
+    });
+  });
+
+  it(`/investigations/investigators/remove`, (done) => {
+    createJohnDoe().then((johnAuth: any) => {
+      createBike(johnAuth).then((bikeId: any) => {
+        createReport(johnAuth, bikeId).then((reportId: any) => {
+          login().then((authPayload: any) => {
+            request
+              .post(
+                `/investigations/create?userId=${authPayload.id}&reportId=${reportId}`
+              )
+              .set("Authorization", `Bearer ${authPayload.token}`)
+              .end((err, res) => {
+                if (err) throw err;
+                let investigationId = res.body.id;
+                request
+                  .post(
+                    `/investigations/investigators/add?userId=${authPayload.id}&investigationId=${investigationId}&investigatorsId=5`
+                  )
+                  .set("Authorization", `Bearer ${authPayload.token}`)
+                  .end((err, res) => {
+                    if (err) throw err;
+                    request
+                      .post(
+                        `/investigations/investigators/remove?userId=${authPayload.id}&investigationId=${investigationId}&investigatorId=5`
+                      )
+                      .set("Authorization", `Bearer ${authPayload.token}`)
+                      .end((err, res) => {
+                        if (err) throw err;
+                        expect(res.status).toBe(200);
+                        done();
+                      });
+                  });
+              });
+          });
+        });
+      });
+    });
+  });
+
+  it(`/investigations/comments/create`, (done) => {
+    createJohnDoe().then((johnAuth) => {
+      createBike(johnAuth).then((bikeId: any) => {
+        createReport(johnAuth, bikeId).then((reportId: any) => {
+          login().then((authPayload: any) => {
+            request
+              .post(
+                `/investigations/create?userId=${authPayload.id}&reportId=${reportId}`
+              )
+              .set("Authorization", `Bearer ${authPayload.token}`)
+              .end((err, res) => {
+                if (err) throw err;
+                request
+                  .post(
+                    `/investigations/commenets/create?userId=${authPayload.id}&investigationId=${res.body.id}`
+                  )
+                  .send({ comment: "This is a test comment" })
+                  .set("Authorization", `Beaerer ${authPayload.token}`)
+                  .end((err, res) => {
+                    if (err) throw err;
+                    expect(res.status).toBe(200);
+                    expect(res.body).toBeDefined();
+                    done();
+                  });
+              });
+          });
+        });
+      });
+    });
+  });
+
+  it(`/investigations/comments/remove`, (done) => {
+    createJohnDoe().then((johnAuth) => {
+      createBike(johnAuth).then((bikeId: any) => {
+        createReport(johnAuth, bikeId).then((reportId: any) => {
+          login().then((authPayload: any) => {
+            request
+              .post(
+                `/investigations/create?userId=${authPayload.id}&reportId=${reportId}`
+              )
+              .set("Authorization", `Bearer ${authPayload.token}`)
+              .end((err, res) => {
+                if (err) throw err;
+                request
+                  .post(
+                    `/investigations/comments/create?userId=${authPayload.id}&investigationId=${res.body.id}`
+                  )
+                  .send({ comment: "This is a test comment." })
+                  .set("Authorization", `Bearer ${authPayload.token}`)
+                  .end((err, res) => {
+                    if (err) throw err;
+                    request
+                      .post(
+                        `/investigations/comments/remove?userId=${authPayload.id}&commentId=${res.body.id}`
+                      )
+                      .set("Authorization", `Bearer ${authPayload.token}`)
+                      .end((err, res) => {
+                        if (err) throw err;
+                        expect(res.status).toBe(200);
+                        done();
+                      });
+                  });
+              });
+          });
+        });
+      });
+    });
+  });
+
+  it(`/investigations/update/add`, (done) => {
+    createJohnDoe().then((johnAuth: any) => {
+      createBike(johnAuth).then((bikeId: any) => {
+        createReport(johnAuth, bikeId).then((reportId: any) => {
+          login().then((authPayload: any) => {
+            request
+              .post(
+                `/investigations/create?userId=${authPayload.id}&reportId=${reportId}`
+              )
+              .set("Authorization", `Bearer ${authPayload.token}`)
+              .end((err, res) => {
+                if (err) throw err;
+                request
+                  .post(
+                    `/investigations/update/add?userId=${authPayload.id}&investigationId=${res.body.id}`
+                  )
+                  .send({ content: "This is a test update." })
+                  .end((err, res) => {
+                    if (err) throw err;
+                    expect(res.status).toBe(200);
+                    expect(res.body).toBeDefined();
+                    done();
+                  });
+              });
+          });
+        });
+      });
+    });
+  });
+
+  it(`/investigations/update/hide`, (done) => {
+    createJohnDoe().then((johnAuth: any) => {
+      createBike(johnAuth).then((bikeId: any) => {
+        createReport(johnAuth, bikeId).then((reportId: any) => {
+          login().then((authPayload: any) => {
+            request
+              .post(
+                `/investigations/create?userId=${authPayload.id}&reportId=${reportId}`
+              )
+              .set("Authorization", `Bearer ${authPayload.token}`)
+              .end((err, res) => {
+                if (err) throw err;
+                request
+                  .post(
+                    `/investigations/update/add?userId=${authPayload.id}&investigationId=${res.body.id}`
+                  )
+                  .send({ content: "This is a test update." })
+                  .set("Authorization", `Bearer ${authPayload.token}`)
+                  .end((err, res) => {
+                    if (err) throw err;
+                    request
+                      .post(
+                        `/investigations/update/hide?userId=${authPayload.id}&updateId=${res.body.id}`
+                      )
+                      .set("Authorization", `Bearer ${authPayload.token}`)
+                      .end((err, res) => {
+                        if (err) throw err;
+                        expect(res.status).toBe(200);
+                        expect(res.body).toBeDefined();
+                        done();
+                      });
+                  });
+              });
+          });
+        });
+      });
+    });
+  });
+
+  it(`/investigations/evidence/upload`, (done) => {
+    createJohnDoe().then((johnAuth: any) => {
+      createBike(johnAuth).then((bikeId: any) => {
+        createReport(johnAuth, bikeId).then((reportId: any) => {
+          login().then((authPayload: any) => {
+            request
+              .post(
+                `/investigations/create?userId=${authPayload.id}&reportId=${reportId}`
+              )
+              .set("Authorization", `Bearer ${authPayload.token}`)
+              .end((err, res) => {
+                if (err) throw err;
+                request
+                  .post(
+                    `/investigations/updates/add?userId=${authPayload.id}&investigationId=${res.body.id}`
+                  )
+                  .send({ content: "This is a test update." })
+                  .set("Authorization", `Bearer ${authPayload.token}`)
+                  .end((err, res) => {
+                    if (err) throw err;
+                    request
+                      .post(
+                        `/investigations/evidence/upload?userId=${authPayload.id}&updateId=${res.body.id}`
+                      )
+                      .attach("testImage", "../assets/bike_2.jpg")
+                      .set("Authorization", `Bearer ${authPayload.token}`)
+                      .end((err, res) => {
+                        if (err) throw err;
+                        expect(res.status).toBe(200);
+                        expect(res.body).toBeDefined();
+                        done();
+                      });
+                  });
+              });
+          });
+        });
+      });
+    });
+  });
 });
