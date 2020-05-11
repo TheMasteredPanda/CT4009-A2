@@ -57,3 +57,22 @@ function getAllInvestigations()
     curl_close($curl);
     return json_decode($result);
 }
+
+function getInvestigationByReportId($reportId)
+{
+    $payload = json_decode($_COOKIE['ct4009Auth']);
+    $curl = curl_init('http://localhost:5555/investigations/investigation?userId=' . $payload->id . '&reportId=' . $reportId);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
+    $result = curl_exec($curl);
+    $status = curl_getinfo($result);
+
+    if ($status !== 200) {
+        print curl_error($curl);
+        print $result;
+        return;
+    }
+
+    curl_close($curl);
+    return json_decode($result);
+}

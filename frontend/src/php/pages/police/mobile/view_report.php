@@ -3,6 +3,7 @@ include "../../../components/header.php";
 include "../../../components/navbar.php";
 include "../../../functions/report_functions.php";
 include "../../../functions/user_functions.php";
+include "../../../functions/investigation_functions.php";
 
 $report = getReport($_GET['reportId'])->report;
 
@@ -75,10 +76,13 @@ if (!$report->open) {
         <?php else : ?>
             <a href=<?php echo 'http://localhost:3000/pages/civilian/bikes.php?bikeId=' . $report->bike_id . '&model=bikeInfo'; ?> class="btn-small">View Reported Bike</a>
         <?php endif; ?>
-        <?php if ($report->investigating) : ?>
-
-        <?php else : ?>
-            <a href=<?php echo 'http://localhost:3000/actions/create_investigation.php?reportId=' . $report->id; ?>>Launch Investigation</a>
+        <?php if ($report->investigating) :
+            $investigation = getInvestigationByReportId($report->id); ?>
+            <?php if ($detect->isMobile()) : ?>
+                <a href=<?php echo 'http://localhost:3000/pages/civilian/mobile/view_investigation.php?investigationId=' . $investigation->id; ?>>View Investigation</a>
+            <?php else : ?>
+                <a href=<?php echo 'http://localhost:3000/pages/civilian/investigations.php?model=viewInvestigation&investigationId=' . $investigation->id; ?>>View Investigation</a>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>
