@@ -511,3 +511,20 @@ nav {
     }
   }
 }
+
+.investigations_container {
+  height: 90%;
+  width: 100%;
+
+  .no_investigations_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.police_investigations_container {
+  @extend .investigations_container;
+}

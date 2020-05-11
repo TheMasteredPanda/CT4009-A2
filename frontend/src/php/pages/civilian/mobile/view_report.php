@@ -8,8 +8,6 @@ $report = getReport($_GET['reportId'])->report;
 $comments = getReportComments($_GET['reportId'], 'civilian')->comments;
 $status = "Open";
 
-print_r($report->open);
-
 if (!$report->open) {
     $status = 'Closed';
 }
