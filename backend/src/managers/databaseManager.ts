@@ -154,6 +154,9 @@ export async function createAssociations() {
     foreignKey: { name: "investigation_id", allowNull: false },
     onDelete: "cascade",
   });
+  InvestigationComments.belongsTo(Users, {
+    foreignKey: { name: "author", allowNull: false },
+  });
   Investigations.hasMany(Investigators, {
     foreignKey: { name: "investigation_id", allowNull: false },
     onDelete: "cascade",

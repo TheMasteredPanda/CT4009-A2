@@ -253,7 +253,7 @@ export async function createComment(
 
   let commentModel = await InvestigationComments.create({
     comment,
-    author_id: authorId,
+    author: authorId,
     investigation_id: investigationId,
   });
   return (commentModel.toJSON() as any).id;
