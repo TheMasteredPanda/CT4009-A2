@@ -48,6 +48,14 @@ $investigation = getInvestigation($_GET['investigationId'])->investigation;
                 <?php endfor; ?>
             <?php endif; ?>
         </ul>
+        <form action="#" class="create_comment_form">
+            <div class="input-field">
+
+                <input type="text" name="comment">
+                <label for="comment">Comment</label>
+            </div>
+            <input type="submit" value="Send" class="btn-small">
+        </form>
     </div>
     <div class="investigation_metadata_container">
         <div class="metadata_container_title">
@@ -71,6 +79,7 @@ $investigation = getInvestigation($_GET['investigationId'])->investigation;
 </div>
 
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
+<script type="text/javascript" src="http://localhost:3000/scripts/investigations.bundle.js"></script>
 <?php
 include "../../../components/footer.php";
 ?>

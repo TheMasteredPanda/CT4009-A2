@@ -587,7 +587,26 @@ nav {
 
   .comments_container {
     display: grid;
-    grid-template-rows: 20% 80%;
+    grid-template-rows: 20% 60% 20%;
+
+    .create_comment_form {
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+
+      input[type="submit"] {
+        @extend .indigo;
+        margin-left: 2%;
+      }
+
+      input[type="text"] {
+        margin-right: 2%;
+      }
+      
+      input {
+        margin: 0;
+      }
+    }
 
     .comments {
       height: 100%;
