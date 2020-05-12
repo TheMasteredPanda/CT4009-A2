@@ -74,7 +74,7 @@ $rank = getRank();
             <li><a href="http://localhost:3000/pages/police/reports.php">Reports</a></li>
             <li><a href="http://localhost:3000/pages/police/ecommerce.php">E-Commerce Matching</a></li>
             <li><a href="http://localhost:3000/pages/police/map.php">Vulnerability Map</a></li>
-            <li><a href="http://localhost:3000/pages/police/bikes.php">Registered Bikes</a></li>
+            <li><a href="http://localhost:3000/bikes.php">Registered Bikes</a></li>
         <?php else : ?>
             <li><a href="http://localhost:3000/pages/civilian/bikes.php">Registered Bikes</a></li>
             <li><a href="http://localhost:3000/pages/civilian/investigations.php">Investigations</a></li>

@@ -1,7 +1,7 @@
 <?php
-include "../../../components/header.php";
-include "../../../components/navbar.php";
-include "../../../functions/bike_functions.php";
+include "../components/header.php";
+include "../components/navbar.php";
+include "../functions/bike_functions.php";
 
 $bike = getBike($_GET['bikeId']);
 ?>
@@ -64,10 +64,12 @@ $bike = getBike($_GET['bikeId']);
             <label for="bike_age_group">Age Group</label>
         </div>
         <span class="button_wrapper">
-            <a href="http://localhost:3000/pages/civilian/bikes.php" class="btn indigo">Back</a>
-            <a href=<?php echo "http://localhost:3000/pages/civilian/mobile/edit_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Edit</a>
+            <a href="http://localhost:3000/bikes.php" class="btn indigo">Back</a>
             <a href=<?php echo "http://localhost:3000/actions/delete_bike.php?bikeId=" . $bike->id ?> class="btn indigo">Delete</a>
-            <a href=<?php echo "http://localhost:3000/pages/civilian/mobile/report_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Report Stolen</a>
+            <?php if ($rank === 'civilian') : ?>
+                <a href=<?php echo "http://localhost:3000/mobile/edit_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Edit</a>
+                <a href=<?php echo "http://localhost:3000/mobile/report_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Report Stolen</a>
+            <?php endif; ?>
         </span>
     </div>
 
@@ -77,5 +79,5 @@ $bike = getBike($_GET['bikeId']);
 <script type="text/javascript" src="http://localhost:3000/scripts/bikes.bundle.js"></script>
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <?php
-include "../../../components/footer.php";
+include "../components/footer.php";
 ?>

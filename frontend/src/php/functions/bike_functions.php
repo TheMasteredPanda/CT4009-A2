@@ -10,7 +10,7 @@ function getUsersBikes()
     $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
 
-    return json_encode(array('result' => json_decode($result), 'status' => $status));
+    return json_encode(array('result' => json_decode($result)->result, 'status' => $status));
 }
 
 function getBike($bikeId)
