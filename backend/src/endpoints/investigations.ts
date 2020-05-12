@@ -112,11 +112,11 @@ router.post(
       return;
     }
 
-    if (!query.hasOwnProperty("investigatorId")) {
+    if (!query.hasOwnProperty("username")) {
       res.error.client.badRequest(
         "Client",
         "Parameter not found",
-        `Query parameter 'investigatorId' was not found.`
+        `Query parameter 'username' was not found.`
       );
       return;
     }
@@ -124,7 +124,7 @@ router.post(
     actions
       .addInvestigator(
         Number(query.investigationId),
-        Number(query.investigatorId)
+        Number(query.username)
       )
       .then((id) => res.status(200).send({ id }))
       .catch((err) => handleInternalError(res, err));

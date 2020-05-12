@@ -5,6 +5,7 @@ import InvestigationComments from "../schemas/InvestigationComments.schema";
 import InvestigationUpdates from "../schemas/InvestigationUpdates.schema";
 import BikeImages from "../schemas/BikeImages.schema";
 import Reports from "../schemas/Reports.schema";
+import Users from "../schemas/User.schema";
 import _ from "lodash";
 import {
   ClientNotAcceptableError,
@@ -124,9 +125,11 @@ export async function getInvestigation(investigationId: number) {
     getInvestigationUpdate(id)
   );
 
-  let comments = await InvestigationComments.findAll({where: {investigation_id: investigationId}});
+  let comments = await InvestigationComments.findAll({
+    where: { investigation_id: investigationId },
+  });
   let object: any = investigation.toJSON();
-  object.comments = _.map(comments, comment => comment.toJSON());
+  object.comments = _.map(comments, (comment) => comment.toJSON());
   object.investigators = _.map(
     investigators,
     (investigator) => (investigator.toJSON() as any).id
@@ -183,8 +186,20 @@ export async function getInvestigationUpdate(updateId: any) {
 
 export async function addInvestigator(
   investigationId: number,
-  investigatorId: number
+  username: string
 ) {
+  let investigatorModel = await Users.findOne({ where: { username } });
+
+  if (!investigatorModel) {
+    throw new ClientNotFoundError(
+      "Client",
+      "User not found",
+      `User under username ${username} was not found.`
+    );
+  }
+
+  let investigatorId = (investigatorModel.toJSON() as any).id;
+
   let investigator = await Investigators.findOne({
     where: {
       investigation_id: investigationId,
