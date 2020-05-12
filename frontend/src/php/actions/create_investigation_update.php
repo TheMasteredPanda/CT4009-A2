@@ -1,10 +1,10 @@
 <?php
 include "../components/header.php";
-$investigationId = $_POST['investigationId'];
-$content = $_POST['content'];
+$investigationId = $_GET['investigationId'];
+$content = $_POST['update_description'];
 $payload = json_decode($_COOKIE['ct4009Auth']);
 $body = json_encode(array('content' => $content));
-$curl = curl_init('http:localhost:5555/investigations/updates/create?userId=' . $payload->id . '&investigationId=' . $investigationId);
+$curl = curl_init('http://localhost:5555/investigations/update/add?userId=' . $payload->id . '&investigationId=' . $investigationId);
 curl_setopt($curl, CURLOPT_POST, true);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -13,14 +13,15 @@ $result = json_decode(curl_exec($curl));
 $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
 if ($status !== 200) {
-    print curl_error($status);
+    echo $status;
+    print_r( curl_error($curl));
     print $result;
     return;
 }
 
 curl_close($curl);
 
-if (isset($_FILES)) {
+if (isset($_FILES['evidence'])) {
     $evidence_array = [];
 
     foreach ($_FILES['evidence']['tmp_name'] as $index => $tmpName) {
@@ -42,7 +43,7 @@ if (isset($_FILES)) {
     $evidence_status = curl_getinfo($evidence_curl, CURLINFO_HTTP_CODE);
 
     if ($status !== 200) {
-        print curl_error($status);
+        print curl_error($evidence_curl);
         print $result;
         return;
     }

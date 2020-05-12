@@ -45,7 +45,11 @@ $investigations = getAllInvestigations()->ids;
                         </div>
                         <div class="card-action">
                             <a href="#" class="btn-small">View Report</a>
-                            <a href="#" class="btn-small">View Investigation</a>
+                            <?php if ($detect->isMobile()) : ?>
+                                <a href=<?php echo 'http://localhost:3000/pages/police/mobile/view_investigation.php?investigationId=' . $investigation->id; ?> class="btn-small">View Investigation</a>
+                            <?php else : ?>
+                                <a href=<?php echo 'http://localhost:3000/pages/police/investigations.php?model=viewInvestigation&investigationId=' . $investigation->id; ?> class="btn-small">View Investigation</a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endfor; ?>

@@ -555,7 +555,7 @@ nav {
 .view_investigation_container {
   display: grid;
   height: 100%;
-  grid-template-rows: 60% 60% 80% auto;
+  grid-template-rows: 60% 60% 100% 20%;
 
   .updates_container {
     display: grid;
@@ -574,6 +574,15 @@ nav {
     .updates {
       height: 100%;
       margin: 0;
+      overflow-y: scroll;
+
+      .update {
+        @extend .grey, .lighten-1;
+        margin: 1%;
+        min-height: 50%;
+        padding-top: 1%;
+        padding-bottom: 1%;
+      }
     }
 
     .updates .no_updates_container {
@@ -602,7 +611,7 @@ nav {
       input[type="text"] {
         margin-right: 2%;
       }
-      
+
       input {
         margin: 0;
       }
@@ -611,6 +620,16 @@ nav {
     .comments {
       height: 100%;
       margin: 0;
+      overflow-y: scroll;
+
+      .comment {
+        @extend .grey, .lighten-1;
+        margin: 1%;
+        min-height: 30%;
+        padding-top: 1%;
+        padding-bottom: 1%;
+        font-size: 1.1rem;
+      }
 
       .no_comments_container {
         height: 100%;
@@ -642,6 +661,145 @@ nav {
     align-items: center;
     a {
       margin: 5%;
+    }
+  }
+}
+
+.police_view_investigation_container {
+  @extend .view_investigation_container;
+
+  .updates_container {
+    display: grid;
+    grid-template-rows: 20% 60% 20%;
+
+    .button_wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      a {
+        @extend .indigo;
+      }
+    }
+  }
+
+  .investigation_metadata_container {
+    height: 100%;
+
+    .investigators_list {
+      display: grid;
+      grid-template-rows: 70% 30%;
+
+      .investigators {
+        overflow-y: scroll;
+        .investigator {
+          display: grid;
+          grid-template-columns: 60% 40%;
+          
+          .button_wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            button {
+              @extend .indigo;
+            }
+          }
+
+          .username_wrapper {
+            display: flex;
+            align-items: center;
+
+             h5 {
+               margin: 0;
+               margin-left: 4%;
+             }
+          }
+        }
+
+
+      }
+      .add_investigator_form {
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+
+        input[type="submit"] {
+          @extend .indigo;
+          margin-left: 2%;
+        }
+      }
+    }
+  }
+}
+
+.add_investigation_update_container {
+  height: 90%;
+  form {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 80% 10% 10%;
+
+    .description_wrapper {
+      height: 100%;
+    }
+
+    .update_description_field {
+      margin-top: 10% !important;
+      height: 90%;
+    }
+
+    textarea {
+      height: 100% !important;
+      overflow-y: scroll;
+    }
+
+    .input-field {
+      margin: 0;
+    }
+
+    .file-field {
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+    }
+
+    .button_wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      input {
+        @extend .indigo;
+      }
+    }
+  }
+}
+
+.view_update_evidence_container {
+  height: 90%;
+  display: grid;
+  grid-template-rows: 20% 60% 20%;
+
+  .view_update_evidence_container_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .carousel_wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .button_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      @extend .btn-small, .indigo;
     }
   }
 }
