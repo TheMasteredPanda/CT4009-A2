@@ -21,7 +21,7 @@ export default function (req: Request, res: Response, next: Function) {
 
   let query = req.query;
 
-  if (!query.hasOwnProperty("userId")) {
+  if (!query.hasOwnProperty("userId") || !query.userId) {
     res.error.client.badRequest(
       "Auth",
       "No `userId` query param",

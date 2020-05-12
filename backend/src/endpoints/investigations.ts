@@ -124,9 +124,9 @@ router.post(
     actions
       .addInvestigator(
         Number(query.investigationId),
-        Number(query.username)
+        query.username as string
       )
-      .then((id) => res.status(200).send({ id }))
+      .then((id: any) => res.status(200).send({ id }))
       .catch((err) => handleInternalError(res, err));
   }
 );

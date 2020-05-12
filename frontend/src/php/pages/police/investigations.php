@@ -40,7 +40,12 @@ $investigations = getAllInvestigations()->ids;
                     <div class="card">
                         <div class="card-content">
                             <span class="card-title">
-                                <?php echo 'Investigation on Report ' . $investigation->report_id; ?>
+                                <?php if ($investigation->open) : ?>
+                                    <?php echo 'Investigation on Report ' . $investigation->report_id; ?>
+                                <?php else : ?>
+                                    <?php echo 'Investigation on Report ' . $investigation->report_id . ' (Closed)'; ?>
+                                <?php endif; ?>
+
                             </span>
                         </div>
                         <div class="card-action">

@@ -132,7 +132,7 @@ export async function getInvestigation(investigationId: number) {
   object.comments = _.map(comments, (comment) => comment.toJSON());
   object.investigators = _.map(
     investigators,
-    (investigator) => (investigator.toJSON() as any).id
+    (investigator) => investigator.toJSON() as any
   );
 
   await Promise.all(imagePromises).then((results) => {
@@ -228,7 +228,7 @@ export async function removeInvestigator(
 ) {
   let investigator = await Investigators.findOne({
     where: {
-      investigator_id: investigatorId,
+      id: investigatorId,
       investigation_id: investigationId,
     },
   });
@@ -243,7 +243,7 @@ export async function removeInvestigator(
 
   await Investigators.destroy({
     where: {
-      investigator_id: investigatorId,
+      id: investigatorId,
       investigation_id: investigationId,
     },
   });

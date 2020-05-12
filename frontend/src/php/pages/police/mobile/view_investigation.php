@@ -92,7 +92,7 @@ $investigation = getInvestigation($_GET['investigationId'])->investigation;
         <div class="investigators_list">
             <ul class="investigators">
                 <?php for ($i = 0; $i < count($investigation->investigators); $i++) :
-                    $username = getUsername($investigation->investigators[$i]);
+                    $username = getUsername($investigation->investigators[$i]->investigator_id);
                 ?>
                     <li class="investigator">
                         <div class="username_wrapper">
@@ -100,7 +100,7 @@ $investigation = getInvestigation($_GET['investigationId'])->investigation;
                         </div>
                         <?php if (count($investigation->investigators) > 1) : ?>
                             <div class="button_wrapper">
-                                <a href=<?php echo "http://localhost:3000/actions/remove_investigator.php?investigationId=" . $investigation->id . '&investigatorId=' . $investigation->investigator[$i]; ?> class="btn-small">Remove</a>
+                                <a name="remove_investigator_button" data-investigator=<?php echo $investigation->investigators[$i]->id; ?> href='#' class="btn-small indigo">Remove</a>
                             </div>
                         <?php endif; ?>
                     </li>
@@ -117,6 +117,7 @@ $investigation = getInvestigation($_GET['investigationId'])->investigation;
     </div>
     <div class="button_wrapper">
         <a href="#" class="btn-small indigo">View Report</a>
+        <a href=<?php echo "http://localhost:3000/actions/close_investigation.php?investigationId=" . $investigation->id; ?> class="btn-small indigo">Close</a>
     </div>
 </div>
 

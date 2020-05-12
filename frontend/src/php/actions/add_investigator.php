@@ -11,15 +11,6 @@ $result = curl_exec($curl);
 $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
 if ($status !== 200) {
-    if ($status === 406) {
-        if ($detect->isMobile()) {
-            header('Location: /pages/police/mobile/add_investigator.php?investigationId=' . $investigationId . '&investigatorId=' . $investigatorId . '&error=already_investigator');
-        } else {
-            header('Location: /pages/police/investigations.php?model=viewInvestigation&investigtionId=' . $investigationId . '&investigatorId=' . $investigatorId . '&error=already_investigator');
-        }
-        return;
-    }
-
     print curl_error($curl);
     print $result;
 }
@@ -29,4 +20,3 @@ if ($detect->isMobile()) {
 } else {
     header('Location: /pages/police/investigations.php?model=viewInvestigation&investigationId=' . $investigationId);
 }
-
