@@ -16,7 +16,7 @@ function getAllUserInvestigations()
     }
 
     curl_close($curl);
-    return json_decode($result);
+    return json_decode($result)->ids;
 }
 
 function getInvestigation($investigationId)
@@ -35,7 +35,7 @@ function getInvestigation($investigationId)
     }
 
     curl_close($curl);
-    return json_decode($result);
+    return json_decode($result)->investigation;
 }
 
 function getAllInvestigations()
@@ -55,7 +55,7 @@ function getAllInvestigations()
     }
 
     curl_close($curl);
-    return json_decode($result);
+    return json_decode($result)->ids;
 }
 
 function getInvestigationByReportId($reportId)

@@ -70,7 +70,7 @@ $rank = getRank();
                 <li><a href="http://localhost:3000/pages/police/admin_panel.php">Admin Panel</a></li>
             <?php endif; ?>
 
-            <li><a href="http://localhost:3000/pages/police/investigations.php">Investigations</a></li>
+            <li><a href="http://localhost:3000/investigations.php">Investigations</a></li>
             <li><a href="http://localhost:3000/pages/police/reports.php">Reports</a></li>
             <li><a href="http://localhost:3000/pages/police/ecommerce.php">E-Commerce Matching</a></li>
             <li><a href="http://localhost:3000/pages/police/map.php">Vulnerability Map</a></li>
