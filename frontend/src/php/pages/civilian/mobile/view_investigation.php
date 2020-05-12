@@ -39,10 +39,11 @@ $investigation = getInvestigation($_GET['investigationId'])->investigation;
                 </li>
             <?php else : ?>
                 <?php for ($i = 0; $i < count($investigation->comments); $i++) :
-                    $comment = $investigation->comments;
+                    $comment = $investigation->comments[$i];
+                    $username = getUsername($comment->author);
                 ?>
                     <li class="comment">
-                        <div class="author"><?php echo getUsername($comment->author) ?></div>
+                        <div class="author"><?php echo $username; ?></div>
                         <div class="comment"><?php echo $comment->comment; ?></div>
                     </li>
                 <?php endfor; ?>
