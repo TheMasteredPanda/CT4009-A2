@@ -124,7 +124,7 @@ export async function getInvestigation(investigationId: number) {
     getInvestigationUpdate(id)
   );
 
-  let comments = await InvestigationComments.findAll({where: {id: investigationId}});
+  let comments = await InvestigationComments.findAll({where: {investigation_id: investigationId}});
   let object: any = investigation.toJSON();
   object.comments = _.map(comments, comment => comment.toJSON());
   object.investigators = _.map(
