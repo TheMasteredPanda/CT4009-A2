@@ -1,9 +1,9 @@
 <?php
-include "../../../components/header.php";
-include "../../../components/navbar.php";
-include "../../../functions/report_functions.php";
-include "../../../functions/user_functions.php";
-include "../../../functions/investigation_functions.php";
+include "../components/header.php";
+include "../components/navbar.php";
+include "../functions/report_functions.php";
+include "../functions/user_functions.php";
+include "../functions/investigation_functions.php";
 
 $report = getReport($_GET['reportId']);
 $userId = json_decode($_COOKIE['ct4009Auth'])->id;
@@ -12,7 +12,7 @@ if ($report->investigating) {
     $isInvestigator = isInvestigator(getInvestigationByReportId($report->id), $userId);
 }
 
-$type = 'public';
+$type = 'civilian';
 if (isset($_POST['type'])) {
     $type = $_POST['type'];
 }
@@ -39,8 +39,8 @@ if (!$report->open) {
         <h5 class="center-align">Comments</h5>
 
         <div class="comments_container_header center-align">
-            <button class="btn-small indigo" name="comment_public_section_button">Public</button>
             <?php if ($rank !== 'civilian') : ?>
+                <button class="btn-small indigo" name="comment_public_section_button">Public</button>
                 <button class="btn-small indigo" name="comment_private_section_button">Police</button>
             <?php endif; ?>
         </div>
@@ -76,7 +76,7 @@ if (!$report->open) {
         </div>
     </div>
     <div class="button_wrapper">
-        <?php if ($report->open && ($rank === 'police_admin' || $isInvestigator)) : ?>
+        <?php if ($report->open) : ?>
             <a href=<?php echo "http://localhost:3000/actions/close_report.php?reportId=" . $_GET['reportId'] ?> class="btn-small">Close</a>
         <?php endif; ?>
         <?php if ($detect->isMobile()) : ?>
@@ -102,5 +102,5 @@ if (!$report->open) {
 <script type="text/javascript" src="http://localhost:3000/scripts/reports.bundle.js"></script>
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <?php
-include "../../../components/footer.php";
+include "../components/footer.php";
 ?>

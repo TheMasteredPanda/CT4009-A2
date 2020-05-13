@@ -49,8 +49,9 @@ router.post("/reports", (req: Request, res: Response) => {
   }
 
   if (req.query.open) {
-    req.query.open = (Number(req.query.open) === 1) as any;
+    req.query.open = Number(req.query.open) === 1 ? true as any : false as any;
   }
+
 
   actions
     .getReportIds(req.query)
@@ -64,16 +65,24 @@ router.post("/reports", (req: Request, res: Response) => {
 router.get("/reports/report", (req: Request, res: Response) => {
   let query = req.query;
 
-  if (!query.reportId) {
+  if (!query.reportId && !query.bikeId) {
     throw new ClientBadRequestError(
       "Client",
       "Query parameter not found",
-      `Query parameter 'reportId' was not found.`
+      `Query parameter 'reportId' and 'bikeId' was not found.`
     );
   }
 
+  let reportId = 0;
+  let bikeId = 0;
+
+  if (query.reportId) {
+    reportId = Number(query.reportId);
+  } else {
+    bikeId = Number(query.bikeId);
+  }
   actions
-    .getReport(Number(query.reportId))
+    .getReport(reportId, bikeId)
     .then((report) => {
       res.status(200).send({ report });
     })

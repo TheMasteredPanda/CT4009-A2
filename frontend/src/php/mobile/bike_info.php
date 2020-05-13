@@ -2,6 +2,7 @@
 include "../components/header.php";
 include "../components/navbar.php";
 include "../functions/bike_functions.php";
+include "../functions/report_functions.php";
 
 $bike = getBike($_GET['bikeId']);
 ?>
@@ -71,7 +72,7 @@ $bike = getBike($_GET['bikeId']);
                 <?php if (!hasOpenReport($bike->id)) : ?>
                     <a href=<?php echo "http://localhost:3000/mobile/report_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Report Stolen</a>
                 <?php else : ?>
-                    <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . ''; ?> class="btn indigo">View Report</a>
+                    <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . getReportByBike($bike->id)->id; ?> class="btn indigo">View Report</a>
                 <?php endif; ?>
             <?php endif; ?>
         </span>

@@ -1,6 +1,9 @@
 <?php
 include "./components/header.php";
 include "./components/navbar.php";
+include "./functions/report_functions.php";
+
+$userId = json_decode($_COOKIE['ct4009Auth'])->id;
 
 if (isset($_POST['select_search_type'])) {
     $search_types = $_POST['select_search_type'];
@@ -13,6 +16,15 @@ if ($rank !== 'civilian') {
     $types['author'] = 'By Report Author';
 }
 
+if (!isset($_POST['ids'])) {
+    if ($rank == 'civilian') {
+        $reports = getAllUserReports();
+    } else {
+        $reports = getAllReports();
+    }
+} else {
+    $reports = $_POST['ids'];
+}
 ?>
 
 <div class="reports_container">
@@ -37,7 +49,10 @@ if ($rank !== 'civilian') {
                 </div>
             </form>
             <?php if (isset($_POST['search_reports']) && count($search_types) > 0) : ?>
-                <form action="#">
+                <form action="#" class="search_reports_form">
+                    <?php if ($rank === 'civilian') : ?>
+                        <input type="text" name="civ_author" value=<?php echo $userId; ?> hidden>
+                    <?php endif; ?>
                     <?php if (in_array('start_date', $search_types)) : ?>
                         <div class="input-field container datepicker_input">
                             <input type="text" class="datepicker" name="search_by_start_date">
@@ -54,10 +69,10 @@ if ($rank !== 'civilian') {
                         <div class="center-align container">
                             <div class="switch">
                                 <label>
-                                    Closed
+                                    Open
                                     <input type="checkbox" name="search_by_open">
                                     <span class="lever"></span>
-                                    Open
+                                    Closed
                                 </label>
                             </div>
                         </div>
@@ -92,7 +107,14 @@ if ($rank !== 'civilian') {
             <div class="reports container">
                 <div class="card">
                     <div class="card-content">
-                        <span class="card-title"><?php echo 'Report ' . $report->id; ?></span>
+                        <?php if ($report->open) : ?>
+
+                            <span class="card-title"><?php echo 'Report ' . $report->id; ?></span>
+                        <?php else : ?>
+                            <span class="card-title">
+                                <?php echo 'Report ' . $report->id . ' (Closed)';  ?>
+                            </span>
+                        <?php endif; ?>
                         <p><?php echo $report->content; ?></p>
                     </div>
                     <div class="card-action">

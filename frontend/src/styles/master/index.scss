@@ -373,8 +373,17 @@ nav {
     align-items: center;
   }
 
+
+  a {
+    @extend .indigo;
+  }
+
   .reports_header {
     margin-top: 4%;
+
+    input[type="submit"] {
+      @extend .indigo;
+    }
 
     .search_reports_form {
       @extend .grey, .lighten-2;
@@ -390,17 +399,15 @@ nav {
         @extend .indigo;
       }
 
-      .search_reports_form_button_wrapper {
+      .button_wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
         padding-bottom: 5%;
+        padding-top: 5%;
       }
     }
 
-    .police_search_reports_form {
-      @extend .search_reports_form;
-    }
   }
 }
 

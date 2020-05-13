@@ -51,7 +51,7 @@ export async function getReportIds(
     query.where.createdAt = { [Op.gte]: new Date(opts.startDate) };
   }
 
-  if (opts.open) {
+  if (opts.hasOwnProperty("open")) {
     query.where.open = opts.open;
   }
 
@@ -73,8 +73,14 @@ export async function getReportIds(
   return _.map(reports, (report) => (report.toJSON() as any).id);
 }
 
-export async function getReport(reportId: number) {
-  let report = await Reports.findOne({ where: { id: reportId } });
+export async function getReport(reportId: number, bikeId: number) {
+  let report = null;
+
+  if (reportId !== 0) {
+    report = await Reports.findOne({ where: { id: reportId } });
+  } else {
+    report = await Reports.findOne({ where: { bike_id: bikeId } });
+  }
 
   if (!report) {
     throw new ClientNotFoundError(

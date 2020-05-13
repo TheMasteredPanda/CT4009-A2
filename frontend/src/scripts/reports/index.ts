@@ -14,30 +14,19 @@ $('select[name="select_search_type[]"]').change((e) => {
   let values = $(e.currentTarget).val();
 
   $.post({
-    url: "http://localhost:3000/pages/civilian/reports.php",
+    url: "http://localhost:3000/reports.php",
     data: { select_search_type: values, search_reports: true },
   }).done((res) => {
     $("body").html(res);
   });
 });
-$('select[name="police_select_search_type[]"]').change((e) => {
-  console.log("Called Police Select");
-  let values = $(e.currentTarget).val();
-  if (!values) return;
 
-  $.post({
-    url: "http://localhost:3000/pages/police/reports.php",
-    data: { select_search_type: values, search_reports: true },
-  }).done((res) => {
-    $("body").html(res);
-  });
-});
 //https://stackoverflow.com/questions/52452763/materialize-textarea-tag-is-not-scrollable-on-fixed-height
 
-$(".police_search_reports_form").submit((e) => {
+$(".search_reports_form").submit((e) => {
   e.preventDefault();
   let searchTypes: string[] = $(
-    'select[name="police_select_search_type[]"]'
+    'select[name="select_search_type[]"]'
   ).val() as string[];
   let data: any = {};
 
@@ -48,6 +37,12 @@ $(".police_search_reports_form").submit((e) => {
 
   if (searchTypes.includes("author")) {
     data.author = $('input[name="search_by_author"').val();
+  }
+
+  let author = $('input[name="civ_author"]').val();
+
+  if (author !== "") {
+    data.author = author;
   }
 
   if (searchTypes.includes("start_date")) {
@@ -75,7 +70,7 @@ $(".police_search_reports_form").submit((e) => {
     }
 
     $.post({
-      url: "http://localhost:3000/pages/police/reports.php",
+      url: "http://localhost:3000/reports.php",
       data: object,
     }).done((res1) => {
       $("body").html(res1);
