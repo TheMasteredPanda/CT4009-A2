@@ -65,7 +65,7 @@ function getInvestigationByReportId($reportId)
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
     $result = curl_exec($curl);
-    $status = curl_getinfo($result);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     if ($status !== 200) {
         print curl_error($curl);
@@ -74,7 +74,7 @@ function getInvestigationByReportId($reportId)
     }
 
     curl_close($curl);
-    return json_decode($result);
+    return json_decode($result)->investigation;
 }
 
 function isInvestigator($investigation, $userId)

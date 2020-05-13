@@ -60,7 +60,7 @@ if (!$investigation->open) {
                 <?php endfor; ?>
             <?php endif; ?>
         </ul>
-        <?php if ($rank !== 'civilian' && $isInvestigator && $investigation->open) : ?>
+        <?php if ($rank !== 'civilian' && ($isInvestigator || $rank === 'police_admin') && $investigation->open) : ?>
             <div class="button_wrapper">
                 <a href=<?php echo 'http://localhost:3000/mobile/add_investigation_update.php?investigationId=' . $investigation->id; ?> class="btn-small">Add Update</a>
             </div>
@@ -149,7 +149,7 @@ if (!$investigation->open) {
             <a href=<?php echo 'http://localhost:3000/reports.php?model=viewReport&reportId=' . $investigation->report_id; ?> class="btn-small">View Report</a>
         <?php endif; ?>
         <?php if (($rank === 'police_admin' || $isInvestigator) && $investigation->open) : ?>
-            <a href=<?php echo 'http://localhost:3000/actions/close_investigation.php?investigationid=' . $investigation->id; ?> class="btn-small">Close</a>
+            <a href=<?php echo 'http://localhost:3000/actions/close_investigation.php?investigationId=' . $investigation->id; ?> class="btn-small">Close</a>
         <?php endif; ?>
         <a href='http://localhost:3000/investigations.php' class="btn-small">Back</a>
     </div>

@@ -1,7 +1,7 @@
 <?php
-include "../../../components/header.php";
-include "../../../components/police_auth_header.php";
-include "../../../components/navbar.php";
+include "../components/header.php";
+include "../components/police_auth_header.php";
+include "../components/navbar.php";
 ?>
 
 <div class="add_investigation_update_container">
@@ -30,5 +30,5 @@ include "../../../components/navbar.php";
 
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <?php
-include "../../../components/footer.php";
+include "../components/footer.php";
 ?>

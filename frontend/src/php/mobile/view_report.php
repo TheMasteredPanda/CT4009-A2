@@ -85,11 +85,12 @@ if (!$report->open) {
             <a href=<?php echo 'http://localhost:3000/bikes.php?bikeId=' . $report->bike_id . '&model=bikeInfo'; ?> class="btn-small">View Reported Bike</a>
         <?php endif; ?>
         <?php if ($report->investigating) :
-            $investigation = getInvestigationByReportId($report->id); ?>
+            $investigation = getInvestigationByReportId($report->id);
+        ?>
             <?php if ($detect->isMobile()) : ?>
-                <a href=<?php echo 'http://localhost:3000/mobile/view_investigation.php?investigationId=' . $investigation->id; ?>>View Investigation</a>
+                <a href=<?php echo 'http://localhost:3000/mobile/view_investigation.php?investigationId=' . $investigation->id; ?> class="btn-small">View Investigation</a>
             <?php else : ?>
-                <a href=<?php echo 'http://localhost:3000/investigations.php?model=viewInvestigation&investigationId=' . $investigation->id; ?>>View Investigation</a>
+                <a href=<?php echo 'http://localhost:3000/investigations.php?model=viewInvestigation&investigationId=' . $investigation->id; ?> class="btn-small">View Investigation</a>
             <?php endif; ?>
         <?php else : ?>
             <?php if ($rank === 'police_admin' || $isInvestigator) : ?>

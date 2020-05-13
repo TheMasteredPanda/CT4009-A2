@@ -81,7 +81,7 @@ $(".search_reports_form").submit((e) => {
 $('button[name="comment_public_section_button"]').click((e: any) => {
   let reportId = getUrlQuery().reportId;
   $.post({
-    url: `http://localhost:3000/pages/police/mobile/view_report.php?reportId=${reportId}`,
+    url: `http://localhost:3000/mobile/view_report.php?reportId=${reportId}`,
     data: { type: "civilian" },
   }).done((res) => {
     console.log("Is done");
@@ -93,7 +93,7 @@ $('button[name="comment_private_section_button"]').click((e: any) => {
   console.log("Police comments click");
   let reportId = getUrlQuery().reportId;
   $.post({
-    url: `http://localhost:3000/pages/police/mobile/view_report.php?reportId=${reportId}`,
+    url: `http://localhost:3000/mobile/view_report.php?reportId=${reportId}`,
     data: { type: "police" },
   }).done((res) => {
     $("body").html(res);
