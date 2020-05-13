@@ -23,9 +23,9 @@ $update = array_values(array_filter($investigation->updates, function ($update) 
     </div>
     <div class="button_wrapper">
         <?php if ($detect->isMobile()) : ?>
-            <a href=<?php echo 'http://localhost:3000/pages/police/mobile/view_investigation.php?investigationId=' . $_GET['investigationId']; ?>>Back</a>
+            <a href=<?php echo 'http://localhost:3000/mobile/view_investigation.php?investigationId=' . $_GET['investigationId']; ?>>Back</a>
         <?php else : ?>
-            <a href=<?php echo 'http://localhost:3000/pages/police/investigations.php?model=viewInvestigation&investigationId=' . $_GET['investigationId']; ?>>Back</a>
+            <a href=<?php echo 'http://localhost:3000/investigations.php?model=viewInvestigation&investigationId=' . $_GET['investigationId']; ?>>Back</a>
         <?php endif; ?>
     </div>
 </div>

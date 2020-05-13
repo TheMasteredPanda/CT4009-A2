@@ -31,7 +31,7 @@ $account = getAccountDetails($_GET['accountId'])->account;
         </div>
         <div class="button_wrapper">
             <a href=<?php echo "http://localhost:3000/actions/delete_account.php?accountId=" . $_GET['accountId'] ?> class="btn-small">Delete</a>
-            <a href="http://localhost:3000/pages/police/admin_panel.php?section=accounts" class="btn-small">Back</a>
+            <a href="http://localhost:3000/admin_panel.php?section=accounts" class="btn-small">Back</a>
         </div>
     </div>
 </div>

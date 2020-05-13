@@ -3,9 +3,22 @@ include "../../../components/header.php";
 include "../../../components/navbar.php";
 include "../../../functions/report_functions.php";
 include "../../../functions/user_functions.php";
+include "../../../functions/investigation_functions.php";
 
-$report = getReport($_GET['reportId'])->report;
-$comments = getReportComments($_GET['reportId'], 'civilian')->comments;
+$report = getReport($_GET['reportId']);
+$userId = json_decode($_COOKIE['ct4009Auth'])->id;
+
+if ($report->investigating) {
+    $isInvestigator = isInvestigator(getInvestigationByReportId($report->id), $userId);
+}
+
+$type = 'public';
+if (isset($_POST['type'])) {
+    $type = $_POST['type'];
+}
+
+
+$comments = getReportComments($_GET['reportId'], $type);
 $status = "Open";
 
 if (!$report->open) {
@@ -25,6 +38,12 @@ if (!$report->open) {
     <div class="comments_container">
         <h5 class="center-align">Comments</h5>
 
+        <div class="comments_container_header center-align">
+            <button class="btn-small indigo" name="comment_public_section_button">Public</button>
+            <?php if ($rank !== 'civilian') : ?>
+                <button class="btn-small indigo" name="comment_private_section_button">Police</button>
+            <?php endif; ?>
+        </div>
         <ul class="comments">
             <?php if (count($comments) > 0) : ?>
                 <?php for ($i = 0; $i < count($comments); $i++) :
@@ -45,7 +64,7 @@ if (!$report->open) {
             <?php endif; ?>
         </ul>
         <div class="new_comment_container">
-            <form action=<?php echo "http://localhost:3000/actions/create_report_comment.php?reportId=" . $report->id . '&type=civilian'; ?> method="POST">
+            <form action=<?php echo "http://localhost:3000/actions/create_report_comment.php?reportId=" . $report->id . '&type=' . $type; ?> method="POST">
                 <div class="input-field">
                     <textarea name="new_comment_textarea" id="newCommentTextarea" class="materialize-textarea" cols="30" rows=3></textarea>
                     <label for="newCommentTextarea">New Comment</label>
@@ -57,17 +76,30 @@ if (!$report->open) {
         </div>
     </div>
     <div class="button_wrapper">
-        <?php if ($report->open) : ?>
+        <?php if ($report->open && ($rank === 'police_admin' || $isInvestigator)) : ?>
             <a href=<?php echo "http://localhost:3000/actions/close_report.php?reportId=" . $_GET['reportId'] ?> class="btn-small">Close</a>
         <?php endif; ?>
         <?php if ($detect->isMobile()) : ?>
-            <a href=<?php echo 'http://localhost:3000/pages/civilian/mobile/bike_info.php?bikeId=' . $report->bike_id; ?> class="btn-small">View Reported Bike</a>
+            <a href=<?php echo 'http://localhost:3000/mobile/bike_info.php?bikeId=' . $report->bike_id; ?> class="btn-small">View Reported Bike</a>
         <?php else : ?>
-            <a href=<?php echo 'http://localhost:3000/pages/civilian/bikes.php?bikeId=' . $report->bike_id . '&model=bikeInfo'; ?> class="btn-small">View Reported Bike</a>
+            <a href=<?php echo 'http://localhost:3000/bikes.php?bikeId=' . $report->bike_id . '&model=bikeInfo'; ?> class="btn-small">View Reported Bike</a>
+        <?php endif; ?>
+        <?php if ($report->investigating) :
+            $investigation = getInvestigationByReportId($report->id); ?>
+            <?php if ($detect->isMobile()) : ?>
+                <a href=<?php echo 'http://localhost:3000/mobile/view_investigation.php?investigationId=' . $investigation->id; ?>>View Investigation</a>
+            <?php else : ?>
+                <a href=<?php echo 'http://localhost:3000/investigations.php?model=viewInvestigation&investigationId=' . $investigation->id; ?>>View Investigation</a>
+            <?php endif; ?>
+        <?php else : ?>
+            <?php if ($rank === 'police_admin' || $isInvestigator) : ?>
+                <a href=<?php echo 'http://localhost:3000/actions/create_investigation.php?reportId=' . $report->id; ?> class="btn-small">Launch Investigation</a>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>
 
+<script type="text/javascript" src="http://localhost:3000/scripts/reports.bundle.js"></script>
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <?php
 include "../../../components/footer.php";

@@ -59,7 +59,7 @@ function getReportComments($reportId, $type)
     }
 
     curl_close($curl);
-    return json_decode($result);
+    return json_decode($result)->comments;
 }
 
 function getAllReports()

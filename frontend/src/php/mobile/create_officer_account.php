@@ -27,7 +27,7 @@ include "../../../components/police_auth_header.php";
         </div>
         <div class="button_wrapper">
             <input type="submit" value="Create Account" class="btn-small indigo">
-            <a href="http://localhost:3000/pages/police/admin_panel.php?section=accounts" class="btn-small indigo">Cancel</a>
+            <a href="http://localhost:3000/admin_panel.php?section=accounts" class="btn-small indigo">Cancel</a>
         </div>
     </form>
 </div>

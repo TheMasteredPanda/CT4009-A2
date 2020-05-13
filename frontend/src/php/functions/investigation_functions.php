@@ -76,3 +76,16 @@ function getInvestigationByReportId($reportId)
     curl_close($curl);
     return json_decode($result);
 }
+
+function isInvestigator($investigation, $userId)
+{
+    for ($i = 0; $i < count($investigation->investigators); $i++) {
+        $investigatorId = $investigation->investigators[$i]->investigator_id;
+
+        if ($userId === $investigatorId) {
+            return true;
+        }
+    }
+
+    return false;
+}
