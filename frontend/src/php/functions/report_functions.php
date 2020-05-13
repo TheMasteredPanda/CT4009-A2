@@ -18,7 +18,7 @@ function getAllUserReports()
     }
 
     curl_close($result);
-    return json_decode($result);
+    return json_decode($result)->ids;
 }
 
 function getReport($reportId)
@@ -38,7 +38,7 @@ function getReport($reportId)
     }
 
     curl_close($curl);
-    return json_decode($result);
+    return json_decode($result)->report;
 }
 
 
@@ -79,5 +79,5 @@ function getAllReports()
     }
 
     curl_close($curl);
-    return json_decode($result);
+    return json_decode($result)->ids;
 }
