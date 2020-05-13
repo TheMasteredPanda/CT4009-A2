@@ -13,7 +13,7 @@ $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 if ($status !== 200) {
     print curl_error($curl);
     echo '\n';
-    print $result;
+    print_r($result);
     return;
 }
 

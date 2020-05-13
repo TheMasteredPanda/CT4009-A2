@@ -1,6 +1,6 @@
 <?php
-include "../../../components/header.php";
-include "../../../components/navbar.php";
+include "../components/header.php";
+include "../components/navbar.php";
 ?>
 
 <div class="report_stolen_container">
@@ -18,5 +18,5 @@ include "../../../components/navbar.php";
 <script type="text/javascript" src="http://localhost:3000/scripts/reports.bundle.js"></script>
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <?php
-include "../../../components/footer.php"
+include "../components/footer.php"
 ?>

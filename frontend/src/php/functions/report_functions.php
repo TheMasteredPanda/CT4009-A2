@@ -81,3 +81,17 @@ function getAllReports()
     curl_close($curl);
     return json_decode($result)->ids;
 }
+
+function getReportByBike($bikeId)
+{
+
+}
+
+
+function hasOpenReport($bikeId)
+{
+}
+
+function isUnderInvestigation($reportId)
+{
+}

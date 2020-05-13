@@ -8,6 +8,7 @@ if ($rank === 'civilian') {
 } else {
     $bikes = getAllBikes();
 }
+
 ?>
 
 <div class="bikes_container">

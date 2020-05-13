@@ -1,7 +1,7 @@
 <?php
-include "../../../components/header.php";
-include "../../../components/navbar.php";
-include "../../../functions/bike_functions.php";
+include "../components/header.php";
+include "../components/navbar.php";
+include "../functions/bike_functions.php";
 
 if (!isset($_GET['bikeId'])) return;
 $bike = getBike($_GET['bikeId']);
@@ -143,5 +143,5 @@ $bike_colours = explode(', ', $bike->colours);
 <script type="text/javascript" src="http://localhost:3000/scripts/bikes.bundle.js"></script>
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <?php
-include "../../../components/footer.php";
+include "../components/footer.php";
 ?>

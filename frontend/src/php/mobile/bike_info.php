@@ -68,7 +68,11 @@ $bike = getBike($_GET['bikeId']);
             <a href=<?php echo "http://localhost:3000/actions/delete_bike.php?bikeId=" . $bike->id ?> class="btn indigo">Delete</a>
             <?php if ($rank === 'civilian') : ?>
                 <a href=<?php echo "http://localhost:3000/mobile/edit_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Edit</a>
-                <a href=<?php echo "http://localhost:3000/mobile/report_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Report Stolen</a>
+                <?php if (!hasOpenReport($bike->id)) : ?>
+                    <a href=<?php echo "http://localhost:3000/mobile/report_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Report Stolen</a>
+                <?php else : ?>
+                    <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . ''; ?> class="btn indigo">View Report</a>
+                <?php endif; ?>
             <?php endif; ?>
         </span>
     </div>

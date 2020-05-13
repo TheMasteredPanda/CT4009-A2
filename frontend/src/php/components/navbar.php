@@ -12,10 +12,10 @@ $rank = getRank();
 
     </div>
 
-    <?php if ($currentScript === '/pages/civilian/bikes.php') : ?>
+    <?php if ($currentScript === '/bikes.php' && $rank === 'civilian') : ?>
         <ul class="right hide-on-med-and-up bikes_navbar_button">
             <?php if ($detect->isMobile()) : ?>
-                <li><a href="http://localhost:3000/register_a_bike.php" class="btn-small">Register a Bike</a></li>
+                <li><a href="http://localhost:3000/mobile/register_a_bike.php" class="btn-small">Register a Bike</a></li>
             <?php else : ?>
                 <li><a href="#" class="btn-small">Register a Bike</a></li>
             <?php endif; ?>

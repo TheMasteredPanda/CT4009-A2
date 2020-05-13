@@ -1,6 +1,6 @@
 <?php
-include "../../../components/header.php";
-include "../../../components/navbar.php";
+include "../components/header.php";
+include "../components/navbar.php";
 ?>
 
 <div class="mobile_register_a_bike_container">
@@ -116,7 +116,7 @@ include "../../../components/navbar.php";
                 </select>
             </div>
             <div class="file-field input-field">
-                <div class="btn-small">
+                <div class="btn-small indigo">
                     <span>Image</span>
                     <input type="file" name="images[]" id="bikeImages" multiple>
                 </div>
@@ -125,7 +125,7 @@ include "../../../components/navbar.php";
                 </div>
             </div>
             <span class="submit_button_wrapper">
-                <input type="submit" class="btn" value="Register">
+                <input type="submit" class="btn indigo" value="Register">
             </span>
         </div>
 
@@ -137,5 +137,5 @@ include "../../../components/navbar.php";
 <link rel="stylesheet" href="http://localhost:3000/styles/mobile.bundle.css">
 
 <?php
-include "../../../components/footer.php";
+include "../components/footer.php";
 ?>
