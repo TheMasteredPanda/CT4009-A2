@@ -64,7 +64,7 @@ $bike = getBike($_GET['bikeId']);
             <input type="text" name="bike_age_group" value=<?php echo $bike->age_group ?> readonly>
             <label for="bike_age_group">Age Group</label>
         </div>
-        <span class="button_wrapper">
+        <div class="button_wrapper">
             <a href="http://localhost:3000/bikes.php" class="btn indigo">Back</a>
             <a href=<?php echo "http://localhost:3000/actions/delete_bike.php?bikeId=" . $bike->id ?> class="btn indigo">Delete</a>
             <?php if ($rank === 'civilian') : ?>
@@ -75,7 +75,7 @@ $bike = getBike($_GET['bikeId']);
                     <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . getReportByBike($bike->id)->id; ?> class="btn indigo">View Report</a>
                 <?php endif; ?>
             <?php endif; ?>
-        </span>
+        </div>
     </div>
 
 

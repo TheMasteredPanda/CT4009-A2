@@ -6,53 +6,57 @@ import { getUrlQuery } from "../master/index";
   M.FormSelect.init(elements);
 }); */
 
-$(".register_a_bike_form").on("submit", (e) => {
-  e.preventDefault();
-  let data = new FormData();
+$(".register_a_bike_form").ready(() => {
+  console.log("Register a bike form ready.");
+  $(".register_a_bike_form").on("submit", (e) => {
+    console.log("Clicked");
+    e.preventDefault();
+    let data = new FormData();
 
-  data.append("partNumber", $("#partNumber").val() as string);
-  data.append("brand", $("#brand").val() as string);
-  data.append("modal", $("#modal").val() as string);
-  data.append("wheelSize", $("#wheelSize").val() as string);
-  data.append("gearCount", $("#gearCount").val() as string);
-  data.append("gender", $("#bikeGender").val() as string);
-  data.append("ageGroup", $("#ageGroup").val() as string);
+    data.append("partNumber", $("#partNumber").val() as string);
+    data.append("brand", $("#brand").val() as string);
+    data.append("modal", $("#modal").val() as string);
+    data.append("wheelSize", $("#wheelSize").val() as string);
+    data.append("gearCount", $("#gearCount").val() as string);
+    data.append("gender", $("#bikeGender").val() as string);
+    data.append("ageGroup", $("#ageGroup").val() as string);
 
-  if ($("#bikeType").val()) {
-    data.append("type", $("#bikeType").val() as string);
-  }
-
-  if ($("#bikeColours").val()) {
-    let colours: string[] = $("#bikeColours").val() as [];
-
-    for (let i = 0; i < colours.length; i++) {
-      const colour = colours[i];
-      data.append("colours[]", colour);
+    if ($("#bikeType").val()) {
+      data.append("type", $("#bikeType").val() as string);
     }
-  }
 
-  if ($("#brakeType").val()) {
-    data.append("brakeType", $("#brakeType").val() as string);
-  }
+    if ($("#bikeColours").val()) {
+      let colours: string[] = $("#bikeColours").val() as [];
 
-  if ($("#bikeSuspension").val()) {
-    data.append("suspension", $("#bikeSuspension").val() as string);
-  }
+      for (let i = 0; i < colours.length; i++) {
+        const colour = colours[i];
+        data.append("colours[]", colour);
+      }
+    }
 
-  let images = $("#bikeImages").prop("files");
+    if ($("#brakeType").val()) {
+      data.append("brakeType", $("#brakeType").val() as string);
+    }
 
-  for (let i = 0; i < images.length; i++) {
-    const image = images[i];
-    data.append(`image[]`, image);
-  }
+    if ($("#bikeSuspension").val()) {
+      data.append("suspension", $("#bikeSuspension").val() as string);
+    }
 
-  $.post({
-    url: "http://localhost:3000/actions/register_bike.php",
-    data: data,
-    processData: false,
-    contentType: false,
-  }).done((res) => {
-    $("body").html(res);
+    let images = $("#bikeImages").prop("files");
+
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      data.append(`image[]`, image);
+    }
+
+    $.post({
+      url: "http://localhost:3000/actions/register_bike.php",
+      data: data,
+      processData: false,
+      contentType: false,
+    }).done((res) => {
+      $("body").html(res);
+    });
   });
 });
 
@@ -187,4 +191,12 @@ $("#uploadImageCarouselItemInput").change((e) => {
 
 $("#bikeInfoImageCarousel").ready(() => {
   $("#bikeInfoImageCarousel").carousel({ fullWidth: true, indicators: true });
+});
+
+$(document).ready(() => {
+  let modal = getUrlQuery().modal;
+  if (!modal) return;
+  $(`#${modal}`).modal({ dismissible: false });
+  $(`#${modal}`).modal("open");
+  $('.carousel').carousel({fullWidth: true})
 });

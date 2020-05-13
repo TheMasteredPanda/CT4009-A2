@@ -88,6 +88,20 @@ html {
       margin-bottom: 2.5%;
     }
   }
+
+  @media #{$medium-and-up} {
+    .login_form {
+      height: 30%;
+    }
+
+    .forgot_creds_form {
+      height: 30%;
+    }
+
+    .register_form {
+      height: 50%;
+    }
+  }
 }
 
 .home_container {
@@ -123,10 +137,58 @@ nav {
   }
 }
 
+#registerBike {
+  overflow: visible !important;
+  max-height: 90% !important ;
+  .register_a_bike_form {
+    .submit_button_wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      input {
+        margin-right: 2%;
+      }
+
+      a {
+        margin-left: 2%;
+      }
+    }
+  }
+}
+
+#viewBike {
+  .bike_info_container {
+    .button_wrapper {
+      a {
+        margin-left: 1% !important;
+        margin-right: 1% !important;
+      }
+    }
+  }
+}
+
+#editBike {
+  .bike_edit_container {
+    #uploadImagesCarouselItem {
+      min-height: 400px !important ;
+    }
+
+    .carousel {
+      height: 400px !important;
+    }
+
+    .edit_button_wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
 .bikes_container {
   height: 90%;
   width: 100%;
-
   .no_bikes_registered_wrapper {
     height: 90%;
     width: 100%;
@@ -134,9 +196,7 @@ nav {
     align-items: center;
     text-align: center;
   }
-}
 
-.bikes_container {
   ul {
     li {
       margin-bottom: 2%;
@@ -165,6 +225,30 @@ nav {
 
         .btn {
           @extend .indigo;
+        }
+      }
+    }
+  }
+
+  @media #{$medium-and-up} {
+    ul {
+      display: flex;
+      flex-flow: row;
+      flex-wrap: wrap;
+
+      li {
+        margin-top: 0;
+        margin-bottom: 0;
+        width: 47%;
+        height: auto;
+        margin-left: 1%;
+        margin-right: 1%;
+
+        .card {
+          .card-title {
+            padding-bottom: 4%;
+            margin-left: 2%;
+          }
         }
       }
     }
@@ -373,7 +457,6 @@ nav {
     align-items: center;
   }
 
-
   a {
     @extend .indigo;
   }
@@ -407,7 +490,6 @@ nav {
         padding-top: 5%;
       }
     }
-
   }
 }
 
@@ -519,7 +601,6 @@ nav {
       margin: 2%;
     }
   }
-
 }
 
 .investigations_container {

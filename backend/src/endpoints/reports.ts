@@ -49,9 +49,9 @@ router.post("/reports", (req: Request, res: Response) => {
   }
 
   if (req.query.open) {
-    req.query.open = Number(req.query.open) === 1 ? true as any : false as any;
+    req.query.open =
+      Number(req.query.open) === 1 ? (true as any) : (false as any);
   }
-
 
   actions
     .getReportIds(req.query)
@@ -80,6 +80,7 @@ router.get("/reports/report", (req: Request, res: Response) => {
   } else {
     bikeId = Number(query.bikeId);
   }
+
   actions
     .getReport(reportId, bikeId)
     .then((report) => {

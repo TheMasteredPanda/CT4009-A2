@@ -34,6 +34,7 @@ export async function getReportIds(
   opts: {
     author?: number;
     open?: boolean;
+    bikeId?: number;
     startDate?: number;
     endDate?: number;
     attributes?: string[];
@@ -67,6 +68,10 @@ export async function getReportIds(
     } else {
       query.where.author = opts.author;
     }
+  }
+
+  if (opts.bikeId) {
+    query.where.bike_id = Number(opts.bikeId);
   }
 
   let reports = await Reports.findAll(query);

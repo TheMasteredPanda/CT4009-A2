@@ -106,10 +106,11 @@ function getReportByBike($bikeId)
 function hasOpenReport($bikeId)
 {
     $payload = json_decode($_COOKIE['ct4009Auth']);
-    $curl = curl_init('http://localhost:5555/reports/report?userId=' . $payload->id . '&bikeId=' . $bikeId);
+    $curl = curl_init('http://localhost:5555/reports?userId=' . $payload->id . '&bikeId=' . $bikeId);
+    curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
-    $result = json_decode(curl_exec($curl))->report;
+    $result = json_decode(curl_exec($curl))->ids;
     curl_close($curl);
-    return $result->open;
+    return !empty($result);
 }
