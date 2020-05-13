@@ -19,8 +19,8 @@ if ($status !== 200) {
 curl_close($curl);
 
 if ($detect->isMobile()) {
-    header('Location: /pages/police/mobile/view_investigation.php?investigationId=' . $investigationId);
+    header('Location: /mobile/view_investigation.php?investigationId=' . $investigationId);
 } else {
-    header('Location: /pages/police/investigations.php?model=viewInvestigation&investigationId=' . $investigationId);
+    header('Location: /investigations.php?model=viewInvestigation&investigationId=' . $investigationId);
 }
 

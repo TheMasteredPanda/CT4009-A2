@@ -21,14 +21,9 @@ if ($status !== 200) {
 $rank = getRank();
 
 if ($detect->isMobile()) {
-    if ($rank === 'civilian') {
-        header('Location: /pages/civilian/mobile/view_report.php?reportId=' . $_GET['reportId']);
-    } else {
-        header('Location: /pages/police/mobile/view_report.php?reportId=' . $_GET['reportId']);
-    }
+    header('Location: /mobile/view_report.php?reportId=' . $_GET['reportId']);
 } else {
-    if ($rank == 'civilian') {
-    } else {
-    }
+    header('Location: /reports.php?model=viewReport&reportId=' . $_GET['reportId']);
 }
+
 include "../components/footer.php";

@@ -1,8 +1,8 @@
 <?php
-include "../../components/header.php";
-include "../../components/navbar.php";
-include "../../components/police_auth_header.php";
-include "../../functions/admin_functions.php";
+include "./components/header.php";
+include "./components/navbar.php";
+include "./components/police_auth_header.php";
+include "./functions/admin_functions.php";
 
 if ($rank !== 'police_admin') {
     header('Location: /index.php');
@@ -44,7 +44,7 @@ if (isset($_POST['accounts'])) {
                     </div>
                     <div class="button_wrapper">
                         <?php if ($detect->isMobile()) : ?>
-                            <a href="http://localhost:3000/pages/police/mobile/create_officer_account.php" class="btn-small">Create Officer Account</a>
+                            <a href="http://localhost:3000/mobile/create_officer_account.php" class="btn-small">Create Officer Account</a>
                         <?php else : ?>
                             <a href="#" class="btn-small"></a>
                         <?php endif; ?>
@@ -70,9 +70,9 @@ if (isset($_POST['accounts'])) {
                             $view_account_href = '';
 
                             if ($detect->isMobile()) {
-                                $view_account_href = 'http://localhost:3000/pages/police/mobile/view_account_details.php?accountId=' . $accounts[$i]->id;
+                                $view_account_href = 'http://localhost:3000/mobile/view_account_details.php?accountId=' . $accounts[$i]->id;
                             } else {
-                                $view_account_href = 'http://localhost:3000/pages/police/admin_panel.php?section=accounts&modal=viewAccount&accountId=' . $accounts[$i]->id;
+                                $view_account_href = 'http://localhost:3000/admin_panel.php?section=accounts&model=viewAccount&accountId=' . $accounts[$i]->id;
                             }
                             ?>
                             <a href=<?php echo $view_account_href; ?>>
@@ -99,5 +99,5 @@ if (isset($_POST['accounts'])) {
 <script type="text/javascript" src="/scripts/admin.bundle.js"></script>
 <script type="text/javascript" src="/scripts/home.bundle.js"></script>
 <?php
-include "../../components/footer.php";
+include "./components/footer.php";
 ?>

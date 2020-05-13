@@ -17,18 +17,18 @@ $data = json_decode($result->data);
 if ($status !== 200) {
     if ($status === 400) {
         if ($detect->isMobile()) {
-            header('Location: /pages/police/mobile/create_officer_account.php?section=accounts&' . $data->parameters[0] . '=badrequest');
+            header('Location: /mobile/create_officer_account.php?section=accounts&' . $data->parameters[0] . '=badrequest');
         } else {
-            header('Location: /pages/police/admin_panel.php?section=accounts&modal=createOfficer&' . $data->parameters[0] . '=badrequest');
+            header('Location: /admin_panel.php?section=accounts&modal=createOfficer&' . $data->parameters[0] . '=badrequest');
         }
         return;
     }
 
     if ($status === 406) {
         if ($detect->isMobile()) {
-            header('Location: /pages/police/mobile/create_officer_account.php?section=accounts&' . $data->parameters[0] . '=unacceptable');
+            header('Location: /mobile/create_officer_account.php?section=accounts&' . $data->parameters[0] . '=unacceptable');
         } else {
-            header('Location: /pages/police/admin_panel.php?section=accounts&modal=createOfficer&' . $data->parameters[0] . '=unacceptable');
+            header('Location: /admin_panel.php?section=accounts&modal=createOfficer&' . $data->parameters[0] . '=unacceptable');
         }
         return;
     }
@@ -39,6 +39,6 @@ if ($status !== 200) {
     return;
 }
 
-header('Location: /pages/police/admin_panel.php?section=accounts');
+header('Location: /admin_panel.php?section=accounts');
 
 include "../components/footer.php";

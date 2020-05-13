@@ -18,9 +18,9 @@ if ($status !== 200) {
 }
 
 if ($detect->isMobile()) {
-    header('Location: /pages/civilian/mobile/view_report.php?reportId=' . $result->id);
+    header('Location: /mobile/view_report.php?reportId=' . $result->id);
 } else {
-    header('Location: /pages/civilian/reports.php?reportId=' . $result->id . '&model=viewReport');
+    header('Location: /reports.php?reportId=' . $result->id . '&model=viewReport');
 }
 
 include "../components/footer.php";

@@ -17,10 +17,6 @@ if ($status !== 200) {
 
 $rank = getRank();
 curl_close($curl);
-if ($rank === 'civilian') {
-    header('Location: /pages/civilian/reports.php');
-} else {
-    header('Location: /pages/police/reports.php');
-}
+header('Location: /reports.php');
 
 include "../components/footer.php";

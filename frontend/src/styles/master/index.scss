@@ -364,6 +364,15 @@ nav {
   flex-flow: column;
   overflow-y: scroll;
   height: 90%;
+
+  .no_reports_container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .reports_header {
     margin-top: 4%;
 
@@ -392,12 +401,6 @@ nav {
     .police_search_reports_form {
       @extend .search_reports_form;
     }
-  }
-
-  .no_reports_container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }
 

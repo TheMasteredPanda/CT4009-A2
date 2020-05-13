@@ -15,7 +15,7 @@ if (isset($_POST['startDate'])) {
     $url = $url . '&startDate=' . $_POST['startDate'];
 }
 
-if (isset($_POST['endDate'])) {
+if (isset($_POST['beforeDate'])) {
     $url = $url . '&endDate=' . $_POST['endDate'];
 }
 

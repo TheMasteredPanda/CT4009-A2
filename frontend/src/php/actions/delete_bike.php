@@ -14,10 +14,6 @@ if ($status !== 200) {
 
 $rank = getRank();
 
-if ($rank === 'civilian') {
-    header('Location: /pages/civilian/bikes.php');
-} else {
-    header('Location: /pages/police/bikes.php');
-}
+header('Location: /bikes.php');
 
 include "../components/footer.php";

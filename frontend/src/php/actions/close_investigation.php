@@ -14,4 +14,4 @@ if ($status !== 200) {
 }
 
 curl_close($curl);
-header('Location: /pages/police/investigations.php');
+header('Location: /investigations.php');

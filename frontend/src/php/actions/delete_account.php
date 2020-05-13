@@ -13,6 +13,6 @@ if ($status !== 200) {
     return;
 }
 
-header('Location: /pages/police/admin_panel.php?section=accounts');
+header('Location: /admin_panel.php?section=accounts');
 
 include  "../components/footer.php";

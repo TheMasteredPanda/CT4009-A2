@@ -70,11 +70,7 @@ curl_close($image_curl);
 $rank = getRank();
 
 if ($status === 200) {
-    if ($rank === 'civilian') {
-        header('Location: /pages/civilian/bikes.php');
-    } else {
-        header('Location: /pages/police/bikes.php');
-    }
+        header('Location: /bikes.php');
 } else {
     print curl_error($curl);
 }

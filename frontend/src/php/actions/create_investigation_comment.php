@@ -19,16 +19,8 @@ if ($status !== 200) {
 
 curl_close($curl);
 
-if ($rank === 'civilian') {
-    if ($detect->isMobile()) {
-        header('Location: /pages/civilian/mobile/view_investigation.php?investigationId=' . $investigationId);
-    } else {
-        header('Location: /pages/civilian/view_investigatin.php?investigationId=' . $investigationId);
-    }
+if ($detect->isMobile()) {
+    header('Location: /mobile/view_investigation.php?investigationId=' . $investigationId);
 } else {
-    if ($detect->isMobile()) {
-        header('Location: /pages/police/mobile/view_investigation.php?investigationId=' . $investigationId);
-    } else {
-        header('Location: /pages/police/investigations.php?model=viewInvestigation?investigationId=' . $investigationId);
-    }
+    header('Location: /view_investigatin.php?investigationId=' . $investigationId);
 }
