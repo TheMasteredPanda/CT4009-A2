@@ -98,6 +98,10 @@ export async function close(investigationId: number) {
     { open: false },
     { where: { id: investigationId } }
   );
+  await Reports.update(
+    { investigating: false },
+    { where: { id: object.report_id } }
+  );
 }
 
 export async function getInvestigation(investigationId: number) {

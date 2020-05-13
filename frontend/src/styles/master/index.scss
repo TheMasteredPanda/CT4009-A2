@@ -511,6 +511,21 @@ nav {
   }
 }
 
+#viewReport {
+  .view_report_container {
+    .comments_container {
+      grid-template-rows: 10% 5% 70% 15%;
+      .new_comment_container {
+        width: 100%;
+
+        form {
+          width: 90%;
+        }
+      }
+    }
+  }
+}
+
 .view_report_container {
   height: 100%;
   display: grid;

@@ -23,7 +23,7 @@ $rank = getRank();
 if ($detect->isMobile()) {
     header('Location: /mobile/view_report.php?reportId=' . $_GET['reportId']);
 } else {
-    header('Location: /reports.php?model=viewReport&reportId=' . $_GET['reportId']);
+    header('Location: /reports.php?modal=viewReport&reportId=' . $_GET['reportId']);
 }
 
 include "../components/footer.php";

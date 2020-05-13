@@ -20,7 +20,7 @@ if ($status !== 200) {
 if ($detect->isMobile()) {
     header('Location: /mobile/view_report.php?reportId=' . $result->id);
 } else {
-    header('Location: /reports.php?reportId=' . $result->id . '&model=viewReport');
+    header('Location: /reports.php?reportId=' . $result->id . '&modal=viewReport');
 }
 
 include "../components/footer.php";

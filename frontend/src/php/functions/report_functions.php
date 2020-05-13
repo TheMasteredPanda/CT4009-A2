@@ -17,7 +17,7 @@ function getAllUserReports()
         return;
     }
 
-    curl_close($result);
+    curl_close($curl);
     return json_decode($result)->ids;
 }
 

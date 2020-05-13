@@ -1,6 +1,12 @@
 import "../master/index";
 import { getUrlQuery } from "../master/index";
 
+$(document).ready(() => {
+  let modal = getUrlQuery().modal;
+  $(`#${modal}`).modal({ dismissible: false });
+  $(`#${modal}`).modal("open");
+});
+
 $('.create_comment_form input[type="submit"]').click((e) => {
   e.preventDefault();
   let investigationId = getUrlQuery().investigationId;

@@ -1,9 +1,14 @@
 import "../master/index";
 import { getUrlQuery } from "../master/index";
+
 $(document).ready(() => {
   $('select[name="select_search_type[]"]').formSelect();
   $('select[name="search_by_open"]').formSelect();
   $('select[name="police_select_search_type[]').formSelect();
+
+  let modal = getUrlQuery().modal;
+  $(`#${modal}`).modal({ dismissible: false });
+  $(`#${modal}`).modal("open");
 });
 
 $(".datepicker").ready(() => {
