@@ -1,8 +1,8 @@
 <?php
-include "../../../components/header.php";
-include "../../../components/navbar.php";
-include "../../../functions/investigation_functions.php";
-$investigation = getInvestigation($_GET['investigationId'])->investigation;
+include "../components/header.php";
+include "../components/navbar.php";
+include "../functions/investigation_functions.php";
+$investigation = getInvestigation($_GET['investigationId']);
 $update = array_values(array_filter($investigation->updates, function ($update) {
     return $update->id == $_GET['updateId'];
 }))[0];
@@ -33,5 +33,5 @@ $update = array_values(array_filter($investigation->updates, function ($update) 
 <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
 <script type="text/javascript" src="http://localhost:3000/scripts/investigations.bundle.js"></script>
 <?php
-include "../../../components/footer.php";
+include "../components/footer.php";
 ?>

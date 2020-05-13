@@ -19,6 +19,12 @@ if ($rank !== 'civilian' && $rank !== 'police_admin') {
         }
     }
 }
+
+$investigationStatus = 'Open';
+
+if (!$investigation->open) {
+    $investigationStatus = 'Closed';
+}
 ?>
 
 <div class="view_investigation_container container">
@@ -54,7 +60,7 @@ if ($rank !== 'civilian' && $rank !== 'police_admin') {
                 <?php endfor; ?>
             <?php endif; ?>
         </ul>
-        <?php if ($rank !== 'civilian') : ?>
+        <?php if ($rank !== 'civilian' && $isInvestigator && $investigation->open) : ?>
             <div class="button_wrapper">
                 <a href=<?php echo 'http://localhost:3000/mobile/add_investigation_update.php?investigationId=' . $investigation->id; ?> class="btn-small">Add Update</a>
             </div>
@@ -84,14 +90,16 @@ if ($rank !== 'civilian' && $rank !== 'police_admin') {
                 <?php endfor; ?>
             <?php endif; ?>
         </ul>
-        <form action="#" class="create_comment_form">
-            <div class="input-field">
+        <?php if ($investigation->open) : ?>
+            <form action="#" class="create_comment_form">
+                <div class="input-field">
 
-                <input type="text" name="comment">
-                <label for="comment">Comment</label>
-            </div>
-            <input type="submit" value="Send" class="btn-small">
-        </form>
+                    <input type="text" name="comment">
+                    <label for="comment">Comment</label>
+                </div>
+                <input type="submit" value="Send" class="btn-small">
+            </form>
+        <?php endif; ?>
     </div>
     <div class="investigation_metadata_container">
         <div class="metadata_container_title">
@@ -100,7 +108,8 @@ if ($rank !== 'civilian' && $rank !== 'police_admin') {
         <div class="metadata">
             <input type="text" name="start_date" value=<?php echo $investigation->createdAt; ?> readonly>
             <label for="start_date">Start Date</label>
-            <input type="text" name="last_update">
+            <input type="text" name="open" value= <?php echo $investigationStatus; ?> readonly>
+            <label for="open">Investigation Status</label>
         </div>
         <div class="metadata_container_title">
             <h4>Investigators</h4>
@@ -112,9 +121,9 @@ if ($rank !== 'civilian' && $rank !== 'police_admin') {
                 ?>
                     <li class="investigator">
                         <div class="username_wrapper">
-                            <h5><?php echo $username ?></h5>
+                            <h5><?php echo ucfirst($username); ?></h5>
                         </div>
-                        <?php if (count($investigation->investigators) > 1) : ?>
+                        <?php if (count($investigation->investigators) > 1 && $rank === 'police_admin' && $investigation->open) : ?>
                             <div class="button_wrapper">
                                 <a name="remove_investigator_button" data-investigator=<?php echo $investigation->investigators[$i]->id; ?> href='#' class="btn-small indigo">Remove</a>
                             </div>
@@ -122,7 +131,7 @@ if ($rank !== 'civilian' && $rank !== 'police_admin') {
                     </li>
                 <?php endfor; ?>
             </ul>
-            <?php if ($rank !== 'civilian') : ?>
+            <?php if ($rank === 'police_admin' && $investigation->open) : ?>
                 <form action="#" class="add_investigator_form">
                     <div class="input-field">
                         <input type="text" name="add_investigator_name" class="validate">
@@ -135,7 +144,7 @@ if ($rank !== 'civilian' && $rank !== 'police_admin') {
     </div>
     <div class="button_wrapper">
         <?php if ($detect->isMobile()) : ?>
-            <a href=<?php echo 'http://localhost:3000/mobile/view_report?reportId=' . $investigation->report_id; ?> class="btn-small">View Report</a>
+            <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $investigation->report_id; ?> class="btn-small">View Report</a>
         <?php else : ?>
             <a href=<?php echo 'http://localhost:3000/reports.php?model=viewReport&reportId=' . $investigation->report_id; ?> class="btn-small">View Report</a>
         <?php endif; ?>
