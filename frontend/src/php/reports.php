@@ -94,15 +94,17 @@ if (isset($_GET['modal'])) :
                             <?php endif; ?>
                         </ul>
                         <div class="new_comment_container">
-                            <form action=<?php echo "http://localhost:3000/actions/create_report_comment.php?reportId=" . $report->id . '&type=' . $type; ?> method="POST">
-                                <div class="input-field">
-                                    <textarea name="new_comment_textarea" id="newCommentTextarea" class="materialize-textarea" cols="30" rows=3></textarea>
-                                    <label for="newCommentTextarea">New Comment</label>
-                                </div>
-                                <div class="button_wrapper">
-                                    <input class="btn-small" type="submit" value="Send" name="new_comment_send_button">
-                                </div>
-                            </form>
+                            <?php if ($report->open) : ?>
+                                <form action=<?php echo "http://localhost:3000/actions/create_report_comment.php?reportId=" . $report->id . '&type=' . $type; ?> method="POST">
+                                    <div class="input-field">
+                                        <textarea name="new_comment_textarea" id="newCommentTextarea" class="materialize-textarea" cols="30" rows=3></textarea>
+                                        <label for="newCommentTextarea">New Comment</label>
+                                    </div>
+                                    <div class="button_wrapper">
+                                        <input class="btn-small" type="submit" value="Send" name="new_comment_send_button">
+                                    </div>
+                                </form>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="button_wrapper">
@@ -116,7 +118,7 @@ if (isset($_GET['modal'])) :
                         ?>
                             <a href=<?php echo 'http://localhost:3000/investigations.php?modal=viewInvestigation&investigationId=' . $investigation->id; ?> class="btn">View Investigation</a>
                         <?php else : ?>
-                            <?php if ($rank === 'police_admin' || $isInvestigator) : ?>
+                            <?php if (($rank === 'police_admin' || $isInvestigator) && $report->open) : ?>
                                 <a href=<?php echo 'http://localhost:3000/actions/create_investigation.php?reportId=' . $report->id; ?> class="btn">Launch Investigation</a>
                             <?php endif; ?>
                         <?php endif; ?>

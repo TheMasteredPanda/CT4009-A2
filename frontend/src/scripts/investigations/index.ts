@@ -5,6 +5,27 @@ $(document).ready(() => {
   let modal = getUrlQuery().modal;
   $(`#${modal}`).modal({ dismissible: false });
   $(`#${modal}`).modal("open");
+  $(".materialboxed").materialbox();
+});
+
+$(".search_investigations_form").submit((e) => {
+  e.preventDefault();
+  let reportAuthor = $('input[name="report_author"]').val();
+  let open = 1;
+
+  if ($('input[name="search_by_open"]').is(":checked")) {
+    open = 0;
+  }
+
+  let url = `http://localhost:3000/actions/search_investigations.php?open=${open}`;
+
+  if (reportAuthor) {
+    url += `&reportAuthor=${reportAuthor}`;
+  }
+
+  $.get(url).done((res) => {
+    $.post({url: 'http://localhost:3000/investigations.php', data: {search_result: res}}).done((res) => $('body').html(res))
+  });
 });
 
 $('.create_comment_form input[type="submit"]').click((e) => {

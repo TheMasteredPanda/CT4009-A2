@@ -54,6 +54,6 @@ if (isset($_FILES['evidence'])) {
 if ($detect->isMobile()) {
     header('Location: /mobile/view_investigation.php?investigationId=' . $investigationId);
 } else {
-    header('Location: /investigations.php?model=viewInvestigation&investigationId=' . $investigationId);
+    header('Location: /investigations.php?modal=viewInvestigation&investigationId=' . $investigationId);
 }
 

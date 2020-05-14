@@ -41,6 +41,9 @@ router.post("/investigations/create", (req: Request, res: Response) => {
 router.post("/investigations", (req: Request, res: Response) => {
   let query = req.query;
 
+  if (query.open) {
+    query.open = Number(query.open) === 1 ? (true as any) : (false as any);
+  }
   actions
     .getInvestigations(query)
     .then((ids) => res.status(200).send({ ids }))
@@ -122,10 +125,7 @@ router.post(
     }
 
     actions
-      .addInvestigator(
-        Number(query.investigationId),
-        query.username as string
-      )
+      .addInvestigator(Number(query.investigationId), query.username as string)
       .then((id: any) => res.status(200).send({ id }))
       .catch((err) => handleInternalError(res, err));
   }

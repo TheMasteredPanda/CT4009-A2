@@ -835,6 +835,178 @@ nav {
   }
 }
 
+#viewInvestigation {
+  .modal_view_investigation_container {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    .updates_container {
+      height: 50vh;
+      margin-bottom: 10%;
+
+      .updates_container_header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2%;
+      }
+
+      .updates {
+        overflow-y: scroll;
+
+        .no_updates_container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .update {
+          @extend .grey, .lighten-1;
+          margin-top: 0.5%;
+          margin-bottom: 0.5%;
+
+          .images {
+            display: flex;
+            flex-flow: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            overflow-x: scroll;
+
+            .image {
+              margin: .5%;
+            }
+          }
+          .content {
+            font-size: 1.2rem;
+          }
+
+          .update_date {
+            margin-bottom: 1.5%;
+          }
+        }
+      }
+    }
+
+    .comments_container {
+      height: 50vh;
+      margin-bottom: 10%;
+      .comments_container_header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .create_comment_form {
+        margin-top: 2%;
+        margin-bottom: 1%;
+        display: grid;
+        grid-template-columns: 80% 20%;
+
+        .input-field {
+          margin: 0;
+        }
+
+        .button_wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          input[type="submit"] {
+            @extend .indigo;
+          }
+        }
+      }
+
+      .comments {
+        height: 80%;
+        overflow-y: scroll;
+        .no_comments_container {
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .comment {
+          margin-top: 0.5%;
+          margin-bottom: 0.5%;
+          @extend .grey, .lighten-1;
+
+          .content {
+            font-size: 1.2rem;
+          }
+
+          .comment_date {
+            margin-bottom: 1.5%;
+          }
+        }
+      }
+    }
+
+    .investigation_metadata_container {
+      .metadata_container_title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .investigators_list {
+        max-height: 20vh;
+        min-height: 10vh;
+
+        .investigators {
+          overflow-y: scroll;
+          overflow-x: hidden;
+          .investigator {
+            margin-bottom: 0;
+          }
+        }
+        .add_investigator_form {
+          display: grid;
+          grid-template-columns: 80% 20%;
+
+          .button_wrapper {
+            input[type="submit"] {
+              @extend .indigo;
+            }
+          }
+        }
+      }
+    }
+
+    .button_wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      a {
+        @extend .indigo;
+        margin: 0.5%;
+      }
+    }
+  }
+}
+
+#addUpdate {
+  .add_investigation_update_form {
+    .input-field {
+      textarea {
+        height: 40vh !important;
+      }
+    }
+
+    .button_wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .btn {
+        margin: .5%;
+      }
+    }
+  }
+}
+
 .add_investigation_update_container {
   height: 90%;
   form {

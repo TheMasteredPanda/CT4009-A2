@@ -39,16 +39,30 @@ export async function create(reportId: number, investigatorId: number) {
 export async function getInvestigations(opts: {
   reportId?: number;
   reportAuthor?: number;
+  open?: boolean;
 }) {
   let query: any = {};
 
+  console.log(opts);
   if (opts.reportId) {
     query.report_id = opts.reportId;
   }
 
   if (opts.reportAuthor) {
+    if (isNaN(Number(opts.reportAuthor))) {
+      let user = await Users.findOne({
+        where: { username: opts.reportAuthor },
+      });
+
+      if (!user) {
+        return [];
+      }
+
+      opts.reportAuthor = (user.toJSON() as any).id;
+    }
+
     let reports = await Reports.findAll({
-      where: { author: opts.reportAuthor },
+      where: { author: opts.reportAuthor as number },
     });
 
     if (!reports) {
@@ -59,6 +73,11 @@ export async function getInvestigations(opts: {
     query.report_id = ids;
   }
 
+  if (opts.open) {
+    query.open = opts.open;
+  }
+
+  console.log(query);
   let investigations = await Investigations.findAll({
     where: query,
     attributes: ["id"],
@@ -73,7 +92,7 @@ export async function getInvestigations(opts: {
 export async function close(investigationId: number) {
   let investigation = await Investigations.findOne({
     where: { id: investigationId },
-    attributes: ["open"],
+    attributes: ["open", "report_id"],
   });
 
   if (!investigation) {
