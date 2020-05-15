@@ -104,31 +104,39 @@ $('button[name="comment_private_section_button"]').click((e: any) => {
   });
 });
 (window as any).initMap = () => {
-  let map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 51.864445, lng: -2.244444 },
-    zoom: 9,
-    mapTypeControl: false,
-    mapTypeId: google.maps.MapTypeId.HYBRID,
-    fullscreenControl: false,
-    minZoom: 9,
-    panControl: false,
-    draggable: false
-  });
+  $.getJSON("http://localhost:3000/cords.json").done((cords) => {
+    let map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 51.864445, lng: -2.244444 },
+      zoom: 9,
+      mapTypeControl: false,
+      mapTypeId: google.maps.MapTypeId.HYBRID,
+      fullscreenControl: false,
+      minZoom: 9,
+      draggable: false,
+    });
 
-  let geocoder = new google.maps.Geocoder();
-  geocoder.geocode({ placeId: getUrlQuery().placeId }, (results, status) => {
-    console.log(status)
-      map.setCenter(results[0].geometry.location);
-      let marker = new google.maps.Marker({
-        map,
-        position: results[0].geometry.location,
-      });
-    }
+    let polygon = new google.maps.Polygon({
+      paths: cords,
+      strokeColor: "#42a5f5",
+      strokeOpacity: 0.8,
+      strokeWeight: 0.3,
+      fillColor: "#42a5f5",
+      fillOpacity: 0.45,
+    });
+
+    polygon.setMap(map);
+
+    let geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ placeId: getUrlQuery().placeId }, (results, status) => {
+      if (status === "OK") {
+        map.setCenter(results[0].geometry.location);
+        let marker = new google.maps.Marker({
+          map,
+          position: results[0].geometry.location,
+        });
+      }
+    });
   });
 };
 
-
-
-$("#viewReport").ready(() => {
-
-});
+$("#viewReport").ready(() => {});

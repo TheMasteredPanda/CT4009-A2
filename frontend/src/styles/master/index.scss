@@ -549,7 +549,7 @@ nav {
 
     .map-field {
       margin-bottom: 5%;
-      height: 25vh;
+      height: 35vh;
       #map {
         height: 100%;
       }
@@ -1105,6 +1105,29 @@ nav {
 
     a {
       @extend .btn-small, .indigo;
+    }
+  }
+}
+
+.vulnerability_map_container {
+  height: 100%;
+  width: 100%;
+
+  #map {
+    height: 50%;
+  }
+
+  .report_info_window {
+    padding: 4%;
+
+    .body_content {
+      font-size: 1.1rem;
+    }
+
+    .button_wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

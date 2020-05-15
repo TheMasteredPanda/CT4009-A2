@@ -233,7 +233,6 @@ let placeId: null | string = null;
         strokeWeight: 0.3,
         fillColor: "#42a5f5",
         fillOpacity: 0.45,
-        panControl: false,
       });
 
       polygon.setMap(map);
