@@ -2,7 +2,8 @@
 include "../components/header.php";
 $payload = json_decode($_COOKIE['ct4009Auth']);
 $curl = curl_init('http://localhost:5555/reports/create?userId=' . $payload->id . '&bikeId=' . $_GET['bikeId']);
-$body = json_encode(array('content' => $_POST['report_description']));
+$body = json_encode(array('content' => $_POST['report_description'], 'placeId' => $_POST['place_id']));
+print_r($body);
 curl_setopt($curl, CURLOPT_POST, true);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
@@ -12,12 +13,11 @@ $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
 if ($status !== 200) {
     print curl_error($curl);
-    echo '\n';
     print_r($result);
     return;
 }
 
-if ($detect->isMobile()) {
+if ($detect->isMobile() && $detect->isTablet()) {
     header('Location: /mobile/view_report.php?reportId=' . $result->id);
 } else {
     header('Location: /reports.php?reportId=' . $result->id . '&modal=viewReport');

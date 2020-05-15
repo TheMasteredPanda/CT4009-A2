@@ -62,7 +62,6 @@ $(".search_reports_form").submit((e) => {
     ).getTime();
   }
 
-  console.log(data);
   $.post({
     url: "http://localhost:3000/actions/search_reports.php",
     data,
@@ -103,4 +102,33 @@ $('button[name="comment_private_section_button"]').click((e: any) => {
   }).done((res) => {
     $("body").html(res);
   });
+});
+(window as any).initMap = () => {
+  let map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 51.864445, lng: -2.244444 },
+    zoom: 9,
+    mapTypeControl: false,
+    mapTypeId: google.maps.MapTypeId.HYBRID,
+    fullscreenControl: false,
+    minZoom: 9,
+    panControl: false,
+    draggable: false
+  });
+
+  let geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ placeId: getUrlQuery().placeId }, (results, status) => {
+    console.log(status)
+      map.setCenter(results[0].geometry.location);
+      let marker = new google.maps.Marker({
+        map,
+        position: results[0].geometry.location,
+      });
+    }
+  });
+};
+
+
+
+$("#viewReport").ready(() => {
+
 });

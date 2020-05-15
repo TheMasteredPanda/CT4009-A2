@@ -11,9 +11,14 @@ import {
   ClientNotFoundError,
 } from "../utils/errorhandler";
 
-export async function create(userId: number, bikeId: number, content: string) {
+export async function create(
+  userId: number,
+  bikeId: number,
+  placeId: string,
+  content: string
+) {
   let reports = await Reports.count({ where: { bike_id: bikeId, open: true } });
-
+  console.log(placeId);
   if (reports > 0) {
     throw new ClientNotAcceptableError(
       "Client",
@@ -25,6 +30,7 @@ export async function create(userId: number, bikeId: number, content: string) {
   let model = await Reports.create({
     author: userId,
     bike_id: bikeId,
+    place_id: placeId,
     content,
   });
   return (model.toJSON() as any).id;

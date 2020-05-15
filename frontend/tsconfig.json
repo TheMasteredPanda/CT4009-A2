@@ -7,7 +7,7 @@
     "sourceMap": true,
     "lib": ["DOM", "ES2016"],
     "allowSyntheticDefaultImports": true,
-    "types": ["jquery", "materialize-css"],
+    "types": ["jquery", "materialize-css", "googlemaps"],
     "typeRoots": ["../node_modules/@types"],
     "moduleResolution": "Node",
     "baseUrl": ".",

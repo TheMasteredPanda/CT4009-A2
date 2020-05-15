@@ -112,5 +112,5 @@ function hasOpenReport($bikeId)
     curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
     $result = json_decode(curl_exec($curl))->ids;
     curl_close($curl);
-    return !empty($result);
+    return !empty($result) && getReport($result[0])->open;
 }

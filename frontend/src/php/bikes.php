@@ -147,6 +147,7 @@ if (isset($_GET['modal'])) :
     <?php endif; ?>
     <?php if ($modal === 'viewBike' && isset($_GET['bikeId'])) :
         $bike = getBike($_GET['bikeId']);
+        print_r('Report: ' . hasOpenReport($bike->id))
     ?>
         <div class="modal" id="viewBike">
             <div class="modal-content">
@@ -348,17 +349,26 @@ if (isset($_GET['modal'])) :
     <?php if ($modal == 'reportStolen' && isset($_GET['bikeId'])) : ?>
         <div class="modal" id="reportStolen">
             <div class="modal-content">
-                <form action=<?php echo "http://localhost:3000/actions/create_report.php?bikeId=" . $_GET['bikeId']; ?> class="report_stolen_bike_form" method="post">
-                    <div class="input-field">
+                <h4 class="center-align">Report Bike Stolen</h4>
+                <form action=<?php echo "http://localhost:3000/actions/create_report.php?bikeId=" . $_GET['bikeId']; ?> class="report_stolen_bike_form row " method="post">
+                    <div class="input-field col m12">
                         <textarea name="report_description" id="reportDescription" rows="19" class="materialize-textarea"></textarea>
                         <label for="report_description">Description</label>
                     </div>
-                    <div class="button_wrapper">
+                    <div class="input-field map-field col m12">
+                        <h5 class="center-align">Where did the theft take place?</h5>
+                        <input type="text" id="pac-input" class="controls" placeholder="Search Box">
+                        <div id="map"></div>
+                    </div>
+                    <div class="button_wrapper col m12">
                         <input type="submit" value="Report" name="report_stolen_submit_button" class="btn indigo">
                     </div>
                 </form>
             </div>
         </div>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geocoder&v=3&key=AIzaSyA43tm6-MqO6IkzYA9he5Zlmu5drqlHtFo&callback=initMap">
+        </script>
+
     <?php endif; ?>
 <?php endif; ?>
 

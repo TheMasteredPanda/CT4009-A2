@@ -493,6 +493,11 @@ nav {
   }
 }
 
+.pac-container, .pac-item{
+  z-index: 2147483647 !important;
+}
+
+
 .report_stolen_bike_form {
   margin-top: 10%;
   textarea {
@@ -500,7 +505,23 @@ nav {
     overflow-y: scroll;
   }
 
+  .map-field {
+    input[type="text"] {
+      @extend .white;
+      margin-top: 2%;
+      width: 80%;
+      margin-left: 2%;
+    }
+
+    height: 50vh;
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
   .button_wrapper {
+    margin-top: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -520,7 +541,17 @@ nav {
 
         form {
           width: 90%;
+
         }
+      }
+    }
+
+
+    .map-field {
+      margin-bottom: 5%;
+      height: 25vh;
+      #map {
+        height: 100%;
       }
     }
   }

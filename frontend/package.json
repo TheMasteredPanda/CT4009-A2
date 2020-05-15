@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/draft-js": "^0.10.39",
+    "@types/googlemaps": "^3.39.5",
     "@types/jquery": "^3.3.35",
     "@types/materialize-css": "^1.0.7",
     "browser-sync": "^2.26.7",

@@ -14,6 +14,10 @@ Reports.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    place_id: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     open: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

@@ -7,7 +7,6 @@ import { getUrlQuery } from "../master/index";
 }); */
 
 $(".register_a_bike_form").ready(() => {
-  console.log("Register a bike form ready.");
   $(".register_a_bike_form").on("submit", (e) => {
     console.log("Clicked");
     e.preventDefault();
@@ -198,5 +197,100 @@ $(document).ready(() => {
   if (!modal) return;
   $(`#${modal}`).modal({ dismissible: false });
   $(`#${modal}`).modal("open");
-  $('.carousel').carousel({fullWidth: true})
+  $(".carousel").carousel({ fullWidth: true });
+});
+
+let geocoder: google.maps.Geocoder;
+let placeId: null | string = null;
+
+(window as any).initMap = () => {
+  $.getJSON("http://localhost:3000/cords.json").done((cords) => {
+    try {
+      console.log("init function");
+      let map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 51.864445, lng: -2.244444 },
+        zoom: 9,
+        mapTypeControl: false,
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+        fullscreenControl: false,
+        minZoom: 9,
+      });
+
+      geocoder = new google.maps.Geocoder();
+      let input: HTMLInputElement = document.getElementById(
+        "pac-input"
+      ) as HTMLInputElement;
+      let searchBox = new google.maps.places.SearchBox(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+      map.addListener("bounds_changed", () => {
+        searchBox.setBounds(map.getBounds());
+      });
+
+      let polygon = new google.maps.Polygon({
+        paths: cords,
+        strokeColor: "#42a5f5",
+        strokeOpacity: 0.8,
+        strokeWeight: 0.3,
+        fillColor: "#42a5f5",
+        fillOpacity: 0.45,
+        panControl: false,
+      });
+
+      polygon.setMap(map);
+      searchBox.addListener("places_changed", () => {
+        let places = searchBox.getPlaces();
+        let place = places[0];
+        geocoder.geocode({ placeId: place.place_id }, (results, status) => {
+          if (status === "OK") {
+            let county = results[0].address_components[2].long_name;
+
+            if (county !== "Gloucestershire") {
+              alert("Address must be within gloucestershire");
+              return;
+            }
+
+            map.setCenter(results[0].geometry.location);
+            let marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location,
+            });
+            placeId = place.place_id;
+          }
+        });
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
+$(".report_stolen_bike_form").ready(() => {
+  $(".map-field").keydown((e) => {
+    if (e.which === 13) {
+      e.preventDefault();
+      return;
+    }
+  });
+
+  $(".report_stolen_bike_form").submit((e) => {
+    e.preventDefault();
+    if (placeId === null) {
+      alert("You enter in the location of the theft.");
+      return;
+    }
+
+    let description = $('textarea[name="report_description"]').val();
+
+    $.post({
+      url: `http://localhost:3000/actions/create_report.php?bikeId=${
+        getUrlQuery().bikeId
+      }`,
+      data: {
+        report_description: description,
+        place_id: placeId,
+      },
+    }).done((res) => {
+      $('body').html(res);
+    });
+  });
 });

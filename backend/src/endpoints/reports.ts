@@ -29,8 +29,22 @@ router.post("/reports/create", (req: Request, res: Response) => {
     return;
   }
 
+  if (!body.hasOwnProperty("placeId")) {
+    res.error.client.badRequest(
+      "Client",
+      "Body parameter not found",
+      `Body parameter 'placeId' was not found.`
+    );
+    return;
+  }
+
   actions
-    .create(req.user.id, Number(query.bikeId), body.content)
+    .create(
+      req.user.id,
+      Number(query.bikeId),
+      body.placeId as string,
+      body.content
+    )
     .then((id) => res.status(200).send({ id }))
     .catch((err) => handleInternalError(res, err));
 });

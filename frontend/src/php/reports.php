@@ -65,6 +65,10 @@ if (isset($_GET['modal'])) :
                         <textarea name="view_report_description" rows="15" class="materialize-textarea" readonly><?php echo $report->content; ?></textarea>
                         <label for="view_report_description">Description</label>
                     </div>
+                    <div class="input-field map-field">
+                        <h4 class="center-align">Location of Theft</h4>
+                        <div id="map"></div>
+                    </div>
                     <div class="comments_container">
                         <h4 class="center-align">Comments</h4>
 
@@ -126,6 +130,8 @@ if (isset($_GET['modal'])) :
                 </div>
             </div>
         </div>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geocoder&v=3&key=AIzaSyA43tm6-MqO6IkzYA9he5Zlmu5drqlHtFo&callback=initMap">
+        </script>
     <?php endif; ?>
 <?php endif; ?>
 
@@ -220,10 +226,10 @@ if (isset($_GET['modal'])) :
                         <p><?php echo $report->content; ?></p>
                     </div>
                     <div class="card-action">
-                        <?php if ($detect->isMobile()) : ?>
-                            <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $report->id; ?> class="btn-small">View Report</a>
+                        <?php if ($detect->isMobile() && !$detect->isTablet()) : ?>
+                            <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn-small">View Report</a>
                         <?php else : ?>
-                            <a href=<?php echo 'http://localhost:3000/reports.php?modal=viewReport&reportId=' . $report->id; ?> class="btn-small">View Report</a>
+                            <a href=<?php echo 'http://localhost:3000/reports.php?modal=viewReport&reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn-small">View Report</a>
                         <?php endif; ?>
                     </div>
                 </div>
