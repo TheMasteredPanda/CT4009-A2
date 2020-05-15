@@ -253,6 +253,16 @@ nav {
       }
     }
   }
+
+  @media #{$large-and-up} {
+    ul {
+      margin: 1%;
+
+      li {
+        width: 30%;
+      }
+    }
+  }
 }
 
 .bike_info_container {
@@ -488,6 +498,29 @@ nav {
         align-items: center;
         padding-bottom: 5%;
         padding-top: 5%;
+      }
+    }
+  }
+
+  @media #{$large-and-up} {
+    .search_reports_form {
+      .button_wrapper {
+        padding: 2% !important;
+      }
+
+      .switch_wrapper {
+        margin-top: 1%;
+        margin-bottom: 1%;
+      }
+    }
+    .reports {
+      margin: 2%;
+      display: flex;
+      flex-flow: row;
+      flex-wrap: wrap;
+      .card {
+        width: 30%;
+        margin: 1%;
       }
     }
   }
@@ -1128,6 +1161,12 @@ nav {
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+  }
+
+  @media #{$large-and-up} {
+    #map {
+      height: 90%;
     }
   }
 }

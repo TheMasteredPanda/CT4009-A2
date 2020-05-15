@@ -1,5 +1,6 @@
 <?php
 include "./components/header.php";
+include "./components/navbar.php";
 include "./components/police_auth_header.php";
 ?>
 

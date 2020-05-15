@@ -143,7 +143,7 @@ if (isset($_GET['modal'])) :
     <?php else : ?>
         <div class="reports_header container">
             <form action="#" class="reports_select_search_type_form">
-                <div class="input-field">
+                <div class="input-field col m12">
                     <select name="select_search_type[]" multiple>
                         <?php foreach ($types as $key => $value) : ?>
                             <?php if (in_array($key, $search_types)) : ?>
@@ -157,24 +157,24 @@ if (isset($_GET['modal'])) :
                 </div>
             </form>
             <?php if (isset($_POST['search_reports']) && count($search_types) > 0) : ?>
-                <form action="#" class="search_reports_form">
+                <form action="#" class="search_reports_form row">
                     <?php if ($rank === 'civilian') : ?>
                         <input type="text" name="civ_author" value=<?php echo $userId; ?> hidden>
                     <?php endif; ?>
                     <?php if (in_array('start_date', $search_types)) : ?>
-                        <div class="input-field container datepicker_input">
+                        <div class="input-field col m10 push-m1 datepicker_input">
                             <input type="text" class="datepicker" name="search_by_start_date">
                             <label for="search_by_start_date">Search By Illustrated Date</label>
                         </div>
                     <?php endif; ?>
                     <?php if (in_array('before_date', $search_types)) : ?>
-                        <div class="input-field container datepicker_input">
+                        <div class="input-field col m10 push-m1 datepicker_input">
                             <input type="text" class="datepicker" name="search_by_before_date">
                             <label for="search_by_before_date">Search By Before Date</label>
                         </div>
                     <?php endif; ?>
                     <?php if (in_array('open', $search_types)) : ?>
-                        <div class="center-align container">
+                        <div class="center-align col m12 switch_wrapper">
                             <div class="switch">
                                 <label>
                                     Open
@@ -186,7 +186,7 @@ if (isset($_GET['modal'])) :
                         </div>
                     <?php endif; ?>
                     <?php if (in_array('investigating', $search_types)) : ?>
-                        <div class="center-align container">
+                        <div class="center-align col m12 switch_wrapper">
                             <div class="switch">
                                 <label>
                                     Investigating
@@ -198,21 +198,22 @@ if (isset($_GET['modal'])) :
                         </div>
                     <?php endif; ?>
                     <?php if ($rank !== 'civilian') : ?>
-                        <div class="input-field">
+                        <div class="input-field col m10 push-m1">
                             <input type="text" name="search_by_author">
                             <label for="search_by_author">Search By Author</label>
                         </div>
                     <?php endif; ?>
-                    <div class="button_wrapper">
+                    <div class="button_wrapper col m12">
                         <input type="submit" value="Search" name="search_reports_button" class="btn-small ">
                     </div>
                 </form>
             <?php endif; ?>
         </div>
-        <?php for ($i = 0; $i < count($reports); $i++) :
-            $report = getReport($reports[$i]);
-        ?>
-            <div class="reports container">
+
+        <div class="reports container">
+            <?php for ($i = 0; $i < count($reports); $i++) :
+                $report = getReport($reports[$i]);
+            ?>
                 <div class="card">
                     <div class="card-content">
                         <?php if ($report->open) : ?>
@@ -233,8 +234,8 @@ if (isset($_GET['modal'])) :
                         <?php endif; ?>
                     </div>
                 </div>
-            </div>
-        <?php endfor; ?>
+            <?php endfor; ?>
+        </div>
     <?php endif; ?>
 </div>
 
