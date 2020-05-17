@@ -10,6 +10,10 @@ if (isset($_POST['forgotCreds'])) {
     $GLOBALS['forgotCreds'] = $_POST['forgotCreds'];
 }
 
+if ($verified) {
+    header('Location: /index.php');
+}
+
 include "./actions/login.php";
 include "./actions/register.php";
 ?>
