@@ -127,7 +127,6 @@ export async function createAssociations() {
   });
   Reports.belongsTo(Users, {
     foreignKey: { name: "author", allowNull: false },
-    onDelete: "cascade",
   });
   Reports.hasMany(ReportsComments, {
     foreignKey: { name: "report_id", allowNull: false },
@@ -135,7 +134,6 @@ export async function createAssociations() {
   });
   Bikes.belongsTo(Users, {
     foreignKey: { name: "user_id", allowNull: false },
-    onDelete: "cascade",
   });
   Reports.belongsTo(Bikes, {
     foreignKey: { name: "bike_id", allowNull: false },
@@ -163,7 +161,6 @@ export async function createAssociations() {
   });
   Investigators.belongsTo(Users, {
     foreignKey: { name: "investigator_id", allowNull: false },
-    onDelete: "cascade",
   });
   Investigations.hasMany(InvestigationUpdates, {
     foreignKey: { name: "investigation_id", allowNull: false },

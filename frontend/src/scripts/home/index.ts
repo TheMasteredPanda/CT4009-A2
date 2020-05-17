@@ -3,6 +3,7 @@ import "../master/index";
 $(document).ready(() => {
   $("#mainSidenav").sidenav();
   $("#adminPanelSidenav").sidenav({ edge: "right" });
+  $(".dropdown-trigger").dropdown();
 });
 
 $('div[name="close_sidenav_button"]').click((e) => {

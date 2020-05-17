@@ -1,5 +1,6 @@
+import { getUrlQuery } from "../master";
+
 $('.create_officer_account_form input[name="retypePassword"]').change((e) => {
-  console.log("Changed.");
   let password = $('input[name="password"]').val();
 
   if (password !== $(e.currentTarget).val()) {
@@ -117,3 +118,10 @@ $('button[name="admin_account_search_button"]').click((e) => {
     });
   }
 });
+
+$(document).ready(() => {
+  let modal = getUrlQuery().modal;
+  if (!modal) return;
+  $(`#${modal}`).modal({dismissible: false});
+  $(`#${modal}`).modal('open');
+})

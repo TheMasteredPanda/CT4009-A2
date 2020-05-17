@@ -102,6 +102,20 @@ html {
       height: 50%;
     }
   }
+
+  @media #{$large-and-up} {
+    .login_form {
+      height: 40%;
+    }
+
+    .forgot_creds_form {
+      height: 40%;
+    }
+
+    .register_form {
+      height: 55%;
+    }
+  }
 }
 
 .home_container {
@@ -354,29 +368,29 @@ nav {
 .admin_panel_container {
   height: 90%;
   .admin_panel_accounts_section {
-    display: grid;
+    display: flex;
+    flex-flow: column;
     grid-template-rows: 30% 70%;
     height: 90%;
 
     .accounts_header {
       @extend .grey, .lighten-2;
       margin-top: 4%;
+      padding: 2%;
 
-      .input_field_wrapper {
-        display: grid;
-        grid-template-columns: 70% 30%;
-        height: 5%;
-        margin-top: 5%;
-        margin-bottom: 4%;
-      }
-
-      .input_field_button_wrapper {
+      .search_accounts_form {
         display: flex;
-        justify-content: center;
+        flex-flow: row;
         align-items: center;
+        justify-content: center;
 
-        button {
-          @extend .indigo;
+        .input-field {
+          width: 70%;
+        }
+        .search_accounts_button_wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       }
 
@@ -390,6 +404,7 @@ nav {
         justify-content: center;
         align-items: center;
         width: 100%;
+        padding-top: 2%;
 
         a {
           @extend .indigo;
@@ -411,6 +426,32 @@ nav {
       h6 {
         padding-left: 10%;
       }
+    }
+  }
+
+  @media #{$large-and-up} {
+    .admin_panel_accounts_section {
+      .accounts_header {
+        .input-field {
+          margin-right: 3%;
+        }
+      }
+    }
+  }
+}
+
+#createOfficer {
+  .button_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input[type="submit"] {
+      margin-right: 0.5%;
+    }
+
+    a {
+      margin-left: 0.5%;
     }
   }
 }
@@ -526,10 +567,10 @@ nav {
   }
 }
 
-.pac-container, .pac-item{
+.pac-container,
+.pac-item {
   z-index: 2147483647 !important;
 }
-
 
 .report_stolen_bike_form {
   margin-top: 10%;
@@ -574,11 +615,9 @@ nav {
 
         form {
           width: 90%;
-
         }
       }
     }
-
 
     .map-field {
       margin-bottom: 5%;
@@ -673,11 +712,11 @@ nav {
     justify-content: center;
     align-items: center;
     flex-flow: wrap;
-    padding: 5%;
+    margin-top: 7%;
 
     a {
       @extend .indigo;
-      margin: 2%;
+      margin: 1%;
     }
   }
 }
@@ -696,10 +735,14 @@ nav {
 
   .investigations_list_container {
     .investigations_list_search {
-      margin-top: 5%;
+      margin-top: 1%;
+
+      .switch {
+        margin-top: 2%;
+      }
       .button_wrapper {
-        margin-top: 6%;
-        margin-bottom: 6%;
+        margin-top: 2%;
+        margin-bottom: 2%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -711,7 +754,6 @@ nav {
     }
 
     .investigations {
-      margin-top: 10%;
       .card {
         .card-action {
           a {
@@ -719,6 +761,16 @@ nav {
             margin: 1%;
           }
         }
+      }
+    }
+  }
+
+  @media #{$large-and-up} {
+    .investigations_list_container {
+      .investigations {
+        display: flex;
+        flex-flow: row;
+        flex-wrap: wrap;
       }
     }
   }
@@ -937,7 +989,7 @@ nav {
             overflow-x: scroll;
 
             .image {
-              margin: .5%;
+              margin: 0.5%;
             }
           }
           .content {
@@ -1065,7 +1117,7 @@ nav {
       align-items: center;
 
       .btn {
-        margin: .5%;
+        margin: 0.5%;
       }
     }
   }
@@ -1167,6 +1219,62 @@ nav {
   @media #{$large-and-up} {
     #map {
       height: 90%;
+    }
+  }
+}
+
+.account_settings_container {
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    @extend .indigo;
+  }
+
+  .account_settings {
+    div {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+
+      a {
+        margin: 2%;
+        white-space: nowrap;
+        width: min-content;
+      }
+    }
+  }
+}
+
+#deleteAccount {
+  .delete_account_form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1%;
+
+    input, a {
+      @extend .indigo;
+      margin: 1%
+    }
+
+  }
+}
+
+#changePassword {
+  width: 40%;
+  .change_password_form {
+    .button_wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      input, a {
+        @extend .indigo;
+        margin: 1%
+      }
     }
   }
 }

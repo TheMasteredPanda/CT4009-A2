@@ -1,4 +1,5 @@
 <?php include('./components/header.php');
+include "./components/navbar.php";
 if (isset($_GET['logout'])) {
     logout();
 }
@@ -8,7 +9,6 @@ $rank = getRank();
 ?>
 
 <div class="home_container">
-    <?php include "./components/navbar.php"; ?>
 
     <div name="content" class="row s12">
     </div>

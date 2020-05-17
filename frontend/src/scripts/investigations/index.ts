@@ -30,6 +30,7 @@ $(".search_investigations_form").submit((e) => {
 
 $('.create_comment_form input[type="submit"]').click((e) => {
   e.preventDefault();
+  console.log('Clicked');
   let investigationId = getUrlQuery().investigationId;
   let comment = $('.create_comment_form input[name="comment"]').val();
 

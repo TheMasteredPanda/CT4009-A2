@@ -22,5 +22,5 @@ curl_close($curl);
 if ($detect->isMobile()) {
     header('Location: /mobile/view_investigation.php?investigationId=' . $investigationId);
 } else {
-    header('Location: /view_investigatin.php?investigationId=' . $investigationId);
+    header('Location: /investigations.php?modal=viewInvestigation&investigationId=' . $investigationId);
 }

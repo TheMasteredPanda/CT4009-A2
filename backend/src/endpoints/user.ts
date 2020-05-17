@@ -90,6 +90,34 @@ router.post("/user/delete", (req: Request, res: Response) => {
     .catch((err) => handleInternalError(res, err));
 });
 
+router.post("/user/change/password", (req: Request, res: Response) => {
+  console.log("Hit /user/change/password");
+  console.log(req.body);
+  if (!req.body.hasOwnProperty("newPassword")) {
+    res.error.client.badRequest(
+      "Client",
+      "Parameter not found",
+      `Body parameter 'newPassword' was not found.`
+    );
+    return;
+  }
+
+  actions
+    .change(req.user.id, req.body.newPassword as string)
+    .then(() => {
+      console.log("Changed password.");
+      res.sendStatus(200);
+    })
+    .catch((err) => handleInternalError(res, err));
+});
+
+router.post("/user/delete", (req: Request, res: Response) => {
+  actions
+    .remove(req.user.id)
+    .then(() => res.sendStatus(200))
+    .catch((err) => handleInternalError(res, err));
+});
+
 router.post("/user/verify", (req: Request, res: Response) => {
   let body = req.body;
   let query: any = req.query;

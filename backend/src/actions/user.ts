@@ -29,6 +29,11 @@ export interface User {
   contacts: UserContact[];
 }
 
+export async function change(userId: number, newPassword: string) {
+  let hashedPassword = await bcrypt.hash(newPassword, 10);
+  await Users.update({ password: hashedPassword }, { where: { id: userId } });
+}
+
 export async function exists(userId: string): Promise<boolean> {
   let result = await Users.findOne({ where: { id: userId } });
   return result ? true : false;

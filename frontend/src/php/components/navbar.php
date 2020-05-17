@@ -1,6 +1,7 @@
 <?php
 $currentScript = $_SERVER['SCRIPT_NAME'];
 $rank = getRank();
+$payload = json_decode($_COOKIE['ct4009Auth']);
 ?>
 
 <nav class="nav-extended">
@@ -23,11 +24,13 @@ $rank = getRank();
             </ul>
         <?php endif; ?>
 
+        <ul class="dropdown-content" id="accountDropdown">
+            <li><a href="http://localhost:3000/index.php?logout=true">Logout</a></li>
+            <li><a href="http://localhost:3000/settings.php">Settings</a></li>
+        </ul>
+
         <ul class="left hide-on-med-and-down">
-            <li><a href="#">Account</a></li>
-            <li>
-                <div class="divider"></div>
-            </li>
+            <li><a href="#" class="dropdown-trigger" data-target="accountDropdown"><?php echo getUsername($payload->id); ?></a></li>
             <?php if (in_array($rank, array('police_officer', 'police_admin'))) : ?>
                 <?php if ($rank === 'police_admin') : ?>
                     <li><a href="http://localhost:3000/admin_panel.php">Admin Panel</a></li>
@@ -44,11 +47,13 @@ $rank = getRank();
             <?php endif; ?>
         </ul>
     </nav>
-    <div class="nav-content hide-on-med-and-down">
-        <ul class="tabs tabs-transparent">
-            <li class="tab"><a href="http://localhost:3000/admin_panel.php?section=accounts">Account</a></li>
-        </ul>
-    </div>
+    <?php if ($currentScript === '/admin_panel.php') : ?>
+        <div class="nav-content hide-on-med-and-down">
+            <ul class="tabs tabs-transparent">
+                <li class="tab"><a href="http://localhost:3000/admin_panel.php?section=accounts">Account</a></li>
+            </ul>
+        </div>
+    <?php endif; ?>
 </nav>
 
 <ul class="sidenav" id="adminPanelSidenav">

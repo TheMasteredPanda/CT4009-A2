@@ -1,4 +1,5 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/functions/user_functions.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 
 $detect = new Mobile_Detect();

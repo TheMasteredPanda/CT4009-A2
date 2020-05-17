@@ -18,7 +18,7 @@ include "./actions/register.php";
     <?php if ($login) : ?>
         <?php if ($forgotCreds) : ?>
             <?php if ($forgotCredsType === 0) : ?>
-                <form action="/login.php" method="POST" class="forgot_creds_form_1 col s10 pull-s1 valign m6 pull-m3 l4 pull-l4 z-depth-2">
+                <form action="/login.php" method="POST" class="forgot_creds_form_1 col s10 pull-s1 valign m6 pull-m3 l3 pull-l4 z-depth-2">
                     <input type="hidden" name="forgotCreds" value=true>
                 </form>
             <?php elseif ($forgotCredsType === 1) : ?>

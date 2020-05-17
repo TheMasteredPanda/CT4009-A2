@@ -25,34 +25,64 @@ if (isset($_POST['accounts'])) {
     $accounts = getAllAccounts([]);
 }
 
+if (isset($_GET['modal'])) :
+    $modal = $_GET['modal'];
 ?>
+    <?php if ($modal === 'createOfficer') : ?>
+        <div class="modal" id="createOfficer">
+            <div class="modal-content">
+                <form action="http://localhost:3000/actions/create_officer_account.php" method="POST" class="create_officer_account_form">
+                    <div class="input-field">
+                        <input type="text" name="username" class="validate" required>
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" name="password" class="validate" required>
+                        <label for="password">Password</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" name="retypePassword" class="validate" required>
+                        <label for="password">Retype Password</label>
+                        <span class="helper-text" data-error="Value must be identical to the password"></span>
+                    </div>
+                    <div class="input-field">
+                        <input type="email" name="email" class="validate" required>
+                        <label for="email">Email Address</label>
+                        <span class="helper-text" data-error="Value must be structured as an email address."></span>
+                    </div>
+                    <div class="button_wrapper">
+                        <input type="submit" value="Create Account" class="btn indigo">
+                        <a href="http://localhost:3000/admin_panel.php?section=accounts" class="btn indigo">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
 
 <div class="admin_panel_container">
     <?php if ($section === 'accounts') : ?>
-        <div class="admin_panel_accounts_section">
-            <div class="accounts_header">
-                <div class="container">
-                    <div class="input_field_wrapper">
-                        <div class="input-field">
-                            <input type="text" name="admin_accounts_search">
-                            <label for="search_by_username">Search</label>
-                        </div>
-                        <div class="input_field_button_wrapper">
-
-                            <button name="admin_account_search_button" class="btn-small">Search</button>
-                        </div>
+        <div class="admin_panel_accounts_section row ">
+            <div class="accounts_header col m10 l10 pull-l1">
+                <form action="" class="search_accounts_form">
+                    <div class="input-field ">
+                        <input type="text" name="admin_accounts_search">
+                        <label for="search_by_username">Search</label>
                     </div>
-                    <div class="button_wrapper">
-                        <?php if ($detect->isMobile()) : ?>
-                            <a href="http://localhost:3000/mobile/create_officer_account.php" class="btn-small">Create Officer Account</a>
-                        <?php else : ?>
-                            <a href="#" class="btn-small"></a>
-                        <?php endif; ?>
+                    <div class="search_accounts_button_wrapper">
+                        <input type="submit" value="Search" name="admin_account_search_button" class="indigo btn-small">
                     </div>
+                </form>
+                <div class="button_wrapper">
+                    <?php if ($detect->isMobile() && !$detect->isTable()) : ?>
+                        <a href="http://localhost:3000/mobile/create_officer_account.php" class="btn-small">Create Officer Account</a>
+                    <?php else : ?>
+                        <a href="http://localhost:3000/admin_panel.php?modal=createOfficer&section=accounts" class="btn indigo">Create Officer Account</a>
+                    <?php endif; ?>
                 </div>
             </div>
             <?php if (count($accounts) > 0) : ?>
-                <ul>
+                <ul class="col m10 pull-m1 l10 pull-l1">
                     <li class="account_entry entry_titles">
                         <a href="#">
 

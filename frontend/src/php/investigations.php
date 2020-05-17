@@ -64,7 +64,7 @@ if (isset($_GET['modal'])) :
                         </ul>
                         <?php if ($rank !== 'civilian' && ($isInvestigator || $rank === 'police_admin') && $investigation->open) : ?>
                             <div class="button_wrapper">
-                                <a href=<?php echo 'http://localhost:3000/investigations.php?investigationId=' . $investigation->id . '&modal=addUpdate'; ?> class="btn-small">Add Update</a>
+                                <a href=<?php echo 'http://localhost:3000/investigations.php?investigationId=' . $investigation->id . '&modal=addUpdate'; ?> class="btn">Add Update</a>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -91,13 +91,13 @@ if (isset($_GET['modal'])) :
                             <?php endif; ?>
                         </ul>
                         <?php if ($investigation->open) : ?>
-                            <form action="#" class="create_comment_form col m12">
+                            <form action="http://localhost:3000/actions/create_investigation_comment.php" class="create_comment_form col m12">
                                 <div class="input-field">
                                     <input type="text" name="comment">
                                     <label for="comment">Comment</label>
                                 </div>
                                 <div class="button_wrapper">
-                                    <input type="submit" value="Send" class="btn-small">
+                                    <input type="submit" value="Send" class="btn">
                                 </div>
                             </form>
                         <?php endif; ?>
@@ -193,16 +193,16 @@ if (isset($_GET['modal'])) :
             <h4>No Investigations</h4>
         </div>
     <?php else : ?>
-        <div class="investigations_list_container container">
-            <div class="investigations_list_search">
+        <div class="investigations_list_container row">
+            <div class="investigations_list_search col m10 push-m1 l10 push-l1">
                 <form action="http://localhost:3000/actions/search_investigations.php" class="search_investigations_form">
                     <?php if ($rank !== 'civilian') : ?>
-                        <div class="input-field">
+                        <div class="input-field col m10 l10 push-m1 push-l1">
                             <input type="text" name="report_author">
                             <label for="report_author">Report Author</label>
                         </div>
                     <?php endif; ?>
-                    <div class="switch center-align">
+                    <div class="switch center-align col m10 l10 push-m1 push-l1">
                         <label>
                             Open
                             <input type="checkbox" name="search_by_open">
@@ -210,12 +210,12 @@ if (isset($_GET['modal'])) :
                             Closed
                         </label>
                     </div>
-                    <div class="button_wrapper">
+                    <div class="button_wrapper col m12 l12">
                         <input type="submit" value="Search" name="investigations_search_button" class="btn-small">
                     </div>
                 </form>
             </div>
-            <div class="investigations">
+            <div class="investigations col m12 l12 s12">
                 <?php for ($i = 0; $i < count($investigations); $i++) :
                     $investigation = getInvestigation($investigations[$i]);
                 ?>
