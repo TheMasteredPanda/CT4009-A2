@@ -19,5 +19,32 @@
     "moduleResolution": "Node"
   },
   "include": ["src", "test"],
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules", "build"],
+  "typedocOptions": {
+    "name": "TMP Notes Backend Documentation",
+    "out": "docs/typedoc",
+    "includeVersion": true,
+    "excludeTags": [
+      "api",
+      "apiDefine",
+      "apiDeprecated",
+      "apiError",
+      "apiErrorExample",
+      "apiExample",
+      "apiGroup",
+      "apiHeader",
+      "apiHeaderExample",
+      "apiIngore",
+      "apiName",
+      "apiParam",
+      "apiParamExmple",
+      "apiPermission",
+      "apiPrivate",
+      "apiSampleRequest",
+      "apiSuccess",
+      "apiSuccessExample",
+      "apiUse",
+      "apiVersion"
+    ]
+  }
 }

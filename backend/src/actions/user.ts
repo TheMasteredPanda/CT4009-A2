@@ -1,11 +1,8 @@
-import bcrypt, { hash } from "bcrypt";
-import * as databaseManager from "../managers/databaseManager";
+import bcrypt from "bcrypt";
 import * as authManager from "../managers/authManager";
 import Users from "../schemas/User.schema";
 import Contacts from "../schemas/Contacts.schema";
-import * as config from "../utils/config";
 import {
-  ServerGenericError,
   ClientUnauthorizedError,
   ClientNotAcceptableError,
   ClientNotFoundError,
@@ -15,6 +12,9 @@ import {
  * This script contains all functions that will be used in the endpoints/users.ts script.
  */
 
+/**
+ * A user contact entry .
+ */
 export interface UserContact {
   id: number;
   contact_value: string;
@@ -22,6 +22,9 @@ export interface UserContact {
   contact_hierarchy_position: string;
 }
 
+/**
+ * A user entry.
+ */
 export interface User {
   id: number;
   username: string;
@@ -29,16 +32,36 @@ export interface User {
   contacts: UserContact[];
 }
 
+/**
+ * Changes the users password.
+ *
+ * @param {number} userId - The id of a user.
+ * @param {string} newPassword - The new password.
+ */
 export async function change(userId: number, newPassword: string) {
   let hashedPassword = await bcrypt.hash(newPassword, 10);
   await Users.update({ password: hashedPassword }, { where: { id: userId } });
 }
 
-export async function exists(userId: string): Promise<boolean> {
+/**
+ * Used to check if a user exists.
+ *
+ * @param {number} userId - The id of a user.
+ *
+ * @return {boolean} true if exists, otherwise false.
+ */
+export async function exists(userId: number): Promise<boolean> {
   let result = await Users.findOne({ where: { id: userId } });
   return result ? true : false;
 }
 
+/**
+ * Gets user information. This includes contacts.
+ *
+ * @param {number} userId - The id of a user.
+ *
+ * @returns {Promise<object>} a user object or null.
+ */
 export async function get(userId: string): Promise<User | null> {
   let userInfo = await Users.findOne({ where: { id: userId } });
   let userContacts = await Contacts.findAll({ where: { id: userId } });
@@ -52,7 +75,24 @@ export async function get(userId: string): Promise<User | null> {
   }
 }
 
-export async function register(params: any) {
+/**
+ * Registry params interface.
+ */
+interface RegisterParams {
+  username: string;
+  password: string;
+  email: string;
+}
+
+/**
+ * Registers a new civilian user.
+ * NOTE: The password is hashed and salted via bcrypt.
+ *
+ * @param {RegisterParams} params - The parameters needed to register an account successfully.
+ *
+ * @returns {string} an authentication payload
+ */
+export async function register(params: RegisterParams) {
   let usernameExists = await Users.findOne({
     where: { username: params.username },
   });
@@ -94,6 +134,14 @@ export async function register(params: any) {
   };
 }
 
+/**
+ * Logs a user in using their username and password.
+ *
+ * @param {string} username - The name of the account.
+ * @param {string} password - The password of that account.
+ *
+ * @returns {string} an authentication payload if successful, otherwise a 401 error.
+ */
 export async function login(username: string, password: string): Promise<any> {
   let model = await Users.findOne({ where: { username } });
   if (!model)
@@ -134,18 +182,38 @@ export async function login(username: string, password: string): Promise<any> {
   };
 }
 
+/**
+ * Used to verify that a user has a valid authentication token.
+ *
+ * @param {string} token - The JWT token.
+ * @param {string} userId - The id of a user.
+ *
+ * @return {boolean} if valid returns true, otherwise false.
+ */
 export async function verify(token: string, userId: number) {
   if (!authManager.hasHandler(userId)) return false;
   let handler = authManager.get(userId);
   return await handler.verify(token);
 }
 
+/**
+ * Logs a user out.
+ *
+ * @param {number} userId - The id of a user.
+ */
 export function logout(userId: number) {
   if (!authManager.hasHandler(userId)) return;
   authManager.remove(userId);
 }
 
-export async function getRank(userId: string) {
+/**
+ * Used to get the rank of a user.
+ *
+ * @param {number} userId - The id of the user.
+ *
+ * @returns {string} rank id of the user.
+ */
+export async function getRank(userId: number) {
   let user: any = await Users.findOne({ where: { id: userId } });
 
   if (!user) {
@@ -159,7 +227,13 @@ export async function getRank(userId: string) {
   return user.rank;
 }
 
-export async function setRank(userId: string, rank: string) {
+/**
+ * Used to demote or promote a user.
+ *
+ * @param {number} userId - The id of a user.
+ * @param {string} rank - A valid rank id.
+ */
+export async function setRank(userId: number, rank: string) {
   if (
     rank !== "civilian" &&
     rank !== "police_officer" &&
@@ -175,12 +249,24 @@ export async function setRank(userId: string, rank: string) {
   await Users.update({ rank }, { where: { id: userId }, fields: ["rank"] });
 }
 
+/**
+ * Used to remove a user from the database.
+ *
+ * @param {number} userId - The id of a user.
+ */
 export async function remove(userId: number) {
   await Users.destroy({ where: { id: userId } });
   if (!authManager.hasHandler(userId)) return;
   authManager.remove(userId);
 }
 
+/**
+ * Used to get the user's username only.
+ *
+ * @param accountId - The id of a user.
+ *
+ * @returns {string} the users username or an error.
+ */
 export async function getUsername(accountId: number) {
   let userModel = await Users.findOne({
     where: { id: accountId },

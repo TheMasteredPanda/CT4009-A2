@@ -1,5 +1,4 @@
 import _ from "lodash";
-import * as databaseManager from "../managers/databaseManager";
 import Users from "../schemas/User.schema";
 import Contacts from "../schemas/Contacts.schema";
 import Bikes from "../schemas/Bikes.schema";
@@ -11,7 +10,21 @@ import {
   ClientNotFoundError,
 } from "../utils/errorhandler";
 import { Model } from "sequelize";
+/**
+ * All functions for executing the features of the admin panel.
+ */
 
+/**
+ * Creates a new officer account. When you register account via the user system,
+ * the rank you're assigned is 'civilian', this procedure however gives the account
+ * a 'police_officer' rank.
+ *
+ * @param {string} username - The name for the account.
+ * @param {string} password - The password for the account.
+ * @param {string} email  - The email address for the account.
+ *
+ * @return {string} the id of the newly created account.
+ */
 export async function createOfficerAccount(
   username: string,
   password: string,
@@ -55,6 +68,15 @@ export async function createOfficerAccount(
   return user.id;
 }
 
+/**
+ * Fetches all account information. If there are no ids in the invocation
+ * of this method then it will fetch all account information from the database,
+ * save for the password.
+ *
+ * @param ids - A list of ids.
+ *
+ * @returns {object[]} an array of user objects.
+ */
 export async function getAllAccounts(ids: number[] = []) {
   let users: Model<any, any>[];
   let contacts: Model<any, any>[];
@@ -90,6 +112,13 @@ export async function getAllAccounts(ids: number[] = []) {
   });
 }
 
+/**
+ * Gets all information on one account.
+ *
+ * @param userId - The id of an account.
+ *
+ * @return {object} returns an object of a user.
+ */
 export async function getAccountDetails(userId: number) {
   let user = await Users.findOne({ where: { id: userId } });
   let contacts = await Contacts.findAll({
@@ -115,11 +144,21 @@ export async function getAccountDetails(userId: number) {
   return object;
 }
 
+/**
+ * Gets all information on registered bikes, including their images.
+ *
+ * @returns {object[]} returns an array of bikes.
+ */
 export async function getAllRegisteredBikes() {
   let bikeIds = await Bikes.findAll({ attributes: ["id"] });
   return _.map(bikeIds, (bike: any) => bike.toJSON().id);
 }
 
+/**
+ * Deletes an account.
+ *
+ * @param userId - An id of an account.
+ */
 export async function deleteAccount(userId: number) {
   let bikes = await Bikes.findAll({ where: { user_id: userId } });
   let bikeIds = bikes.map((bike) => (bike.toJSON() as any).id);

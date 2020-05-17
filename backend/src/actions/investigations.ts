@@ -12,6 +12,15 @@ import {
   ClientNotFoundError,
 } from "../utils/errorhandler";
 
+/**
+ * Creates a new investigation. A new investigation is created from
+ * a report and the user id of the officer launching the investigation.
+ *
+ * @param {string} reportId - The id of the report.
+ * @param {string} investigatorId - The id of the primary investigator.
+ *
+ * @return {string} the id of the new created investigation.
+ */
 export async function create(reportId: number, investigatorId: number) {
   let investigation = await Investigations.findOne({
     where: { report_id: reportId, open: true },
@@ -36,6 +45,13 @@ export async function create(reportId: number, investigatorId: number) {
   return investigationObject.id;
 }
 
+/**
+ * Gets all investigation information, including images, updates, and comments.
+ *
+ * @param opts - Options.
+ *
+ * @returns {object} investigation information.
+ */
 export async function getInvestigations(opts: {
   reportId?: number;
   reportAuthor?: number;
@@ -89,6 +105,12 @@ export async function getInvestigations(opts: {
   );
 }
 
+/**
+ * Closes an investigation. Changes an investigations status from
+ * open to closed.
+ *
+ * @param {string} investigationId - The id of the investigation.
+ */
 export async function close(investigationId: number) {
   let investigation = await Investigations.findOne({
     where: { id: investigationId },
@@ -123,6 +145,13 @@ export async function close(investigationId: number) {
   );
 }
 
+/**
+ * Gets information on one investigation, including images, updates, and comments.
+ *
+ * @param {string} investigationId - The id of an investigation.
+ *
+ * @returns {object} investigation object.
+ */
 export async function getInvestigation(investigationId: number) {
   let investigation = await Investigations.findOne({
     where: { id: investigationId },
@@ -170,6 +199,15 @@ export async function getInvestigation(investigationId: number) {
   return object;
 }
 
+/**
+ * Gets an investigation entry, only be the base information. from a report id,
+ * provided that the report has an open investigation.
+ *
+ * @param reportId - The id of a report.
+ *
+ * @return {object} an object containing the investigation id, report id, created at and
+ * updated at date.
+ */
 export async function getInvestigationIdByReport(reportId: number) {
   let investigation = await Investigations.findOne({
     where: { report_id: reportId, open: true },
@@ -186,6 +224,14 @@ export async function getInvestigationIdByReport(reportId: number) {
   return (investigation.toJSON() as any).id;
 }
 
+/**
+ * Gets an investigation update. An update being a description by an investigator
+ * and any attached evidence (images).
+ *
+ * @param {string} updateId - The id of the update entry.
+ *
+ * @returns {object} an update object.
+ */
 export async function getInvestigationUpdate(updateId: any) {
   let update = await InvestigationUpdates.findOne({ where: { id: updateId } });
   if (!update)
@@ -207,6 +253,16 @@ export async function getInvestigationUpdate(updateId: any) {
   return object;
 }
 
+/**
+ * Adds a new investigator to an investigation. The username is
+ * used to find the user's entry in the relevant table to get
+ * the id of that entry.
+ *
+ * @param {string} investigationId - The id of an investigation.
+ * @param {string} username - The name of the account.
+ *
+ * @returns {string} the entry of the newly created investigator entry.
+ */
 export async function addInvestigator(
   investigationId: number,
   username: string
@@ -245,6 +301,12 @@ export async function addInvestigator(
   return (newInvestigator.toJSON() as any).id;
 }
 
+/**
+ * Removes an investigator from an investigation.
+ *
+ * @param {string} investigationId - The id of an investigation.
+ * @param {string} investigatorId - The id of an investigator.
+ */
 export async function removeInvestigator(
   investigationId: number,
   investigatorId: number
@@ -272,6 +334,15 @@ export async function removeInvestigator(
   });
 }
 
+/**
+ * Creates an investigation comment.
+ *
+ * @param {string} comment - The comment text.
+ * @param {string} authorId  - The id of the author.
+ * @param {string} investigationId  - The id of the investigation.
+ *
+ * @returns {string} id of the newly created comment.
+ */
 export async function createComment(
   comment: string,
   authorId: number,
@@ -297,10 +368,24 @@ export async function createComment(
   return (commentModel.toJSON() as any).id;
 }
 
+/**
+ * Removes a comment from an investigation.
+ *
+ * @param {string} commentId - Comment id.
+ */
 export async function removeComment(commentId: number) {
   await InvestigationComments.destroy({ where: { id: commentId } });
 }
 
+/**
+ * Adds an investigation update to the database.
+ *
+ * @param {string} investigationId - The id of an investigation.
+ * @param {string} authorId - The id of the author.
+ * @param {string} content - The content of the update.
+ *
+ * @returns {string} id of the newly created comment.
+ */
 export async function addUpdate(
   investigationId: number,
   authorId: number,
@@ -326,6 +411,12 @@ export async function addUpdate(
   return (updateModel.toJSON() as any).id;
 }
 
+/**
+ * Changes the visibility of an update from visible (hide = true) to hidden (hide = false)
+ *
+ * @param {string} updateId - The id of an update.
+ *
+ */
 export async function hideUpdate(updateId: number) {
   await InvestigationUpdates.update(
     { hide: true },
@@ -333,6 +424,14 @@ export async function hideUpdate(updateId: number) {
   );
 }
 
+/**
+ * Adds evidence to an update via it's update id.
+ *
+ * @param {string} updateId - The id of an update.
+ * @param {string} path - The path of the uploaded picture.
+ *
+ * @returns {string} the id of the newly created image entry.
+ */
 export async function addImage(updateId: number, path: string) {
   let bikeImage = await BikeImages.create({ uri: path });
 

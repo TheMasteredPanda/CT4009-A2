@@ -154,8 +154,8 @@ export async function register({
 /**
  * Stores the url of an image for a registered bike entry in the relevent database.
  *
- * @param bikeId - The id of the bike.
- * @param url - The url of the image.
+ * @param {string} bikeId - The id of the bike.
+ * @param {string} url - The url of the image.
  *
  * @returns {object} the most recently inserted image.
  */
@@ -168,6 +168,11 @@ export async function addImage(bikeId: number, url: string) {
   return image.toJSON();
 }
 
+/**
+ * Deletes a registered bike image.
+ *
+ * @param {string} imageId - The id of the image.
+ */
 export async function removeImage(imageId: number) {
   let model = await RegistryImages.findOne({ where: { image_id: imageId } });
 
@@ -184,7 +189,7 @@ export async function removeImage(imageId: number) {
 /**
  * Removes a registered bike entry.
  *
- * @param bikeId - The id of the bike to unregister.
+ * @param {string} bikeId - The id of the bike to unregister.
  */
 export async function unregister(bikeId: string) {
   await Bikes.destroy({ where: { id: bikeId } });
@@ -193,7 +198,7 @@ export async function unregister(bikeId: string) {
 /**
  * Get a registered bike.
  *
- * @param bikeId - The id of the bike.
+ * @param {string} bikeId - The id of the bike.
  *
  * @returns {object} all information on the registered bike and it's images.
  */
@@ -246,7 +251,7 @@ export async function getRegisteredBike(bikeId: string) {
 /**
  * Get all registered bike ids under a user.
  *
- * @param userId - The owner of the bike.
+ * @param {string} userId - The owner of the bike.
  *
  * @returns {string[]} an array of bike ids.
  */
@@ -275,8 +280,8 @@ export async function getAllRegisteredBikes(userId: number) {
 /**
  * Updates a registered bike entry.
  *
- * @param bikeId - The id of the bike.
- * @param data - The data to update to the registered bike entry.
+ * @param {string} bikeId - The id of the bike.
+ * @param {object} data - The data to update to the registered bike entry.
  */
 export async function updateRegisteredBike(
   bikeId: string,

@@ -1,6 +1,4 @@
-import * as databaseManager from "../managers/databaseManager";
 import { Op } from "sequelize";
-import Investigations from "../schemas/Investigations.schema";
 import Reports from "../schemas/Reports.schema";
 import ReportComments from "../schemas/ReportComments.schema";
 import Users from "../schemas/User.schema";
@@ -11,6 +9,21 @@ import {
   ClientNotFoundError,
 } from "../utils/errorhandler";
 
+/**
+ * All actions functions for the report system.
+ */
+
+/**
+ * Creates a report from the google maps api place id,
+ * report description (content) and bike id (id of the bike stolen).
+ *
+ * @param {number} userId - The id of an account.
+ * @param {number} bikeId - The id of a registered bike.
+ * @param {string} placeId - The id of a location.
+ * @param {string} content - The content of the report.
+ *
+ * @returns {string} the id of the newly created report.
+ */
 export async function create(
   userId: number,
   bikeId: number,
@@ -36,15 +49,30 @@ export async function create(
   return (model.toJSON() as any).id;
 }
 
+/**
+ * Options for fetching an array of report ids.
+ */
+interface ReportOptions {
+  author?: number;
+  open?: boolean;
+  bikeId?: number;
+  startDate?: number;
+  endDate?: number;
+  attributes?: string[];
+}
+
+/**
+ * Returns a list of report ids. The ids returned varies
+ * depending upon what search parameters are present. If
+ * no search parameters are injected into this method it
+ * will returns all report ids.
+ *
+ * @param {ReportOptions} opts - A list of search parameters
+ *
+ * @returns {string[]} an array of report ids.
+ */
 export async function getReportIds(
-  opts: {
-    author?: number;
-    open?: boolean;
-    bikeId?: number;
-    startDate?: number;
-    endDate?: number;
-    attributes?: string[];
-  } = { attributes: ["id"] }
+  opts: ReportOptions = { attributes: ["id"] }
 ) {
   let query: { where: any } = { where: {} };
 
@@ -84,6 +112,14 @@ export async function getReportIds(
   return _.map(reports, (report) => (report.toJSON() as any).id);
 }
 
+/**
+ * Returns all information on a report, including images.
+ *
+ * @param {number} reportId  - The id of a report.
+ * @param {number} bikeId - The id of a bike.
+ *
+ * @returns {object} a report object.
+ */
 export async function getReport(reportId: number, bikeId: number) {
   let report = null;
 
@@ -104,11 +140,24 @@ export async function getReport(reportId: number, bikeId: number) {
   return report.toJSON();
 }
 
+/**
+ * The type of comment. Used in storing and fetching comment(s).
+ */
 export enum CommentType {
   CIVILIAN = "civilian",
   POLICE = "police",
 }
 
+/**
+ * Adds a report comment to the database.
+ *
+ * @param {number} reportId - The id of an report
+ * @param {string} comment - The comment content.
+ * @param {number} author - The author of the comment.
+ * @param {CommentType} type - The type of comment.
+ *
+ * @returns {string} the id of the newly created comment.
+ */
 export async function createComment(
   reportId: number,
   comment: string,
@@ -134,6 +183,14 @@ export async function createComment(
   return (commentModel.toJSON() as any).id;
 }
 
+/**
+ * Fetches an array of civilian or police comments.
+ *
+ * @param {number} reportId - The id of a report.
+ * @param {CommentType} type - The type of comments to fetch.
+ *
+ * @returns {object[]} an array of comments.
+ */
 export async function getComments(reportId: number, type: CommentType) {
   let comments = await ReportComments.findAll({
     where: { type, report_id: reportId },
@@ -142,6 +199,11 @@ export async function getComments(reportId: number, type: CommentType) {
   return _.map(comments, (comment) => comment.toJSON());
 }
 
+/**
+ * Closes a report.
+ *
+ * @param {number} reportId - The id of a report.
+ */
 export async function closeReport(reportId: number) {
   let report = await Reports.findOne({
     where: { id: reportId },
