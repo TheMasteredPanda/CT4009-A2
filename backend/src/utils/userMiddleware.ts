@@ -11,7 +11,7 @@ const dmz = [
 
 /**
  * Uses the 'userId' query parameter to fetch user informaton and
- * store it in the request object for reference.
+ * store it in the request object for future reference.
  */
 export default function (req: Request, res: Response, next: Function) {
   if (dmz.some((endpoint) => req.url.startsWith(endpoint))) {
@@ -33,7 +33,7 @@ export default function (req: Request, res: Response, next: Function) {
   let userId = query.userId as string;
 
   actions
-    .exists(userId)
+    .exists(Number(userId))
     .then((exists: boolean) => {
       if (!exists) {
         res.error.client.notFound(

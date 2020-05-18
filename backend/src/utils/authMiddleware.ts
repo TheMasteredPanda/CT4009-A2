@@ -10,6 +10,11 @@ const dmz = [
   from being processed through the middleware below.*/
 const authDmz = ["/user/refresh"]; //Demilitarized endpoints for the authentication middleware only.
 
+/**
+ * Middleware used to authorize users before accessing the endpoint requested.
+ * This is to ensure that no unauthorized access to endpoints, save for the dmzed
+ * endpoints, are made.
+ */
 export default function (req: Request, res: Response, next: Function) {
   if (
     dmz.some((endpoint) => req.url.startsWith(endpoint)) ||
