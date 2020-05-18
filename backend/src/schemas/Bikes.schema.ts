@@ -1,6 +1,9 @@
 import * as databaseManager from "../managers/databaseManager";
 import { Model, DataTypes } from "sequelize";
 
+/**
+ * Stores all registered bike metadata, excluding, of course, images.
+ */
 class Bikes extends Model {}
 
 let BikesModel = Bikes.init(

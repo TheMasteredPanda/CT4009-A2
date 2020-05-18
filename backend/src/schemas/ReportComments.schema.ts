@@ -1,6 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import * as databaseManager from "../managers/databaseManager";
 
+/**
+ * Stores all report comments.
+ */
 class ReportComment extends Model {}
 
 ReportComment.init(

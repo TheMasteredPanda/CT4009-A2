@@ -1,6 +1,9 @@
 import { DataTypes, Model } from "sequelize";
 import * as databaseManager from "../managers/databaseManager";
 
+/**
+ * Stores the content of an investigation update.
+ */
 class InvestigationUpdates extends Model {}
 
 InvestigationUpdates.init(

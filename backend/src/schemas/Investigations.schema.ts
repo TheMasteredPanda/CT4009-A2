@@ -1,6 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import * as databaseManager from "../managers/databaseManager";
 
+/**
+ * A semi-junction table for relating a report with updates, comments, and investigation images (evidence).
+ */
 class Investigation extends Model {}
 Investigation.init(
   {

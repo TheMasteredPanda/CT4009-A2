@@ -1,6 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import * as databaseManager from "../managers/databaseManager";
 
+/**
+ * Stores report metadata. 
+ */
 class Reports extends Model {}
 
 Reports.init(

@@ -1,6 +1,9 @@
 import * as databaseManager from "../managers/databaseManager";
 import { Model, DataTypes } from "sequelize";
 
+/**
+ * Centeral table for storing image URIs, uploaded and provided by multer.
+ */
 class BikeImage extends Model {}
 BikeImage.init(
   {

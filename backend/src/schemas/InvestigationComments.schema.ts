@@ -1,6 +1,9 @@
 import { Model, DataTypes } from "sequelize";
 import * as databaseManager from "../managers/databaseManager";
 
+/**
+ * Stores investigation comments.
+ */
 class InvestigationComments extends Model {}
 
 InvestigationComments.init(
