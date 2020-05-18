@@ -27,6 +27,8 @@ const upload = multer({ storage }).any();
  *                                            user id of the officer launching the investigation.
  *                                            The officer will be the primary investigator of the
  *                                            investigation.
+ * 
+ * @apiParam (Query Param) {string} reportId  The id of the report that will be investigated.
  *
  * @apiError {BadRequest} 400                 The query parameter 'reportId' was not found.
  *
@@ -53,18 +55,18 @@ router.post("/investigations/create", (req: Request, res: Response) => {
 });
 
 /**
- * @api {post} /investigations                Get an array of investigations.
+ * @api {post} /investigations                          Get an array of investigations.
  * @apiVersion 0.1.0
- * @apiGroup endpionts/investigations         Get an array of investigations.
+ * @apiGroup endpionts/investigations                   Get an array of investigations.
  *
- * @apiParam (Query Param) reportAuthor       The username of the user who author the report
- *                                            the investigation is on.
+ * @apiParam (Query Param) {string} reportAuthor        The username of the user who author the report
+ *                                                      the investigation is on.
  *
- * @apiParam (Query Param) open               A boolean that determines whether the investigation search
- *                                            is inclusively open (true) or closed (false)
+ * @apiParam (Query Param) {bolean} open                A boolean that determines whether the investigation search
+ *                                                      is inclusively open (true) or closed (false)
  *
- * @apiSuccess {Success} ids                  A set of investigation ids that fit the search parameters. Or
- *                                            all investigation ids if no search params are given.
+ * @apiSuccess {Success} ids                            A set of investigation ids that fit the search parameters. Or
+ *                                                      all investigation ids if no search params are given.
  */
 router.post("/investigations", (req: Request, res: Response) => {
   let query = req.query;
@@ -80,21 +82,21 @@ router.post("/investigations", (req: Request, res: Response) => {
 });
 
 /**
- * @api {get} /investigations/investigation   Get investigation information.
+ * @api {get} /investigations/investigation             Get investigation information.
  * @apiVersion 0.1.0
  * @apiGroup endpoints/investigations
  *
- * @apiParam (Query Param) invesigationId     An id of the investigation to get the
- *                                            information for.
+ * @apiParam (Query Param) {string} invesigationId      An id of the investigation to get the
+ *                                                      information for.
  *
- * @apiParam (Query Param) reportId           The id of the report an open invesigation
- *                                            may be launched upon. This id will be used
- *                                            to get the investigation id and fetch the information
- *                                            for that investigation.
+ * @apiParam (Query Param) {string} reportId            The id of the report an open invesigation
+ *                                                      may be launched upon. This id will be used
+ *                                                      to get the investigation id and fetch the information
+ *                                                      for that investigation.
  *
- * @apiError {BadRequest} 400                 The query parameter investigationId was not found.
+ * @apiError {BadRequest} 400                           The query parameter investigationId was not found.
  *
- * @apiSuccess {Success} investigation        The investigation object.
+ * @apiSuccess {Success} investigation                  The investigation object.
  */
 router.get("/investigations/investigation", (req: Request, res: Response) => {
   let query = req.query;
@@ -130,16 +132,18 @@ router.get("/investigations/investigation", (req: Request, res: Response) => {
 });
 
 /**
- * @api {post} /investigations/close          Close an investigation.
+ * @api {post} /investigations/close                        Close an investigation.
  * @apiVersion 0.1.0
  * @apiGroup endpoints/investigations
  *
- * @apiDescription                            Close an investigation.
+ * @apiDescription                                          Close an investigation.
+ * 
+ * @apiParam (Query Param) {string} investigationId         The id of the investigation to close.
  *
- * @apiError {BadRequest} 4000                The query parameter 'investigationId' was
- *                                            not found.
+ * @apiError {BadRequest} 400                               The query parameter 'investigationId' was
+ *                                                          not found.
  *
- * @apiSuccess {Success} {void}               A 200 status code.
+ * @apiSuccess {Success} {void}                             A 200 status code.
  */
 router.post("/investigations/close", (req: Request, res: Response) => {
   let query = req.query;
@@ -160,19 +164,19 @@ router.post("/investigations/close", (req: Request, res: Response) => {
 });
 
 /**
- * @api {post} /investigations/investigators/add          Add an investigator.
+ * @api {post} /investigations/investigators/add                    Add an investigator.
  * @apiVersion 0.1.0
  * @apiGroup endpionts/investigations
  *
- * @apiDescription                                        Add an investigator to the investigation.
+ * @apiDescription                                                  Add an investigator to the investigation.
  *
- * @apiParam (Query Param) investigationId                An id of an investigation.
- * @apiParam (Query Param) username                       The username of the user to add as an investigator.
+ * @apiParam (Query Param) {string} investigationId                 An id of an investigation.
+ * @apiParam (Query Param) {string} username                        The username of the user to add as an investigator.
  *
- * @apiError {BadRequest} 400                             Either the query did not include parameters 'investigationId'
- *                                                        and/or 'username'
+ * @apiError {BadRequest} 400                                       Either the query did not include parameters 'investigationId'
+ *                                                                  and/or 'username'
  *
- * @apiSuccess {Success} id                               The id of the newly created investigator entry.
+ * @apiSuccess {Success} id                                         The id of the newly created investigator entry.
  */
 router.post(
   "/investigations/investigators/add",
@@ -212,6 +216,8 @@ router.post(
  * @apiDescription                                          Remove an investigator from an investigation.
  *                                                          This will only work if there is more than one
  *                                                          investigator.
+ * 
+ * @apiPraram (Query Param) {string} investigationId        The id of the investigation.
  *
  * @apiError {BadRequest} 400                               The query didn't include 'investigationId' or
  *                                                          'investigatorId'
@@ -252,19 +258,19 @@ router.post(
 );
 
 /**
- * @api {post} /investigations/comments/create          Add investigation comment.
+ * @api {post} /investigations/comments/create                  Add investigation comment.
  * @apiVersion 0.1.0
  * @apiGroup endpoints/investigations
  *
- * @apiDescription                                     Add a comment to a investigation.
+ * @apiDescription                                              Add a comment to a investigation.
  *
- * @apiParam (Body Param) comment                      The content of the comment.
- * @apiParam (Query Param) investigationId             The id of the investigation to add the comment to.
+ * @apiParam (Body Param) {string}  comment                     The content of the comment.
+ * @apiParam (Query Param) {string} investigationId             The id of the investigation to add the comment to.
  *
- * @apiError {BadRequest} 400                          Either the body didn't include 'comment' or the query
- *                                                     didn't include 'investigationId'.
+ * @apiError {BadRequest} 400                                   Either the body didn't include 'comment' or the query
+ *                                                              didn't include 'investigationId'.
  *
- * @apiSuccess {Succes} id                             The id of the newly created comment.
+ * @apiSuccess {Succes} id                                      The id of the newly created comment.
  */
 router.post(
   "/investigations/comments/create",
@@ -297,17 +303,17 @@ router.post(
 );
 
 /**
- * @api {post} /investigations/comments/remove          Remove a comment from an ivnestigation.
+ * @api {post} /investigations/comments/remove                    Remove a comment from an ivnestigation.
  * @apiVersion 0.1.0
  * @apiGroup endpoints/investigations
  *
- * @apiDescription                                      Remove a comment from an investigation.
+ * @apiDescription                                                Remove a comment from an investigation.
  *
- * @apiParam (Query Param) commentId                    The id of the comment to delete.
+ * @apiParam (Query Param) {string} commentId                     The id of the comment to delete.
  *
- * @apiError {BadRequest} 400                           The query did not include 'commentId'
+ * @apiError {BadRequest} 400                                     The query did not include 'commentId'
  *
- * @apiSucces {Success} {void}                          A 200 status code.
+ * @apiSucces {Success} {void}                                    A 200 status code.
  */
 router.post(
   "/investigations/comments/remove",
@@ -331,19 +337,19 @@ router.post(
 );
 
 /**
- * @api {post} /investigations/update/add         Add an investigation update.
+ * @api {post} /investigations/update/add                   Add an investigation update.
  * @apiVersion 0.1.0
  * @apiGroup endpoints/investigations
  *
- * @apiDescription                                Add an investigation update.
+ * @apiDescription                                          Add an investigation update.
  *
- * @apiParam (Query Param) investigationId        The id of the investigation to add the update to.
- * @apiParam (Body Param) content                 The update description.
+ * @apiParam (Query Param) {string} investigationId         The id of the investigation to add the update to.
+ * @apiParam (Body Param) {string} content                  The update description.
  *
- * @apiError {BadRequest} 400                     Either the query didn't include 'investigationId' or
- *                                                the body didn't include 'content'.
+ * @apiError {BadRequest} 400                               Either the query didn't include 'investigationId' or
+ *                                                          the body didn't include 'content'.
  *
- * @apiSuccess {Success} id                       The id to the newly created update.
+ * @apiSuccess {Success} id                                 The id to the newly created update.
  */
 router.post("/investigations/update/add", (req: Request, res: Response) => {
   let query = req.query;
@@ -374,17 +380,17 @@ router.post("/investigations/update/add", (req: Request, res: Response) => {
 });
 
 /**
- * @api {post} /investigations/update/hide          Hide an update.
+ * @api {post} /investigations/update/hide                   Hide an update.
  * @apiVersion 0.1.0
  * @apiGroup endpoints/investigations
  *
- * @apiDescription                                  Hide an update on an investigation.
+ * @apiDescription                                           Hide an update on an investigation.
  *
- * @apiParam (Query Param) updateId                 The id of the update.
+ * @apiParam (Query Param) {string} updateId                 The id of the update.
  *
- * @apiError {BadRequest} 400                       The query paramaters didn't include 'updateId'
+ * @apiError {BadRequest} 400                               The query paramaters didn't include 'updateId'
  *
- * @apiSuccess {Success} {void}                     A 200 status code.
+ * @apiSuccess {Success} {void}                             A 200 status code.
  */
 router.post("/investigations/update/hide", (req: Request, res: Response) => {
   let query = req.query;
@@ -405,18 +411,18 @@ router.post("/investigations/update/hide", (req: Request, res: Response) => {
 });
 
 /**
- * @api {post} /investigations/evidence/upload          Upload evidenc to an update.
+ * @api {post} /investigations/evidence/upload                    Upload evidenc to an update.
  * @apiVersion 0.1.0
  * @apiGroup endpoints/investigations
  *
- * @apiDescription                                       Upload images as evidnece coressponding to evidence.
+ * @apiDescription                                                Upload images as evidnece coressponding to evidence.
  *
- * @apiParam (Query Param) updateId                      The id of the update entry the evidence coressponds to.
- * @apiParam (Body Param) multipart/form                 The images formatted in multipart/form
+ * @apiParam (Query Param) {string} updateId                      The id of the update entry the evidence coressponds to.
+ * @apiParam (Body Param) multipart/form                          The images formatted in multipart/form
  *
- * @apiError {BadRequest} 400                            The query parameters did not include 'updateId'.
+ * @apiError {BadRequest} 400                                     The query parameters did not include 'updateId'.
  *
- * @apiSuccess {Success} ids                             An array of ids coressponding to investigation image entries.
+ * @apiSuccess {Success} ids                                      An array of ids coressponding to investigation image entries.
  */
 router.post(
   "/investigations/evidence/upload",
