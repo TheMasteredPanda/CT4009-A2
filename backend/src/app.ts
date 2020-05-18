@@ -1,5 +1,4 @@
 import * as path from "path";
-import * as fs from "fs";
 import express from "express";
 import * as fileUtils from "./utils/files";
 import * as actionManager from "./managers/actionsManager";
@@ -39,8 +38,7 @@ export async function start() {
     process.exit(0);
   }
 
-  if (process.env.NODE_ENV === "development") {
-    console.log("Is development.");
+  if (process.env.NODE_ENV === "development") { //For development purposes the config is populated by environment variables set in each test unit.
     configUtils.set({
       mariadb: {
         username: process.env.TEST_MARIADB_USERNAME,
@@ -90,6 +88,10 @@ export async function start() {
   let ownerAccount = await Users.findOne({
     where: { username: configUtils.get().ownerAccount.username },
   });
+
+  /**
+   * Creates the owners account. This is the only police_admin account on the entire system.
+   */
   if (!ownerAccount) {
     let hashedPassword = await bcrypt.hash(
       configUtils.get().ownerAccount.password,
