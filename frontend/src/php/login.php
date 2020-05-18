@@ -58,7 +58,6 @@ include "./actions/register.php";
                 <span class="center-align">
                     <input type="submit" value="Login" class="btn-small grey darken-3" name="login_submit_form">
                     <div class="login_footer_hrefs">
-                        <a name="forgot_creds_button" href="#">Forgot Credentials?</a>
                         <a name="create_account_button" href="#">Don't have an account?</a>
                     </div>
                 </span>

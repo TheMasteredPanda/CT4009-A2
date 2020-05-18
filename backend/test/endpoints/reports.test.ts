@@ -85,7 +85,7 @@ describe("Testing Report Endpoints", () => {
       createBikeEntry(authPayload).then((bikeId: any) => {
         request
           .post(`/reports/create?userId=${authPayload.id}&bikeId=${bikeId}`)
-          .send({ content: "Test Report" })
+          .send({ content: "Test Report", placeId: '123455' })
           .set("Authorization", `Bearer ${authPayload.token}`)
           .end((err, res) => {
             if (err) throw err;
@@ -102,7 +102,7 @@ describe("Testing Report Endpoints", () => {
       createBikeEntry(authPayload).then((bikeId: any) => {
         request
           .post(`/reports/create?userId=${authPayload.id}&bikeId=${bikeId}`)
-          .send({ content: "Test Report" })
+          .send({ content: "Test Report", placeId: '123455'  })
           .set("Authorization", `Bearer ${authPayload.token}`)
           .end((err, res) => {
             if (err) throw err;
@@ -128,7 +128,7 @@ describe("Testing Report Endpoints", () => {
         request
           .post(`/reports/create?userId=${authPayload.id}&bikeId=${bikeId}`)
           .set("Authorization", `Bearer ${authPayload.token}`)
-          .send({ content: "Test Report" })
+          .send({ content: "Test Report", placeId: '123455'  })
           .end((err, res) => {
             if (err) throw err;
             expect(res.status).toBe(200);
@@ -154,7 +154,7 @@ describe("Testing Report Endpoints", () => {
       createBikeEntry(authPayload).then((bikeId: any) => {
         request
           .post(`/reports/create?userId=${authPayload.id}&bikeId=${bikeId}`)
-          .send({ content: "Test Report" })
+          .send({ content: "Test Report", placeId: '123455'  })
           .set("Authorization", `Bearer ${authPayload.token}`)
           .end((err, res) => {
             if (err) throw err;
@@ -182,7 +182,7 @@ describe("Testing Report Endpoints", () => {
       createBikeEntry(authPayload).then((bikeId: any) => {
         request
           .post(`/reports/create?userId=${authPayload.id}&bikeId=${bikeId}`)
-          .send({ content: "Test Reports" })
+          .send({ content: "Test Reports", placeId: '123455'  })
           .set("Authorization", `Bearer ${authPayload.token}`)
           .end((err, res) => {
             if (err) throw err;
@@ -221,7 +221,7 @@ describe("Testing Report Endpoints", () => {
       createBikeEntry(authPayload).then((bikeId: any) => {
         request
           .post(`/reports/create?userId=${authPayload.id}&bikeId=${bikeId}`)
-          .send({ content: "Test Content" })
+          .send({ content: "Test Content", placeId: '123455'  })
           .set("Authorization", `Bearer ${authPayload.token}`)
           .end((err, res) => {
             if (err) throw err;

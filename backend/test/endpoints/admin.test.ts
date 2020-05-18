@@ -27,6 +27,9 @@ beforeAll(async (done) => {
 
 beforeEach(async (done) => {
   await databaseManager.sync();
+  let username = process.env.OWNER_ACCOUNT_USERNAME;
+  let password = await bcrypt.hash(process.env.OWNER_ACCOUNT_PASSWORD, 10);
+  await databaseManager.sequelize().models.users.create({ username, password , rank: 'police_admin'});
   done();
 });
 

@@ -112,7 +112,7 @@ function createReport(authPayload: any, bikeId: number) {
   return new Promise((resolve, reject) => {
     request
       .post(`/reports/create?userId=${authPayload.id}&bikeId=${bikeId}`)
-      .send({ content: "Test Report" })
+      .send({ content: "Test Report", placeId: "121345231" })
       .set("Authorization", `Bearer ${authPayload.token}`)
       .end((err, res) => {
         if (err) {
@@ -277,7 +277,7 @@ describe("Testing Investigation Endpoints", () => {
                 createJaneDoe().then((janeAuth: any) => {
                   request
                     .post(
-                      `/investigations/investigators/add?userId=${authPayload.id}&investigationId=${res.body.id}&investigatorId=${janeAuth.id}`
+                      `/investigations/investigators/add?userId=${authPayload.id}&username=janedoe&investigationId=${res.body.id}`
                     )
                     .set("Authorization", `Bearer ${authPayload.token}`)
                     .end((err, res) => {
@@ -310,14 +310,14 @@ describe("Testing Investigation Endpoints", () => {
                 createJaneDoe().then((janeAuth: any) => {
                   request
                     .post(
-                      `/investigations/investigators/add?userId=${authPayload.id}&investigationId=${investigationId}&investigatorId=${janeAuth.id}`
+                      `/investigations/investigators/add?userId=${authPayload.id}&investigationId=${investigationId}&username=janedoe`
                     )
                     .set("Authorization", `Bearer ${authPayload.token}`)
                     .end((err, res) => {
                       if (err) throw err;
                       request
                         .post(
-                          `/investigations/investigators/remove?userId=${authPayload.id}&investigationId=${investigationId}&investigatorId=${janeAuth.id}`
+                          `/investigations/investigators/remove?userId=${authPayload.id}&investigationId=${investigationId}&investigatorId=${res.body.id}`
                         )
                         .set("Authorization", `Bearer ${authPayload.token}`)
                         .end((err, res) => {

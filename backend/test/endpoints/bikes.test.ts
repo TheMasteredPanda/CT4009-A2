@@ -19,7 +19,7 @@ beforeAll(async (done) => {
   process.env.TEST_SERVER_AUTH_REFRESHOFFSET = "20s";
   process.env.OWNER_ACCOUNT_USERNAME = "owner";
   process.env.OWNER_ACCOUNT_PASSWORD = "passwd";
-  
+
   process.chdir(process.cwd() + `/build/src`);
   await start();
   done();
@@ -67,7 +67,7 @@ describe("Testing Bike Endpoints: ", () => {
       request
         .post(`/bike/register?userId=${authPayload.id}`)
         .set("Authorization", `Bearer ${authPayload.token}`)
-        .send({ brand: "Test Brand", wheel_size: 24.3, gear_count: 8 })
+        .send({ brand: "Test Brand", wheelSize: 24.3, gearCount: 8 })
         .end((err, res) => {
           if (err) throw err;
           expect(res.status).toBe(200);
@@ -95,7 +95,7 @@ describe("Testing Bike Endpoints: ", () => {
       request
         .post(`/bike/register?userId=${authPayload.id}`)
         .set("Authorization", `Bearer ${authPayload.token}`)
-        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8 })
+        .send({ brand: "Test Brand", wheelSize: 24.8, gearCount: 8 })
         .end((err, res) => {
           if (err) throw err;
           request
@@ -111,8 +111,8 @@ describe("Testing Bike Endpoints: ", () => {
               expect(res.body).toBeDefined();
               request
                 .post(
-                  `/bike/images/delete?userId=${authPayload.id}&imageId=${res.body[0].image_id}`
-                )
+                  `/bike/images/delete?userId=${authPayload.id}`
+                ).send({imageIds: res.body[0].image_id})
                 .set("Authorization", `Bearer ${authPayload.token}`)
                 .end((err, res) => {
                   if (err) throw err;
@@ -128,7 +128,7 @@ describe("Testing Bike Endpoints: ", () => {
       request
         .post(`/bike/register?userId=${authPayload.id}`)
         .set("Authorization", `Bearer ${authPayload.token}`)
-        .send({ brand: "Test Bike", wheel_size: 24.8, gear_count: 8 })
+        .send({ brand: "Test Bike", wheelSize: 24.8, gearCount: 8 })
         .end((err, res) => {
           if (err) throw err;
           expect(res.status).toBe(200);
@@ -161,7 +161,7 @@ describe("Testing Bike Endpoints: ", () => {
     createJohnDoe().then((authPayload: any) => {
       request
         .post(`/bike/register?userId=${authPayload.id}`)
-        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8 })
+        .send({ brand: "Test Brand", wheelSize: 24.8, gearCount: 8 })
         .set("Authorization", `Bearer ${authPayload.token}`)
         .end((err, res) => {
           if (err) throw err;
@@ -196,7 +196,7 @@ describe("Testing Bike Endpoints: ", () => {
     createJohnDoe().then((authPayload: any) => {
       request
         .post(`/bike/register?userId=${authPayload.id}`)
-        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8 })
+        .send({ brand: "Test Brand", wheelSize: 24.8, gearCount: 8 })
         .set("Authorization", `Bearer ${authPayload.token}`)
         .end((err, res) => {
           if (err) throw err;
@@ -229,7 +229,7 @@ describe("Testing Bike Endpoints: ", () => {
       request
         .post(`/bike/register?userId=${authPayload.id}`)
         .set("Authorization", `Bearer ${authPayload.token}`)
-        .send({ brand: "Test Brand", wheel_size: 24.8, gear_count: 8 })
+        .send({ brand: "Test Brand", wheelSize: 24.8, gearCount: 8 })
         .end((err, res) => {
           if (err) throw err;
           expect(res.status).toBe(200);

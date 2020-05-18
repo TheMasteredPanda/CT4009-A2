@@ -4,8 +4,7 @@
   "description": "Bike Registry Backend",
   "main": "app.js",
   "scripts": {
-    "test": "cp -r test/assets build/test/ && NODE_ENV=development jest investigations.test.js",
-    "idk": "NODE_ENV=development jest user.test.js && NODE_ENV=development jest bikes.test.js && NODE_ENV=development jest reports.test.js && NODE_ENV=development jest admin.test.js",
+    "test": "cp -r test/assets build/test/ && NODE_ENV=development jest investigations.test.js && NODE_ENV=development jest user.test.js && NODE_ENV=development jest bikes.test.js && NODE_ENV=development jest reports.test.js && NODE_ENV=development jest admin.test.js",
     "watch": "tsc --watch -p tsconfig.json"
   },
   "repository": {
