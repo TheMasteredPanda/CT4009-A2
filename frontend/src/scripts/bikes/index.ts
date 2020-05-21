@@ -289,7 +289,7 @@ $(".report_stolen_bike_form").ready(() => {
         place_id: placeId,
       },
     }).done((res) => {
-      $('body').html(res);
+      $("body").html(res);
     });
   });
 });

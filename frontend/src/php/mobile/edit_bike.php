@@ -6,12 +6,18 @@ include "../functions/bike_functions.php";
 if (!isset($_GET['bikeId'])) return;
 $bike = getBike($_GET['bikeId']);
 $colours_selection_array = array("red", "orange", "yellow", "green", "blue", "purple", "brown", "megenta", "tan", "cyan", "olive", "maroon", "navy", "aquamarine", "turquoise", "silver", "lime", "teal", "indigo", "violet", "pink", "black", "white", "gray");
-$bike_brakes = array('N/A', 'spoon', 'duck', 'rim', 'disc', 'drum', 'coaster', 'drag', 'band', 'mechanical', 'hydraulic', 'v-brake', 'cantilever');
+$bike_brakes = array('spoon', 'duck', 'rim', 'disc', 'drum', 'coaster', 'drag', 'band', 'mechanical', 'hydraulic', 'v-brake', 'cantilever');
 $bike_suspension = array('front', 'rear', 'seatpost', 'saddle', 'stem', 'hub', 'none');
 $bike_genders = array('mens', 'womens', 'boys', 'girls', 'unisex');
 $bike_age_group = array('toddler', 'children', 'adult');
 $bike_types = array('road', 'mountain', 'hybrid_or_commuter', 'cyclocross', 'folding', 'electric', 'touring', 'womens');
 $bike_colours = explode(', ', $bike->colours);
+
+for ($j = 0; $j < count($bike_brakes); $j++) {
+    if ($bike_brakes[$j] === $bike->brake_type) {
+        echo 'Is brake type ' . $bike_brakes[$j];
+    }
+}
 ?>
 
 <div class="bike_edit_container">
@@ -54,12 +60,12 @@ $bike_colours = explode(', ', $bike->colours);
                     <?php for ($i = 0; $i < count($bike_brakes); $i++) :
                         $entry = $bike_brakes[$i];
                     ?>
-                        <?php if ($entry === $bike->type) : ?>
+                        <?php if ($entry === $bike->brake_type) : ?>
                             <option value=<?php echo $entry; ?> selected><?php echo ucfirst($entry) ?></option>
                         <?php else : ?>
                             <option value=<?php echo $entry; ?>><?php echo ucfirst($entry) ?></option>
                         <?php endif; ?>
-                    <?php endfor ?>
+                    <?php endfor; ?>
                 </select>
                 <label for="edit_brake_type">Brake Type</label>
             </div>
@@ -69,9 +75,9 @@ $bike_colours = explode(', ', $bike->colours);
                         $entry = $bike_types[$i];
                     ?>
                         <?php if ($entry === $bike->type) : ?>
-                            <option value=<?php echo $entry; ?> selected><?php echo $entry; ?></option>
+                            <option value=<?php echo $entry; ?> selected><?php echo ucfirst($entry); ?></option>
                         <?php else : ?>
-                            <option value=<?php echo $entry; ?>><?php echo $entry; ?></option>
+                            <option value=<?php echo $entry; ?>><?php echo ucfirst($entry); ?></option>
                         <?php endif; ?>
                     <?php endfor ?>
                 </select>
@@ -123,7 +129,7 @@ $bike_colours = explode(', ', $bike->colours);
                         $entry = $bike_age_group[$i];
                     ?>
                         <?php if ($entry === $bike->age_group) : ?>
-                            <option value=<?php echo $entry; ?>> selected><?php echo ucfirst($entry); ?></option>
+                            <option value=<?php echo $entry; ?> selected><?php echo ucfirst($entry); ?></option>
                         <?php else : ?>
                             <option value=<?php echo $entry; ?>><?php echo ucfirst($entry); ?></option>
                         <?php endif; ?>

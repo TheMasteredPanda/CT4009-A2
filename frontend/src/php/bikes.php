@@ -48,7 +48,7 @@ if (isset($_GET['modal'])) :
                         <label for="wheel_size">Wheel Size</label>
                     </div>
                     <div class="input-field">
-                        <select name="colours[]" id="bikeColours">
+                        <select name="colours[]" id="bikeColours" multiple>
                             <option value="red">Red</option>
                             <option value="orange">Orange</option>
                             <option value="yellow">Yellow</option>
@@ -147,7 +147,6 @@ if (isset($_GET['modal'])) :
     <?php endif; ?>
     <?php if ($modal === 'viewBike' && isset($_GET['bikeId'])) :
         $bike = getBike($_GET['bikeId']);
-        print_r('Report: ' . hasOpenReport($bike->id))
     ?>
         <div class="modal" id="viewBike">
             <div class="modal-content">
@@ -380,7 +379,8 @@ if (isset($_GET['modal'])) :
     <?php else : ?>
         <ul class="container">
             <?php for ($i = 0; $i < count($bikes); $i++) :
-                $bike = getBike($bikes[$i]); ?>
+                $bike = getBike($bikes[$i]);
+            ?>
                 <li>
                     <div class="card">
                         <div class="card-title"><?php echo 'Registered Bike ' . $bike->id; ?></div>

@@ -2,7 +2,6 @@
 include "./components/header.php";
 include "./components/navbar.php";
 include "./functions/investigation_functions.php";
-include "./functions/user_functions.php";
 
 if (!isset($_POST['search_result'])) {
     if ($rank === 'civilian') {

@@ -327,6 +327,7 @@ router.post("/bike/unregister", (req: Request, res: Response) => {
 router.post("/bike/update", (req: Request, res: Response) => {
   let query = req.query;
   let body = req.body;
+  console.log(body);
 
   if (!query.hasOwnProperty("bikeId")) {
     res.error.client.badRequest(
@@ -347,7 +348,7 @@ router.post("/bike/update", (req: Request, res: Response) => {
   }
 
   actions
-    .updateRegisteredBike(query.bikeId as string, body)
+    .updateRegisteredBike(Number(query.bikeId), body)
     .then((updatedBike) => res.status(200).send(updatedBike));
 });
 

@@ -8,18 +8,23 @@ if (!isset($_GET['bikeId'])) {
 }
 
 $body_content = array(
-    'partNumber' => htmlspecialchars($_POST['edit_part_number']),
+    'part_number' => htmlspecialchars($_POST['edit_part_number']),
     'brand' => htmlspecialchars($_POST['edit_brand']),
     'modal' => htmlspecialchars($_POST['edit_modal']),
-    'wheelSize' => htmlspecialchars($_POST['edit_wheel_size']),
-    'gearCount' => htmlspecialchars($_POST['edit_gear_count']),
-    'brakeType' => htmlspecialchars($_POST['edit_brake_type']),
+    'wheel_size' => htmlspecialchars($_POST['edit_wheel_size']),
+    'gear_count' => htmlspecialchars($_POST['edit_gear_count']),
     'suspension' => htmlspecialchars($_POST['edit_bike_suspension']),
     'colours' => $_POST['edit_bike_colours'],
     'gender' => htmlspecialchars($_POST['edit_bike_gender']),
-    'ageGroup' => htmlspecialchars($_POST['edit_bike_age_group']),
+    'age_group' => htmlspecialchars($_POST['edit_bike_age_group']),
     'type' => htmlspecialchars($_POST['edit_bike_type'])
 );
+
+if ($_POST['edit_brake_type'] === 'N/A') {
+    $body_content['brake_type'] = 'v-brake';
+} else {
+    $body_content['brake_type'] = htmlspecialchars($_POST['edit_brake_type']);
+}
 
 $body = json_encode($body_content);
 $update_curl = curl_init('http://localhost:5555/bike/update?userId=' . $payload->id . '&bikeId=' . $_GET['bikeId']);
@@ -67,7 +72,6 @@ if (isset($_FILES)) {
         array_push($images, new \CURLFile($tmpName, $_FILES['hidden_tmp_file_input']['type'][$index], $_FILES['hidden_tmp_file_input']['name'][$index]));
     }
 
-    print_r($images);
     if (count($images) > 0) {
         $upload_curl = curl_init('http://localhost:5555/bike/images/upload?userId=' . $payload->id . '&bikeId=' . $_GET['bikeId']);
         curl_setopt($upload_curl, CURLOPT_POST, true);

@@ -3,7 +3,6 @@ include "./components/header.php";
 include "./components/navbar.php";
 include "./functions/report_functions.php";
 include "./functions/investigation_functions.php";
-include "./functions/user_functions.php";
 
 $userId = json_decode($_COOKIE['ct4009Auth'])->id;
 

@@ -284,7 +284,7 @@ export async function getAllRegisteredBikes(userId: number) {
  * @param {object} data - The data to update to the registered bike entry.
  */
 export async function updateRegisteredBike(
-  bikeId: string,
+  bikeId: number,
   data: UpdateBikeOptions
 ) {
   let bike: Model | null;

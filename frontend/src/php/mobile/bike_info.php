@@ -25,15 +25,15 @@ $bike = getBike($_GET['bikeId']);
             <label for="part_number">Part Number</label>
         </div>
         <div class="input-field">
-            <input type="text" name="bike_brand" value=<?php echo $bike->brand ?> readonly>
+            <input type="text" name="bike_brand" value=<?php echo '"' . ucfirst($bike->brand) . '"'; ?> readonly>
             <label for="bike_brand">Brand</label>
         </div>
         <div class="input-field">
-            <input type="text" name="bike_modal" value=<?php echo $bike->modal ?> readonly>
+            <input type="text" name="bike_modal" value=<?php echo '"', ucfirst($bike->modal) . '"' ?> readonly>
             <label for="bike_modal">Modal</label>
         </div>
         <div class="input-field">
-            <input type="text" name="bike_type" value=<?php echo $bike->type ?> readonly>
+            <input type="text" name="bike_type" value=<?php echo ucfirst($bike->type) ?> readonly>
             <label for="bike_type">Type</label>
         </div>
         <div class="input-field">
@@ -41,7 +41,7 @@ $bike = getBike($_GET['bikeId']);
             <label for="bike_wheel_size">Wheel Size (in inches)</label>
         </div>
         <div class="input-field">
-            <input type="text" name="bike_colours" value=<?php echo '"' . $bike->colours . '"'; ?> readonly>
+            <input type="text" name="bike_colours" value=<?php echo '"' . ucwords($bike->colours) . '"'; ?> readonly>
             <label for="bike_colours">Colours</label>
         </div>
         <div class="input-field">
@@ -49,19 +49,19 @@ $bike = getBike($_GET['bikeId']);
             <label for="bike_gear_count">Gear Count</label>
         </div>
         <div class="input-field">
-            <input type="text" name="bike_brake_type" value=<?php echo $bike->brake_type ?> readonly>
+            <input type="text" name="bike_brake_type" value=<?php echo ucfirst($bike->brake_type) ?> readonly>
             <label for="bike_brake_type">Brake Type</label>
         </div>
         <div class="input-field">
-            <input type="text" name="bike_suspension" value=<?php echo $bike->suspension ?> readonly>
+            <input type="text" name="bike_suspension" value=<?php echo ucfirst($bike->suspension) ?> readonly>
             <label for="bike_suspension">Suspension</label>
         </div>
         <div class="input-field">
-            <input type="text" name="bike_gender" value=<?php echo $bike->gender ?> readonly>
+            <input type="text" name="bike_gender" value=<?php echo ucfirst($bike->gender) ?> readonly>
             <label for="bike_gender">Gender</label>
         </div>
         <div class="input-field">
-            <input type="text" name="bike_age_group" value=<?php echo $bike->age_group ?> readonly>
+            <input type="text" name="bike_age_group" value=<?php echo ucfirst($bike->age_group) ?> readonly>
             <label for="bike_age_group">Age Group</label>
         </div>
         <div class="button_wrapper">
@@ -69,10 +69,13 @@ $bike = getBike($_GET['bikeId']);
             <a href=<?php echo "http://localhost:3000/actions/delete_bike.php?bikeId=" . $bike->id ?> class="btn indigo">Delete</a>
             <?php if ($rank === 'civilian') : ?>
                 <a href=<?php echo "http://localhost:3000/mobile/edit_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Edit</a>
-                <?php if (!hasOpenReport($bike->id)) : ?>
+                <?php if (!hasOpenReport($bike->id)) :
+                ?>
                     <a href=<?php echo "http://localhost:3000/mobile/report_bike.php?bikeId=" . $bike->id; ?> class="btn indigo">Report Stolen</a>
-                <?php else : ?>
-                    <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . getReportByBike($bike->id)->id; ?> class="btn indigo">View Report</a>
+                <?php else :
+                    $report = getReportByBike($bike->id);
+                ?>
+                    <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn indigo">View Report</a>
                 <?php endif; ?>
             <?php endif; ?>
         </div>

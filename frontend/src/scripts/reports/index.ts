@@ -1,5 +1,5 @@
 import "../master/index";
-import { getUrlQuery } from "../master/index";
+import { getUrlQuery, mobileCheck } from "../master/index";
 
 $(document).ready(() => {
   $('select[name="select_search_type[]"]').formSelect();
@@ -94,7 +94,6 @@ $('button[name="comment_public_section_button"]').click((e: any) => {
 });
 
 $('button[name="comment_private_section_button"]').click((e: any) => {
-  console.log("Police comments click");
   let reportId = getUrlQuery().reportId;
   $.post({
     url: `http://localhost:3000/mobile/view_report.php?reportId=${reportId}`,
@@ -103,17 +102,96 @@ $('button[name="comment_private_section_button"]').click((e: any) => {
     $("body").html(res);
   });
 });
+
+let placeId: string | null;
+
 (window as any).initMap = () => {
   $.getJSON("http://localhost:3000/cords.json").done((cords) => {
-    let map = new google.maps.Map(document.getElementById("map"), {
-      center: { lat: 51.864445, lng: -2.244444 },
-      zoom: 9,
-      mapTypeControl: false,
-      mapTypeId: google.maps.MapTypeId.HYBRID,
-      fullscreenControl: false,
-      minZoom: 9,
-      draggable: false,
-    });
+    let map: any;
+    let geocoder = new google.maps.Geocoder();
+
+    if (window.location.toString().includes("report_bike.php")) {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 51.864445, lng: -2.244444 },
+        zoom: 5,
+        mapTypeControl: false,
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+        fullscreenControl: false,
+        minZoom: 9,
+      });
+
+      let searchBoxElement = document.getElementById(
+        "pac-input"
+      ) as HTMLInputElement;
+      let searchBox = new google.maps.places.SearchBox(searchBoxElement);
+      map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+        searchBoxElement
+      );
+      map.addListener("bounds_changed", () => {
+        searchBox.setBounds(map.getBounds());
+      });
+
+      searchBox.addListener("places_changed", () => {
+        let places = searchBox.getPlaces();
+        let place = places[0];
+        geocoder.geocode({ placeId: place.place_id }, (results, status) => {
+          if (status === "OK") {
+            let isInGloucestershire = false;
+
+            for (let i = 0; i < results[0].address_components.length; i++) {
+              const name = results[0].address_components[i].long_name;
+
+              if (name !== "Gloucestershire") {
+                continue;
+              }
+
+              isInGloucestershire = true;
+            }
+
+            if (!isInGloucestershire) {
+              alert("Address must be within gloucestershire");
+              return;
+            }
+
+            map.setCenter(results[0].geometry.location);
+            let marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location,
+            });
+            placeId = place.place_id;
+          }
+        });
+      });
+    }
+
+    if (
+      window.location.toString().includes("view_report.php") ||
+      window.location.toString().includes("reports.php")
+    ) {
+      console.log("Viewing the report.");
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 51.864445, lng: -2.244444 },
+        zoom: 9,
+        mapTypeControl: false,
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+        fullscreenControl: false,
+        minZoom: 9,
+        draggable: false,
+      });
+
+      geocoder.geocode(
+        { placeId: getUrlQuery().placeId },
+        (results, status) => {
+          if (status === "OK") {
+            map.setCenter(results[0].geometry.location);
+            let marker = new google.maps.Marker({
+              map,
+              position: results[0].geometry.location,
+            });
+          }
+        }
+      );
+    }
 
     let polygon = new google.maps.Polygon({
       paths: cords,
@@ -125,17 +203,6 @@ $('button[name="comment_private_section_button"]').click((e: any) => {
     });
 
     polygon.setMap(map);
-
-    let geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ placeId: getUrlQuery().placeId }, (results, status) => {
-      if (status === "OK") {
-        map.setCenter(results[0].geometry.location);
-        let marker = new google.maps.Marker({
-          map,
-          position: results[0].geometry.location,
-        });
-      }
-    });
   });
 };
 
