@@ -344,7 +344,7 @@ export async function removeInvestigator(
  * @returns {string} id of the newly created comment.
  */
 export async function createComment(
-  comment: string,
+  content: string,
   authorId: number,
   investigationId: number
 ) {
@@ -361,7 +361,7 @@ export async function createComment(
   }
 
   let commentModel = await InvestigationComments.create({
-    comment,
+    content,
     author: authorId,
     investigation_id: investigationId,
   });

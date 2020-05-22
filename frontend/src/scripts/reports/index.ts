@@ -168,7 +168,6 @@ let placeId: string | null;
       window.location.toString().includes("view_report.php") ||
       window.location.toString().includes("reports.php")
     ) {
-      console.log("Viewing the report.");
       map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 51.864445, lng: -2.244444 },
         zoom: 9,
@@ -206,4 +205,3 @@ let placeId: string | null;
   });
 };
 
-$("#viewReport").ready(() => {});

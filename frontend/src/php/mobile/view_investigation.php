@@ -2,7 +2,7 @@
 include "../components/header.php";
 include "../components/navbar.php";
 include "../functions/investigation_functions.php";
-include "../functions/user_functions.php";
+$userId = json_decode($_COOKIE['ct4009Auth'])->id;
 $investigation = getInvestigation($_GET['investigationId']);
 
 $isInvestigator = false;
@@ -27,11 +27,9 @@ if (!$investigation->open) {
 }
 ?>
 
-<div class="view_investigation_container container">
-    <div class="updates_container">
-        <div class="updates_container_header">
-            <h4>Updates</h4>
-        </div>
+<div class="view_investigation_container row">
+    <div class="updates_container col s12">
+        <h4 class="center-align">Updates</h4>
         <ul class="updates">
             <?php if (count($investigation->updates) === 0) : ?>
                 <li class="center-align no_updates_container">
@@ -41,20 +39,26 @@ if (!$investigation->open) {
                 <?php for ($i = 0; $i  < count($investigation->updates); $i++) :
                     $update = $investigation->updates[$i]; ?>
                     <li class="update">
-                        <div class="container">
+                        <div class="update_content_wrapper">
+                            <div class="update_header">
+                                <div><?php echo getUsername($update->author); ?></div>
+                            </div>
+                            <div class="update_content">
+                                <p><?php echo $update->content; ?></p>
 
-                            <h6 class="author"><?php echo getUsername($update->author); ?></h6>
-                            <p class="content"><?php echo $update->content; ?></p>
-                            <?php if (count($update->images) > 0) : ?>
-                                <div class="button_wrapper">
-                                    <?php if ($detect->isMobile()) : ?>
-                                        <a href=<?php echo 'http://localhost:3000/mobile/view_update_evidence.php?investigationId=' . $investigation->id . '&updateId=' . $update->id; ?> class="btn-small">View Evidence</a>
-                                    <?php else : ?>
-                                        <a href=<?php echo 'http://localhost:3000/investigations.php?model=viewUpdate&updateId=' . $update->id; ?> class="btn-small">View Update</a>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-                            <h6 class="right-align"><?php echo $update->createdAt; ?></h6>
+                                <?php if (count($update->images) > 0) : ?>
+                                    <h5 class="center-align">Evidence</h5>
+                                    <ul class="images">
+                                        <?php for ($i = 0; $i < count($update->images); $i++) :
+                                            $image = $update->images[$i]; ?>
+                                            <li class="image"><img class="materialboxed" src=<?php echo 'http://localhost:5555/' . $image->uri; ?>></img></li>
+                                        <?php endfor; ?>
+                                    </ul>
+                                <?php endif; ?>
+                            </div>
+                            <div class="update_footer">
+                                <div><?php echo date('H:i, D j, M Y', strtotime($update->createdAt)); ?></div>
+                            </div>
                         </div>
                     </li>
                 <?php endfor; ?>
@@ -66,9 +70,9 @@ if (!$investigation->open) {
             </div>
         <?php endif; ?>
     </div>
-    <div class="comments_container">
+    <div class="comments_container col s12">
         <div class="comments_container_header">
-            <h4>Comments</h4>
+            <h4 class="center-align">Comments</h4>
         </div>
         <ul class="comments">
             <?php if (count($investigation->comments) === 0) : ?>
@@ -80,15 +84,27 @@ if (!$investigation->open) {
                     $comment = $investigation->comments[$i];
                     $username = getUsername($comment->author);
                 ?>
-                    <li class="comment">
-                        <div class="container">
-                            <h6 class="author"><?php echo $username; ?></h6>
-                            <p class="comment"><?php echo $comment->comment; ?></p>
-                            <h6 class="right-align"><?php echo $comment->createdAt; ?></h6>
+                    <?php if ($comment->author === $userId) : ?>
+                        <li class="comment client_comment">
+                        <?php else : ?>
+                        <li class="comment not_client_comment">
+                        <?php endif; ?>
+                        <div class="comment_content_wrapper">
+                            <div class="comment_header">
+                                <div class="author"><?php echo $username ?></div>
+                            </div>
+                            <div class="comment_content">
+                                <p>
+                                    <?php echo $comment->content; ?>
+                                </p>
+                            </div>
+                            <div class="comment_footer">
+                                <div class="date"><?php echo date('H:i, D j, M Y', strtotime($comment->createdAt)) ?></div>
+                            </div>
                         </div>
-                    </li>
-                <?php endfor; ?>
-            <?php endif; ?>
+                        </li>
+                    <?php endfor; ?>
+                <?php endif; ?>
         </ul>
         <?php if ($investigation->open) : ?>
             <form action="#" class="create_comment_form">
@@ -101,20 +117,16 @@ if (!$investigation->open) {
             </form>
         <?php endif; ?>
     </div>
-    <div class="investigation_metadata_container">
-        <div class="metadata_container_title">
-            <h4>Metadata</h4>
-        </div>
-        <div class="metadata">
+    <div class="investigation_metadata_container col s12">
+        <h4 class="center-align col s12">Metadata</h4>
+        <div class="metadata col s12">
             <input type="text" name="start_date" value=<?php echo $investigation->createdAt; ?> readonly>
             <label for="start_date">Start Date</label>
-            <input type="text" name="open" value= <?php echo $investigationStatus; ?> readonly>
+            <input type="text" name="open" value=<?php echo $investigationStatus; ?> readonly>
             <label for="open">Investigation Status</label>
         </div>
-        <div class="metadata_container_title">
-            <h4>Investigators</h4>
-        </div>
-        <div class="investigators_list">
+        <h4 class="center-align col s12">Investigators</h4>
+        <div class="investigators_list col s12">
             <ul class="investigators">
                 <?php for ($i = 0; $i < count($investigation->investigators); $i++) :
                     $username = getUsername($investigation->investigators[$i]->investigator_id);
@@ -142,7 +154,7 @@ if (!$investigation->open) {
             <?php endif; ?>
         </div>
     </div>
-    <div class="button_wrapper">
+    <div class="button_wrapper col s12">
         <?php if ($detect->isMobile()) : ?>
             <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $investigation->report_id; ?> class="btn-small">View Report</a>
         <?php else : ?>

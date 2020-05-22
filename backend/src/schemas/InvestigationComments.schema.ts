@@ -13,7 +13,7 @@ InvestigationComments.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    comment: {
+    content: {
       type: DataTypes.STRING,
       allowNull: false,
     },

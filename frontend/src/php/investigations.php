@@ -10,10 +10,10 @@ if (!isset($_POST['search_result'])) {
         $investigations = getAllInvestigations();
     }
 } else {
-$investigations = json_decode($_POST['search_result'])->ids;
+    $investigations = json_decode($_POST['search_result'])->ids;
 }
 
-print_r($result);
+$searchParams = $_POST['search_params'];
 
 $userId = json_decode($_COOKIE['ct4009Auth'])->id;
 
@@ -193,15 +193,15 @@ if (isset($_GET['modal'])) :
         </div>
     <?php else : ?>
         <div class="investigations_list_container row">
-            <div class="investigations_list_search col m10 push-m1 l10 push-l1">
+            <div class="investigations_list_search col s12 m10 push-m1 l10 push-l1">
                 <form action="http://localhost:3000/actions/search_investigations.php" class="search_investigations_form">
                     <?php if ($rank !== 'civilian') : ?>
                         <div class="input-field col m10 l10 push-m1 push-l1">
-                            <input type="text" name="report_author">
+                            <input type="text" name="report_author" value=<?php echo '"' . $searchParams->reportAuthor . '"' ?>>
                             <label for="report_author">Report Author</label>
                         </div>
                     <?php endif; ?>
-                    <div class="switch center-align col m10 l10 push-m1 push-l1">
+                    <div class="switch center-align col s12 m10 l10 push-m1 push-l1">
                         <label>
                             Open
                             <input type="checkbox" name="search_by_open">
@@ -209,7 +209,7 @@ if (isset($_GET['modal'])) :
                             Closed
                         </label>
                     </div>
-                    <div class="button_wrapper col m12 l12">
+                    <div class="button_wrapper col s12 m12 l12">
                         <input type="submit" value="Search" name="investigations_search_button" class="btn-small">
                     </div>
                 </form>

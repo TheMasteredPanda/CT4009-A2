@@ -642,7 +642,7 @@ nav {
 }
 
 .view_report_container {
-  height: 100%;
+  min-height: 100%;
   margin-top: 4%;
 
   #viewReportDescription {
@@ -665,12 +665,15 @@ nav {
     }
   }
 
+  .civilian_comments_container {
+    grid-template-rows: 10% 80% 10%;
+  }
+
   .comments_container {
+    display: grid;
     margin-top: 4%;
     margin-bottom: 2%;
-    height: 100% !important;
-    display: grid;
-    grid-template-rows: 10% 15% 60% 15%;
+    height: 100vh !important;
 
     .comments_container_header {
       margin-bottom: 4%;
@@ -680,26 +683,76 @@ nav {
     .comments {
       margin: 0;
       overflow-y: scroll;
-      .comment {
-        @extend .grey, .lighten-1;
-        display: block;
-        display: flex;
-        flex-flow: column;
-        margin-top: 1%;
-        margin-bottom: 1%;
-        padding-left: 1%;
-        padding-right: 1%;
-        height: max-content;
-        min-height: 5%;
-        p {
-          margin: 1%;
-          font-size: 1.2rem;
-        }
+      display: flex;
+      flex-flow: column;
+
+      .not_client_comment {
+        @extend .grey, .lighten-2;
 
         .comment_footer {
           display: flex;
+          justify-content: flex-start;
           align-items: center;
+        }
+
+        .comment_content {
+          text-align: right;
+        }
+
+        .comment_header {
+          display: flex;
           justify-content: flex-end;
+          align-items: center;
+        }
+      }
+
+      .client_comment {
+        @extend .grey, .lighten-1;
+        .comment_footer {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+        }
+
+        .comment_header {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+        }
+      }
+
+      .comment {
+        width: 100%;
+        .comment_content_wrapper {
+          height: max-content;
+          margin: 2%;
+        }
+
+        border-radius: 5px;
+        display: grid;
+        grid-template-rows: 10% auto 10%;
+        margin-top: 1%;
+        margin-bottom: 1%;
+
+        .comment_content {
+          display: inline-block;
+          overflow-wrap: anywhere;
+          width: 100%;
+
+          p {
+            margin: 0;
+          }
+        }
+        .comment_header {
+          .author {
+            font-size: 1.2rem;
+          }
+        }
+
+        .comment_footer {
+          .date {
+            font-size: 0.9rem;
+          }
         }
       }
     }
@@ -708,6 +761,10 @@ nav {
       display: flex;
       justify-content: center;
       align-items: center;
+
+      textarea {
+        margin: 0;
+      }
     }
 
     form {
@@ -763,7 +820,9 @@ nav {
 
       .switch {
         margin-top: 2%;
+        margin-bottom: 2%;
       }
+
       .button_wrapper {
         margin-top: 2%;
         margin-bottom: 2%;
@@ -801,13 +860,10 @@ nav {
 }
 
 .view_investigation_container {
-  display: grid;
   height: 100%;
-  grid-template-rows: 60% 60% 100% 20%;
 
   .updates_container {
-    display: grid;
-    grid-template-rows: 20% 60% 20%;
+    margin-top: 4%;
 
     .button_wrapper {
       display: flex;
@@ -836,10 +892,45 @@ nav {
 
       .update {
         @extend .grey, .lighten-1;
-        margin: 1%;
-        min-height: 50%;
+        display: grid;
+        grid-template-rows: 10% auto 10%;
+        margin-top: 1%;
+        margin-bottom: 1%;
         padding-top: 1%;
         padding-bottom: 1%;
+        .update_content_wrapper {
+          margin: 2%;
+
+          .update_header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 1.2rem;
+          }
+
+          .update_content {
+            .images {
+              display: flex;
+              flex-wrap: wrap;
+              flex-flow: row;
+              margin: 1%;
+
+              .image {
+                margin: 2%;
+                img {
+                  height: 10vh;
+                  width: auto;
+                }
+              }
+            }
+          }
+          .update_footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            font-size: .9rem;
+          }
+        }
       }
     }
 
@@ -925,17 +1016,73 @@ nav {
     }
 
     .comments {
-      height: 100%;
+      height: 100vh;
       margin: 0;
       overflow-y: scroll;
 
-      .comment {
+      .not_client_comment {
+        @extend .grey, .lighten-2;
+
+        .comment_header {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+        }
+
+        .comment_content {
+          text-align: right;
+        }
+
+        .comment_footer {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+        }
+      }
+
+      .client_comment {
         @extend .grey, .lighten-1;
-        margin: 1%;
-        min-height: 30%;
-        padding-top: 1%;
-        padding-bottom: 1%;
-        font-size: 1.1rem;
+
+        .comment_header {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+        }
+
+        .comment_content {
+          text-align: left;
+        }
+
+        .comment_footer {
+          display: flex;
+          align-items: center;
+          justify-self: flex-end;
+        }
+      }
+
+      .comment {
+        display: grid;
+        grid-template-rows: 10% auto 10%;
+        border-radius: 5px;
+        margin-top: 1%;
+        margin-bottom: 1%;
+
+        .comment_content_wrapper {
+          margin: 2%;
+        }
+
+        .comment_header {
+          font-size: 1.2rem;
+        }
+
+        .comment_content {
+          p {
+            margin: 0;
+          }
+        }
+        .comment_footer {
+          font-size: 0.9rem;
+        }
       }
 
       .no_comments_container {
@@ -949,12 +1096,6 @@ nav {
   }
 
   .investigation_metadata_container {
-    display: grid;
-    grid-template-rows: 12% 35% 12% auto;
-    h4 {
-      margin: 0;
-    }
-
     .metadata_container_title {
       display: flex;
       align-items: center;

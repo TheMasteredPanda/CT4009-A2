@@ -17,20 +17,31 @@ $(".search_investigations_form").submit((e) => {
     open = 0;
   }
 
+  let searchParams: any = { open: open };
   let url = `http://localhost:3000/actions/search_investigations.php?open=${open}`;
 
   if (reportAuthor) {
     url += `&reportAuthor=${reportAuthor}`;
+    searchParams.reportAuthor = reportAuthor;
   }
 
   $.get(url).done((res) => {
-    $.post({url: 'http://localhost:3000/investigations.php', data: {search_result: res}}).done((res) => $('body').html(res))
+    $.post({
+      url: "http://localhost:3000/investigations.php",
+      data: { search_result: res, search_params: searchParams },
+    }).done((res) => {
+      $("body").html(res);
+      $('input[name="search_by_open"]').prop(
+        "checked",
+        open === 0 ? true : false
+      );
+    });
   });
 });
 
 $('.create_comment_form input[type="submit"]').click((e) => {
   e.preventDefault();
-  console.log('Clicked');
+  console.log("Clicked");
   let investigationId = getUrlQuery().investigationId;
   let comment = $('.create_comment_form input[name="comment"]').val();
 
