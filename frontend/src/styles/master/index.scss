@@ -6,6 +6,12 @@ html {
   height: 100%;
 }
 
+@media #{$medium-and-up} {
+  .indicators {
+    justify-content: center;
+  }
+}
+
 .login_or_register_container {
   height: 100%;
   position: relative;
@@ -248,7 +254,7 @@ nav {
         margin-left: 1%;
       }
       position: relative;
-      
+
       .card-img {
         margin-top: 2%;
         position: relative;
@@ -256,6 +262,18 @@ nav {
         img {
           width: 100%;
           height: max-content;
+        }
+      }
+
+      .card-content {
+        ul {
+          display: flex;
+          flex-flow: column;
+          width: 100%;
+
+          li {
+            width: 100%;
+          }
         }
       }
 
@@ -696,6 +714,10 @@ nav {
     grid-template-rows: 10% 80% 10%;
   }
 
+  .police_comments_container {
+    grid-template-rows: 10% 10% 70% 10%;
+  }
+
   .comments_container {
     display: grid;
     margin-top: 4%;
@@ -934,7 +956,6 @@ nav {
             align-items: center;
             justify-content: flex-end;
             font-size: 1.2rem;
-
           }
 
           .update_content {
@@ -957,7 +978,7 @@ nav {
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            font-size: .9rem;
+            font-size: 0.9rem;
           }
         }
       }
@@ -1021,9 +1042,33 @@ nav {
     }
   }
 
+  .police_comments_container {
+    grid-template-rows: 10% 10% 70% 10%;
+  }
+
+  .civilian_comments_container {
+    grid-template-rows: 20% 60% 20%;
+  }
+
   .comments_container {
     display: grid;
-    grid-template-rows: 20% 60% 20%;
+    height: 100vh;
+
+    .comment_buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      a {
+        margin: 1%;
+      }
+    }
+
+    .comments_container_header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .create_comment_form {
       display: flex;
@@ -1045,7 +1090,6 @@ nav {
     }
 
     .comments {
-      height: 100vh;
       margin: 0;
       overflow-y: scroll;
 
@@ -1414,6 +1458,10 @@ nav {
     #map {
       height: 90%;
     }
+  }
+
+  @media #{$small-and-down} {
+    height: 86% !important;
   }
 }
 

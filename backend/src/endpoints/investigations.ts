@@ -27,7 +27,7 @@ const upload = multer({ storage }).any();
  *                                            user id of the officer launching the investigation.
  *                                            The officer will be the primary investigator of the
  *                                            investigation.
- * 
+ *
  * @apiParam (Query Param) {string} reportId  The id of the report that will be investigated.
  *
  * @apiError {BadRequest} 400                 The query parameter 'reportId' was not found.
@@ -131,13 +131,46 @@ router.get("/investigations/investigation", (req: Request, res: Response) => {
   }
 });
 
+router.get(
+  "/investigations/investigation/comments",
+  (req: Request, res: Response) => {
+    let query = req.query;
+
+    if (!query.hasOwnProperty("investigationId")) {
+      res.error.client.badRequest(
+        "Client",
+        "Parameter not found",
+        `Query parameter 'investigationId' not found.`
+      );
+      return;
+    }
+
+    if (!query.hasOwnProperty("type")) {
+      res.error.client.badRequest(
+        "Client",
+        "Parameter not found",
+        `Query parameter 'type' not found.`
+      );
+      return;
+    }
+
+    return actions
+      .getInvestigationComments(
+        Number(query.investigationId),
+        query.type as string
+      )
+      .then((comments) => res.status(200).send({ comments }))
+      .catch((err) => handleInternalError(res, err));
+  }
+);
+
 /**
  * @api {post} /investigations/close                        Close an investigation.
  * @apiVersion 0.1.0
  * @apiGroup endpoints/investigations
  *
  * @apiDescription                                          Close an investigation.
- * 
+ *
  * @apiParam (Query Param) {string} investigationId         The id of the investigation to close.
  *
  * @apiError {BadRequest} 400                               The query parameter 'investigationId' was
@@ -216,7 +249,7 @@ router.post(
  * @apiDescription                                          Remove an investigator from an investigation.
  *                                                          This will only work if there is more than one
  *                                                          investigator.
- * 
+ *
  * @apiPraram (Query Param) {string} investigationId        The id of the investigation.
  *
  * @apiError {BadRequest} 400                               The query didn't include 'investigationId' or
@@ -295,8 +328,23 @@ router.post(
       return;
     }
 
+    if (!query.hasOwnProperty("type")) {
+      res.error.client.badRequest(
+        "Client",
+        "Parameter not found",
+        `Query parameter 'type' not found.`
+      );
+      return;
+    }
+
+    let investigationId = Number(query.investigationId);
     actions
-      .createComment(body.comment, req.user.id, Number(query.investigationId))
+      .createComment(
+        body.comment,
+        req.user.id,
+        investigationId,
+        query.type as string
+      )
       .then((id) => res.status(200).send({ id }))
       .catch((err) => handleInternalError(res, err));
   }

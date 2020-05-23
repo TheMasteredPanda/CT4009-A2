@@ -89,3 +89,21 @@ function isInvestigator($investigation, $userId)
 
     return false;
 }
+
+function getInvestigationComments($investigationId, $type)
+{
+    $payload = json_decode($_COOKIE['ct4009Auth']);
+    $curl = curl_init('http://localhost:5555/investigations/investigation/comments?userId=' . $payload->id . '&investigationId=' . $investigationId . '&type=' . $type);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
+    $result = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($status !== 200) {
+        print_r(curl_error($curl));
+        print_r($result);
+        return;
+    }
+
+    return json_decode($result)->comments;
+}

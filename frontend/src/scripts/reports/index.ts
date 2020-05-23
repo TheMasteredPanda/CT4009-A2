@@ -82,23 +82,39 @@ $(".search_reports_form").submit((e) => {
   });
 });
 
+$(".new_report_comment_form").submit((e: any) => {
+  e.preventDefault();
+
+  $.post({
+    url: $(e.currentTarget).attr("action"),
+    data: {
+      new_comment_textarea: $('textarea[name="new_comment_textarea"]').val(),
+    },
+  }).done((res) => {
+    $.post(window.location.href).done((res) => {
+      $("body").html(res);
+    });
+  });
+});
+
 $('button[name="comment_public_section_button"]').click((e: any) => {
   let reportId = getUrlQuery().reportId;
-  $.post({
-    url: `http://localhost:3000/mobile/view_report.php?reportId=${reportId}`,
-    data: { type: "civilian" },
-  }).done((res) => {
-    console.log("Is done");
+  let url = `http://localhost:3000/mobile/view_report.php?reportId=${reportId}&placeId=${
+    getUrlQuery().placeId
+  }&type=civilian`;
+  $.get(url).done((res) => {
+    window.history.pushState({ href: url }, "", url);
     $("body").html(res);
   });
 });
 
 $('button[name="comment_private_section_button"]').click((e: any) => {
   let reportId = getUrlQuery().reportId;
-  $.post({
-    url: `http://localhost:3000/mobile/view_report.php?reportId=${reportId}`,
-    data: { type: "police" },
-  }).done((res) => {
+  let url = `http://localhost:3000/mobile/view_report.php?reportId=${reportId}&placeId=${
+    getUrlQuery().placeId
+  }&type=police`;
+  $.get(url).done((res) => {
+    window.history.pushState({ href: url }, "", url);
     $("body").html(res);
   });
 });
@@ -204,4 +220,3 @@ let placeId: string | null;
     polygon.setMap(map);
   });
 };
-

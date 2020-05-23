@@ -196,11 +196,55 @@ $("#bikeInfoImageCarousel").ready(() => {
 });
 
 $(document).ready(() => {
-  let modal = getUrlQuery().modal;
-  if (!modal) return;
-  $(`#${modal}`).modal({ dismissible: false });
-  $(`#${modal}`).modal("open");
   $(".carousel").carousel({ fullWidth: true });
+});
+
+$('a[name="register_bike_button_desktop"]').ready(() => {
+  $('a[name="register_bike_button_desktop"]').click((e: any) => {
+    $(`#registerBike`).modal({ dismissible: false });
+    $(`#registerBike`).modal("open");
+  });
+});
+
+$('a[name="register_bike_back_button"]').ready(() => {
+  $('a[name="register_bike_back_button"]').click((e: any) => {
+    $(`#registerBike`).modal("close");
+  });
+});
+
+$('a[name="more_bike_info_butotn"]').ready(() => {
+  $('a[name="more_bike_info_button"]').click((e: any) => {
+    let bikeId = $(e.currentTarget).attr("data-bike-id");
+
+    $.get(`http://localhost:3000/actions/get_bike.php?bikeId=${bikeId}`).done(
+      (res) => {
+        let bike = JSON.parse(res);
+
+        console.log(bike);
+        for (let i = 0; i < bike.images.length; i++) {
+          const image = bike.images[i];
+
+          $("#bikeInfoImageCarousel").append(
+            `<a href="" class="carousel-item"><img src="http://localhost:5555/${image.uri}"></a>`
+          );
+        }
+
+        $("#bikeInfoImageCarousel").carousel({
+          fullWidth: true,
+          indicators: true,
+        });
+        $('#viewBike input[name="part_number"]').val(bike.part_number);
+        $('#viewBike input[name="bike_brand"]').val(bike.brand);
+        $('#viewBike input[name="bike_modal"]').val(bike.modal);
+        $('#viewBike input[name="bike_type"]').val(bike.type);
+        $('#viewBike input[name="bike_wheel_size"]').val(bike.wheel_size);
+        $('#viewBike input[name="bike_colours"]').val(bike.colours);
+        $('#viewBike input[name="bike_age_group"]').val(bike.age_group);
+        $("#viewBike").modal({ dismissible: false });
+        $("#viewBike").modal("open");
+      }
+    );
+  });
 });
 
 let geocoder: google.maps.Geocoder;

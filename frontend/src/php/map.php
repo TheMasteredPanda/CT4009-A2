@@ -5,8 +5,8 @@ include "./components/police_auth_header.php";
 ?>
 
 <div class="vulnerability_map_container row">
-    <h3 class="center-align">Vulnerability Map</h3>
-    <div id="map" class="col m10 push-m1">
+    <h3 class="center-align col s12">Vulnerability Map</h3>
+    <div id="map" class="col s12 m10 push-m1">
 
     </div>
 </div>

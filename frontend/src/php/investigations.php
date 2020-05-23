@@ -2,6 +2,7 @@
 include "./components/header.php";
 include "./components/navbar.php";
 include "./functions/investigation_functions.php";
+include "./functions/report_functions.php";
 
 if (!isset($_POST['search_result'])) {
     if ($rank === 'civilian') {
@@ -196,7 +197,7 @@ if (isset($_GET['modal'])) :
             <div class="investigations_list_search col s12 m10 push-m1 l10 push-l1">
                 <form action="http://localhost:3000/actions/search_investigations.php" class="search_investigations_form">
                     <?php if ($rank !== 'civilian') : ?>
-                        <div class="input-field col m10 l10 push-m1 push-l1">
+                        <div class="input-field col s12 m10 l10 push-m1 push-l1">
                             <input type="text" name="report_author" value=<?php echo '"' . $searchParams->reportAuthor . '"' ?>>
                             <label for="report_author">Report Author</label>
                         </div>
@@ -222,9 +223,17 @@ if (isset($_GET['modal'])) :
                         <div class="card-content">
                             <span class="card-title">
                                 <?php if ($investigation->open) : ?>
-                                    <?php echo 'Investigation on Report ' . $investigation->report_id; ?>
+                                    <?php if ($rank === 'civilian') : ?>
+                                        <?php echo 'Investigation on Report ' . $investigation->report_id; ?>
+                                    <?php else : ?>
+                                        <?php echo 'Investigation on Report ' . $investigation->report_id . ' by ' . getUsername(getReport($investigation->report_id)->author); ?>
+                                    <?php endif; ?>
                                 <?php else : ?>
-                                    <?php echo 'Investigation on Report ' . $investigation->report_id . ' (Closed)'; ?>
+                                    <?php if ($rank === 'civilian') : ?>
+                                        <?php echo 'Investigation on Report ' . $investigation->report_id . ' (Closed)'; ?>
+                                    <?php else : ?>
+                                        <?php echo 'Investigation on Report ' . $investigation->report_id . ' (Closed) by '  . getUsername(getReport($investigation->report_id)->author); ?>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </span>
                         </div>

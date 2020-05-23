@@ -43,11 +43,13 @@ $('.create_comment_form input[type="submit"]').click((e) => {
   e.preventDefault();
   console.log("Clicked");
   let investigationId = getUrlQuery().investigationId;
+  let type = getUrlQuery().type;
   let comment = $('.create_comment_form input[name="comment"]').val();
 
+  console.log(investigationId);
   if (comment === "") return;
   $.post({
-    url: `http://localhost:3000/actions/create_investigation_comment.php?investigationId=${investigationId}`,
+    url: `http://localhost:3000/actions/create_investigation_comment.php?investigationId=${investigationId}&type=${type}`,
     data: { comment },
   }).done((res) => {
     $("body").html(res);
@@ -76,6 +78,15 @@ $('a[name="remove_investigator_button"]').click((e) => {
   $.get(
     `http://localhost:3000/actions/remove_investigator.php?investigationId=${investigationId}&investigatorId=${investigatorId}`
   ).done((res) => {
+    $("body").html(res);
+  });
+});
+
+$(".comment_buttons a").click((e: any) => {
+  e.preventDefault();
+  let url = $(e.currentTarget).attr("href");
+  $.post(url).done((res) => {
+    window.history.pushState({ href: url }, "", url);
     $("body").html(res);
   });
 });

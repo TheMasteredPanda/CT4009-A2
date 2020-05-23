@@ -20,7 +20,7 @@ $username = getUsername($payload->id);
                 <?php if ($detect->isMobile()) : ?>
                     <li><a href="http://localhost:3000/mobile/register_a_bike.php" class="btn-small">Register a Bike</a></li>
                 <?php else : ?>
-                    <li><a href="http://localhost:3000/bikes.php?modal=registerBike" class="btn-small">Register a Bike</a></li>
+                    <li><a href="http://localhost:3000/bikes.php?modal=registerBike" class=<?php echo '"' . getButtonType() . '"'; ?> name="register_bike_button_desktop">Register a Bike</a></li>
                 <?php endif; ?>
             </ul>
         <?php endif; ?>

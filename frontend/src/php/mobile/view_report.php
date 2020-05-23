@@ -13,8 +13,8 @@ if ($report->investigating) {
 }
 
 $type = 'civilian';
-if (isset($_POST['type'])) {
-    $type = $_POST['type'];
+if (isset($_GET['type'])) {
+    $type = $_GET['type'];
 }
 
 
@@ -84,17 +84,19 @@ if (!$report->open) {
                             <?php endfor; ?>
                         <?php endif; ?>
                 </ul>
-                <div class="new_comment_container">
-                    <form action=<?php echo "http://localhost:3000/actions/create_report_comment.php?reportId=" . $report->id . '&type=' . $type; ?> method="POST">
-                        <div class="input-field">
-                            <textarea name="new_comment_textarea" id="newCommentTextarea" class="materialize-textarea" cols="30" rows=3></textarea>
-                            <label for="newCommentTextarea">New Comment</label>
-                        </div>
-                        <div class="button_wrapper">
-                            <input class="btn-small" type="submit" value="Send" name="new_comment_send_button">
-                        </div>
-                    </form>
-                </div>
+                <?php if ($report->open) : ?>
+                    <div class="new_comment_container">
+                        <form action=<?php echo "http://localhost:3000/actions/create_report_comment.php?reportId=" . $report->id . '&type=' . $type; ?> method="POST" class="new_report_comment_form">
+                            <div class="input-field">
+                                <textarea name="new_comment_textarea" id="newCommentTextarea" class="materialize-textarea" cols="30" rows=3></textarea>
+                                <label for="newCommentTextarea">New Comment</label>
+                            </div>
+                            <div class="button_wrapper">
+                                <input class="btn-small" type="submit" value="Send" name="new_comment_send_button">
+                            </div>
+                        </form>
+                    </div>
+                <?php endif; ?>
                 </div>
                 <div class="button_wrapper col s12">
                     <?php if ($report->open) : ?>
@@ -114,7 +116,7 @@ if (!$report->open) {
                             <a href=<?php echo 'http://localhost:3000/investigations.php?model=viewInvestigation&investigationId=' . $investigation->id; ?> class="btn-small">View Investigation</a>
                         <?php endif; ?>
                     <?php else : ?>
-                        <?php if ($rank === 'police_admin' || $isInvestigator) : ?>
+                        <?php if (($rank === 'police_admin' || $isInvestigator) && $report->open) : ?>
                             <a href=<?php echo 'http://localhost:3000/actions/create_investigation.php?reportId=' . $report->id; ?> class="btn-small">Launch Investigation</a>
                         <?php endif; ?>
                     <?php endif; ?>

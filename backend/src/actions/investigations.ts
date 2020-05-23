@@ -177,11 +177,7 @@ export async function getInvestigation(investigationId: number) {
     getInvestigationUpdate(id)
   );
 
-  let comments = await InvestigationComments.findAll({
-    where: { investigation_id: investigationId },
-  });
   let object: any = investigation.toJSON();
-  object.comments = _.map(comments, (comment) => comment.toJSON());
   object.investigators = _.map(
     investigators,
     (investigator) => investigator.toJSON() as any
@@ -346,7 +342,8 @@ export async function removeInvestigator(
 export async function createComment(
   content: string,
   authorId: number,
-  investigationId: number
+  investigationId: number,
+  type: string
 ) {
   let investigation = await Investigations.findOne({
     where: { id: investigationId, open: true },
@@ -364,7 +361,9 @@ export async function createComment(
     content,
     author: authorId,
     investigation_id: investigationId,
+    type,
   });
+
   return (commentModel.toJSON() as any).id;
 }
 
@@ -441,4 +440,19 @@ export async function addImage(updateId: number, path: string) {
   });
 
   return (imageModel.toJSON() as any).id;
+}
+
+export async function getInvestigationComments(
+  investigationId: number,
+  type: string
+) {
+  let comments = await InvestigationComments.findAll({
+    where: { investigation_id: investigationId, type },
+  });
+
+  if (!comments) {
+    return [];
+  }
+
+  return _.map(comments, (comment) => comment.toJSON());
 }
