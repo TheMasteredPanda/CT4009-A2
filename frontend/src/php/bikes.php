@@ -385,7 +385,15 @@ if (isset($_GET['modal'])) :
                     <div class="card">
                         <div class="card-title"><?php echo 'Registered Bike ' . $bike->id; ?></div>
                         <div class="card-img">
-                            <img src=<?php echo 'http://localhost:5555/' . $bike->images[0]->uri; ?>>
+                            <div class="carousel carousel-slider bike_carousel">
+                                <?php if (count($bike->images) > 0) : ?>
+                                    <?php for ($j = 0; $j < count($bike->images); $j++) : ?>
+                                        <a href="#" class="carousel-item">
+                                            <img src=<?php echo 'http://localhost:5555/' . $bike->images[$j]->uri; ?>>
+                                        </a>
+                                    <?php endfor; ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
                         <div class="card-content">
                             <h5 class="center-align">Bike Brief Info</h5>

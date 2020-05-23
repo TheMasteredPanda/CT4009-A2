@@ -6,6 +6,9 @@ import { getUrlQuery } from "../master/index";
   M.FormSelect.init(elements);
 }); */
 
+$(document).ready(() => {
+  $(".bike_carousel").carousel({ fullWidth: true, indicators: true });
+});
 $(".register_a_bike_form").ready(() => {
   $(".register_a_bike_form").on("submit", (e) => {
     console.log("Clicked");
