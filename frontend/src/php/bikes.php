@@ -387,6 +387,16 @@ if (isset($_GET['modal'])) :
                         <div class="card-img">
                             <img src=<?php echo 'http://localhost:5555/' . $bike->images[0]->uri; ?>>
                         </div>
+                        <div class="card-content">
+                            <h5 class="center-align">Bike Brief Info</h5>
+                            <ul>
+                                <li><strong>Type: </strong> <?php echo ucfirst($bike->type); ?> </li>
+                                <li><strong>Modal Number: </strong> <?php echo $bike->modal; ?></li>
+                                <li><strong>Brand: </strong> <?php echo $bike->brand; ?> </li>
+                                <li><strong>Registered At: </strong> <?php echo date('H:i, D j, M Y', strtotime($bike->createdAt)); ?></li>
+                                <li><strong>Last Updated At: </strong> <?php echo date('H:i, D j, M Y', strtotime($update->updatedAt)); ?></li>
+                            </ul>
+                        </div>
                         <div class="buttons">
                             <?php if ($detect->isMobile() && !$detect->isTablet()) : ?>
                                 <a href=<?php echo 'http://localhost:3000/mobile/bike_info.php?bikeId=' . $bike->id; ?> class="btn-small">More</a>

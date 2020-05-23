@@ -293,7 +293,15 @@ router.post("/user/refresh", (req: Request, res: Response) => {
  * @apiSuccess {Success} {string}     The rank of the user.
  */
 router.get("/user/rank", (req: Request, res: Response) => {
-  actions.getRank(req.user.id).then((rank) => {
+  let accountId = 0;
+
+  if (req.query.hasOwnProperty("accountId")) {
+    accountId = Number(req.query.accountId);
+  } else {
+    accountId = req.user.id;
+  }
+
+  actions.getRank(accountId).then((rank) => {
     res.status(200).send(rank);
   });
 });

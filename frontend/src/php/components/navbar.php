@@ -2,6 +2,7 @@
 $currentScript = $_SERVER['SCRIPT_NAME'];
 $rank = getRank();
 $payload = json_decode($_COOKIE['ct4009Auth']);
+$username = getUsername($payload->id);
 ?>
 
 <nav class="nav-extended">
@@ -66,7 +67,20 @@ $payload = json_decode($_COOKIE['ct4009Auth']);
 </ul>
 <ul class="sidenav" id="mainSidenav">
     <div class="sidenav_buttons">
-        <li><a href="#">Account</a></li>
+        <li>
+            <div class="user-view">
+                <a href="http://localhost:3000/settings.php" class="sidenav_username">
+                    <span class="name"><?php echo $username; ?></span>
+                    <?php if ($rank === 'police_officer') : ?>
+                        <span class="badge indigo white-text">Police Officer</span>
+                    <?php elseif ($rank === 'police_admin') : ?>
+                        <span class="badge red white-text">Police Admin</span>
+                    <?php else : ?>
+                        <span class="badge green white-text">Civilian</span>
+                    <?php endif; ?>
+                </a>
+            </div>
+        </li>
         <li>
             <div class="divider"></div>
         </li>
@@ -90,7 +104,7 @@ $payload = json_decode($_COOKIE['ct4009Auth']);
     </div>
 
     <div class="sidenav_footer container">
-        <a href="http://localhost:3000/index.php?logout=true" class="btn" name="logout_button">Logout</a>
-        <div class="btn" name="close_sidenav_button">Close</div>
+        <a href="http://localhost:3000/index.php?logout=true" class="btn-small" name="logout_button">Logout</a>
+        <div class="btn-small" name="close_sidenav_button">Close</div>
     </div>
 </ul>

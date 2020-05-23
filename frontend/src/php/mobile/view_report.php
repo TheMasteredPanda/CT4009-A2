@@ -68,6 +68,7 @@ if (!$report->open) {
                                 <div class="comment_content_wrapper">
                                     <div class="comment_header">
                                         <div class="author"><?php echo $author_name; ?></div>
+                                        <div><?php echo getBadgeFor($comment->author); ?></div>
                                     </div>
                                     <div class="comment_content">
                                         <p>

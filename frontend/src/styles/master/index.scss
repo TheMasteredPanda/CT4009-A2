@@ -124,6 +124,14 @@ html {
   position: relative;
 }
 
+.badge {
+  border-radius: 5px;
+
+  @media #{$small-and-down} {
+    margin-left: 5px !important;
+  }
+}
+
 nav {
   @extend .indigo;
 }
@@ -138,6 +146,25 @@ nav {
 
   .btn {
     @extend .indigo;
+  }
+
+  .sidenav_username {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    width: 100%;
+    color: inherit;
+
+    .name {
+      width: min-content;
+      margin: 0;
+    }
+
+    .badge {
+      margin: 0;
+      border-radius: 5px;
+      margin-left: 1%;
+    }
   }
 
   .sidenav_footer {
@@ -224,6 +251,7 @@ nav {
       }
       position: relative;
       .card-img {
+        margin-top: 2%;
         position: relative;
         width: 100%;
         img {
@@ -898,6 +926,7 @@ nav {
         margin-bottom: 1%;
         padding-top: 1%;
         padding-bottom: 1%;
+        border-radius: 5px;
         .update_content_wrapper {
           margin: 2%;
 
@@ -906,6 +935,10 @@ nav {
             align-items: center;
             justify-content: flex-end;
             font-size: 1.2rem;
+
+            .badge {
+              margin-left: 5px;
+            }
           }
 
           .update_content {

@@ -4,22 +4,10 @@ include "../components/navbar.php";
 include "../functions/investigation_functions.php";
 $userId = json_decode($_COOKIE['ct4009Auth'])->id;
 $investigation = getInvestigation($_GET['investigationId']);
-
-$isInvestigator = false;
-
-if ($rank !== 'civilian' && $rank !== 'police_admin') {
-    $authPayload = json_decode($_COOKIE['ct4009Auth']);
-
-    for ($i = 0; $i < count($investigation->investigators); $i++) {
-        $investigator = $investigation->$investigators[$i]->investigator_id;
-
-        if ($authPayload->id === $investigator) {
-            $isInvestigator = true;
-            break;
-        }
-    }
-}
-
+$investigatorIds = array_map(function ($investigator) {
+    return $investigator->investigator_id;
+}, $investigation->investigators);
+$isInvestigator = in_array($userId, $investigatorIds);
 $investigationStatus = 'Open';
 
 if (!$investigation->open) {
@@ -42,6 +30,10 @@ if (!$investigation->open) {
                         <div class="update_content_wrapper">
                             <div class="update_header">
                                 <div><?php echo getUsername($update->author); ?></div>
+                                <div><?php echo getBadgeFor($update->author); ?></div>
+                                <?php if (in_array($update->author, $investigatorIds)) : ?>
+                                    <div><span class="white-text indigo accent-1 badge">Investigator</span></div>
+                                <?php endif; ?>
                             </div>
                             <div class="update_content">
                                 <p><?php echo $update->content; ?></p>
@@ -92,6 +84,10 @@ if (!$investigation->open) {
                         <div class="comment_content_wrapper">
                             <div class="comment_header">
                                 <div class="author"><?php echo $username ?></div>
+                                <div><?php echo getBadgeFor($comment->author); ?></div>
+                                <?php if (in_array($comment->author, $investigatorIds)) : ?>
+                                    <div><span class="white-text indigo accent-1 badge">Investigator</span></div>
+                                <?php endif; ?>
                             </div>
                             <div class="comment_content">
                                 <p>
@@ -120,7 +116,7 @@ if (!$investigation->open) {
     <div class="investigation_metadata_container col s12">
         <h4 class="center-align col s12">Metadata</h4>
         <div class="metadata col s12">
-            <input type="text" name="start_date" value=<?php echo $investigation->createdAt; ?> readonly>
+            <input type="text" name="start_date" value=<?php echo '"' . date('H:i, D j, M Y', strtotime($investigation->createdAt)) . '"'; ?> readonly>
             <label for="start_date">Start Date</label>
             <input type="text" name="open" value=<?php echo $investigationStatus; ?> readonly>
             <label for="open">Investigation Status</label>
@@ -134,6 +130,7 @@ if (!$investigation->open) {
                     <li class="investigator">
                         <div class="username_wrapper">
                             <h5><?php echo ucfirst($username); ?></h5>
+                            <div><?php echo getBadgeFor($investigation->investigators[$i]->investigator_id); ?></div>
                         </div>
                         <?php if (count($investigation->investigators) > 1 && $rank === 'police_admin' && $investigation->open) : ?>
                             <div class="button_wrapper">
