@@ -136,6 +136,11 @@ html {
   @media #{$small-and-down} {
     margin-left: 5px !important;
   }
+
+
+  @media #{$medium-and-up} {
+    margin-left: 3px !important;
+  }
 }
 
 nav {
@@ -665,14 +670,128 @@ nav {
 
 #viewReport {
   .view_report_container {
-    .comments_container {
-      grid-template-rows: 10% 5% 70% 15%;
-      .new_comment_container {
-        width: 100%;
+    grid-template-rows: 10% 80% 10%;
+  }
 
-        form {
-          width: 90%;
+  .police_comments_container {
+    grid-template-rows: 10% 10% 70% 10%;
+  }
+
+  .comments_container {
+    display: grid;
+    margin-top: 4%;
+    margin-bottom: 2%;
+    height: 80vh !important;
+
+    .comments_container_header {
+      margin-bottom: 4%;
+      margin-top: 4%;
+    }
+
+    .comments {
+      margin: 0;
+      overflow-y: scroll;
+      display: flex;
+      flex-flow: column;
+
+      .not_client_comment {
+        @extend .grey, .lighten-2;
+
+        .comment_footer {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
         }
+
+        .comment_content {
+          text-align: right;
+        }
+
+        .comment_header {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+        }
+      }
+
+      .client_comment {
+        @extend .grey, .lighten-1;
+        .comment_footer {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+        }
+
+        .comment_header {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+        }
+      }
+
+      .comment {
+        width: 100%;
+        .comment_content_wrapper {
+          height: max-content;
+          margin: 1%;
+        }
+
+        border-radius: 5px;
+        display: grid;
+        grid-template-rows: 10% auto 10%;
+        margin-top: 1%;
+        margin-bottom: 1%;
+
+        .comment_content {
+          margin-top: 1%;
+          margin-bottom: 1%;
+          display: inline-block;
+          overflow-wrap: anywhere;
+          width: 100%;
+
+          p {
+            margin: 0;
+          }
+        }
+        .comment_header {
+          .author {
+            font-size: 1.2rem;
+          }
+        }
+
+        .comment_footer {
+          .date {
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+
+    .new_comment_container {
+      margin-top: 6%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      form {
+        width: 75%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .input-field {
+          width: 100%;
+        }
+
+        .button_wrapper {
+          width: min-content;
+          margin-top: 2%;
+          margin-left: 2%;
+        }
+      }
+
+      textarea {
+        margin: 0;
       }
     }
 

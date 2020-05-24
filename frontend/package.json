@@ -28,6 +28,7 @@
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-uglify": "^3.0.2",
     "gulp-webpack": "^1.5.0",
+    "js-cookie": "^2.2.1",
     "lodash": "^4.17.15",
     "node-sass": "^4.14.0",
     "readable-stream": "^3.6.0",
@@ -42,7 +43,6 @@
     "axios": "^0.19.2",
     "imports-loader": "^0.8.0",
     "jquery": "^3.5.0",
-    "js-cookie": "^2.2.1",
     "materialize-css": "^1.0.0"
   }
 }

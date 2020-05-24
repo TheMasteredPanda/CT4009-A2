@@ -32,3 +32,19 @@ export function mobileCheck() {
   })(navigator.userAgent || navigator.vendor);
   return check;
 }
+
+export function capitalize(sentence: string, allWords: boolean) {
+  let words = sentence.split(" ");
+
+  if (allWords) {
+    words = words.map((word) =>
+      word.replace(word.charAt(0), word.charAt(0).toUpperCase())
+    );
+  } else {
+    let word = words.splice(0, 1)[0];
+    word = word.replace(word.charAt(0), word.charAt(0).toUpperCase());
+    words.unshift(word);
+  }
+
+  return words.join(" ");
+}
