@@ -74,8 +74,8 @@ if (!isset($_POST['ids'])) {
                         </div>
 
                         <div class="form_button_wrapper button_wrapper col m12 l12">
-                            <a href="#" name="close_view_report_button" class="btn">Close</a>
-                            <a href="#" class="btn indigo">Back</a>
+                            <a href="#" name="close_report_button" class="btn">Close</a>
+                            <a href="#" name="close_view_report_button" class="btn indigo">Back</a>
                             <a href="#" class="btn">View Reported Bike</a>
                         </div>
                     </div>
@@ -208,6 +208,7 @@ if (!isset($_POST['ids'])) {
             function populateViewReportModal() {
                 let reportId = query.reportId;
 
+                if (!reportId) return;
                 $.get(
                     `http://localhost:3000/actions/get_report.php?reportId=${reportId}`
                 ).done((res) => {
@@ -267,11 +268,17 @@ if (!isset($_POST['ids'])) {
                 });
                 $('#viewReport').modal('open');
             }
-        });
 
-        $('a[name="close_view_report_button"]').click((e) => {
-            $('#viewReport').modal('close');
-        })
+            $('a[name="close_view_report_close_button"]').ready(() => {
+                $('a[name="close_view_report_button"]').click((e) => {
+                    e.preventDefault();
+                    window.history.pushState({
+                        href: 'http://localhost:3000/reports.php'
+                    }, '', 'http://localhost:3000/reports.php');
+                    $('#viewReport').modal('close');
+                })
+            })
+        });
     </script>
     <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
     <?php
