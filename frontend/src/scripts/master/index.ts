@@ -2,11 +2,13 @@ import $ from "jquery";
 import * as materialize from "materialize-css";
 $.fn.extend(materialize);
 
-export function getUrlQuery() {
+export function getUrlQuery(url?: string) {
   let query: { [key: string]: string } = {};
-  let hashes = window.location.href
-    .slice(window.location.href.indexOf("?") + 1)
-    .split("&");
+  let hashes = url
+    ? url.slice(url.indexOf("?") + 1).split("&")
+    : window.location.href
+        .slice(window.location.href.indexOf("?") + 1)
+        .split("&");
 
   for (let i = 0; i < hashes.length; i++) {
     const hash = hashes[i];

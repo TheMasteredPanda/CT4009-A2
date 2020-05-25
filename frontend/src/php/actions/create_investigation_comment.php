@@ -2,6 +2,7 @@
 include "../components/header.php";
 $investigationId = $_GET['investigationId'];
 $type = $_GET['type'];
+
 $comment = $_POST['comment'];
 $payload = json_decode($_COOKIE['ct4009Auth']);
 $curl = curl_init('http://localhost:5555/investigations/comments/create?userId=' . $payload->id . '&investigationId=' . $investigationId . '&type=' . $type);

@@ -1,7 +1,6 @@
 <?php
 include "../components/header.php";
 $payload = json_decode($_COOKIE['ct4009Auth']);
-print_r($_GET);
 $curl = curl_init('http://localhost:5555/reports/comments/create?userId=' . $payload->id . '&type=' . $_GET['type'] . '&reportId=' . $_GET['reportId']);
 $body = json_encode(array('comment' => $_POST['new_comment_textarea']));
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

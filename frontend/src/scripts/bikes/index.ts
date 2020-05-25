@@ -8,6 +8,14 @@ import { getUrlQuery, capitalize } from "../master/index";
 
 $(document).ready(() => {
   $(".bike_carousel").carousel({ fullWidth: true, indicators: true });
+  let modal = getUrlQuery().modal;
+  if (!modal) return;
+  $(`#${modal}`).modal({ dismissible: false });
+  $(`#${modal}`).modal("open");
+});
+
+$("#viewBike").ready(() => {
+  $("#bikeInfoImageCarousel").carousel({ fullWidth: true, indicators: true });
 });
 $(".register_a_bike_form").ready(() => {
   $(".register_a_bike_form").on("submit", (e) => {
@@ -126,7 +134,7 @@ function createItem(
 }
 
 $(".edit_images_carousel_slider").ready(() => {
-  let bikeId = getUrlQuery()["bikeId"];
+  let bikeId = getUrlQuery().bikeId;
   if (bikeId == undefined) return;
 
   $.ajax(`http://localhost:3000/actions/get_bike.php?bikeId=${bikeId}`).done(
@@ -187,15 +195,7 @@ $("#uploadImageCarouselItemInput").change((e) => {
     });
   };
 
-  console.log(files);
   reader.readAsDataURL(files[0]);
-});
-
-$('a[name="register_bike_button_desktop"]').ready(() => {
-  $('a[name="register_bike_button_desktop"]').click((e: any) => {
-    $(`#registerBike`).modal({ dismissible: false });
-    $(`#registerBike`).modal("open");
-  });
 });
 
 $('a[name="register_bike_back_button"]').ready(() => {
@@ -204,101 +204,13 @@ $('a[name="register_bike_back_button"]').ready(() => {
   });
 });
 
-$('a[name="more_bike_info_button"]').ready(() => {
-  $('a[name="more_bike_info_button"]').click((e: any) => {
-    let bikeId = $(e.currentTarget).attr("data-bike-id");
-
-    $.get(`http://localhost:3000/actions/get_bike.php?bikeId=${bikeId}`).done(
-      (res) => {
-        let bike = JSON.parse(res);
-
-        for (let i = 0; i < bike.images.length; i++) {
-          const image = bike.images[i];
-
-          $("#bikeInfoImageCarousel").append(
-            `<a href="" class="carousel-item"><img src="http://localhost:5555/${image.uri}"></a>`
-          );
-        }
-
-        $('a[name="delete_bike_button').prop(
-          "href",
-          `http://localhost:3000/actions/delete_bike.php?bikeId=${bike.id}`
-        );
-
-        $.get(
-          `http://localhost:3000/actions/bike_has_report.php?bikeId=${bike.id}`
-        ).done((res) => {
-          if (res === "") {
-            $("#viewBike .button_wrapper").append(
-              `<a href="#" name="create_bike_report_button" class="btn indigo">Report Stolen</a>`
-            );
-
-            $('a[name="create_bike_report_button"').click((e: any) => {
-              $('a[name="view_bike_back_button"]').trigger("click");
-              $("#reportBike").modal({ dismissible: false });
-              $("#reportBike").modal("open");
-            });
-          } else {
-            $("#viewBike .button_wrapper").append(
-              `<a href="#" name="view_bike_report_button" class="btn indigo">View Report</a>`
-            );
-
-            $.get(
-              `http://localhost:3000/actions/get_report_by_bike.php?bikeId=${bike.id}`
-            ).done((res) => {
-              let object = JSON.parse(res);
-              $('a[name="view_bike_report_button"]').prop(
-                "href",
-                `http://localhost:3000/reports.php?modal=viewReport&reportId=${object.id}&placeId=${object.place_id}`
-              );
-            });
-          }
-        });
-        $('#viewBike input[name="part_number"]').val(bike.part_number);
-        $('#viewBike input[name="part_number"]').focus();
-        $('#viewBike input[name="bike_brand"]').val(bike.brand);
-        $('#viewBike input[name="bike_brand"]').focus();
-        $('#viewBike input[name="bike_modal"]').val(bike.modal);
-        $('#viewBike input[name="bike_modal"]').focus();
-        $('#viewBike input[name="bike_type"]').val(
-          capitalize(bike.type, false)
-        );
-        $('#viewBike input[name="bike_type"]').focus();
-        $('#viewBike input[name="bike_wheel_size"]').val(bike.wheel_size);
-        $('#viewBike input[name="bike_wheel_size"]').focus();
-        $('#viewBike input[name="bike_colours"]').val(
-          capitalize(bike.colours, true)
-        );
-        $('#viewBike input[name="bike_colours"]').focus();
-        $('#viewBike input[name="bike_age_group"]').val(
-          capitalize(bike.age_group, false)
-        );
-        $('#viewBike input[name="bike_age_group"]').focus();
-        $("#viewBike").modal({ dismissible: false });
-        $("#viewBike").modal("open");
-        $("#bikeInfoImageCarousel").carousel({
-          fullWidth: true,
-          indicators: true,
-        });
-        $('a[name="view_bike_report_button"]').remove();
-        $('a[name="create_bike_report_button"').remove();
-      }
-    );
-  });
-});
-
 $('a[name="view_bike_back_button"]').ready(() => {
   $('a[name="view_bike_back_button"]').click((e: any) => {
-    $("#bikeInfoImageCarousel").carousel("destroy");
-    $("#bikeInfoImageCarousel").empty();
-    $('#viewBike input[name="part_number"]').val("");
-    $('#viewBike input[name="bike_brand"]').val("");
-    $('#viewBike input[name="bike_modal"]').val("");
-    $('#viewBike input[name="bike_type"]').val("");
-    $('#viewBike input[name="bike_wheel_size"]').val("");
-    $('#viewBike input[name="bike_colours"]').val("");
-    $('#viewBike input[name="bike_age_group"]').val("");
+    e.preventDefault();
     $("#viewBike").modal("close");
+    setTimeout(() => {
+      $('#viewBike').modal('destroy');
+    }, 1000)
   });
 });
 

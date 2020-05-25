@@ -1,8 +1,5 @@
 import "../master/index";
-import { getUrlQuery, mobileCheck } from "../master/index";
-import Cookies from "js-cookie";
-
-
+import { getUrlQuery } from "../master/index";
 
 $(document).ready(() => {
   $('select[name="select_search_type[]"]').formSelect();
@@ -12,6 +9,7 @@ $(document).ready(() => {
   if (!modal) return;
 
   if (modal === "viewReport") {
+    $("#viewReport").modal({ dismissible: false }).modal("open");
   }
 });
 
@@ -30,6 +28,15 @@ $('select[name="select_search_type[]"]').change((e) => {
   });
 });
 
+$('a[name="close_view_report_button"').ready(() => {
+  $('a[name="close_view_report_button"]').click((e: any) => {
+    e.preventDefault();
+    $("#viewReport").modal("close");
+    setTimeout(() => {
+      $("#viewReport").modal("destroy");
+    }, 1000);
+  });
+});
 //https://stackoverflow.com/questions/52452763/materialize-textarea-tag-is-not-scrollable-on-fixed-height
 
 $(".search_reports_form").submit((e) => {
@@ -86,21 +93,26 @@ $(".search_reports_form").submit((e) => {
   });
 });
 
-$(".new_report_comment_form").submit((e: any) => {
-  e.preventDefault();
+$('form[name="new_report_comment_form"]').ready(() => {
+  $('form[name="new_report_comment_form"]').submit((e: any) => {
+    e.preventDefault();
+    console.log("Submitted and prevented. ");
+    let query = getUrlQuery();
 
-  $.post({
-    url: $(e.currentTarget).attr("action"),
-    data: {
-      new_comment_textarea: $('textarea[name="new_comment_textarea"]').val(),
-    },
-  }).done((res) => {
-    $.post(window.location.href).done((res) => {
-      $("body").html(res);
+    $.post({
+      url: $(e.currentTarget).attr("action"),
+      data: {
+        new_comment_textarea: $('textarea[name="new_comment_textarea"]').val(),
+      },
+    }).done((res) => {
+      $.post(
+        `http://localhost:3000/reports.php?reportId=${query.reportId}&modal=viewReport&placeId=${query.placeId}`
+      ).done((res) => {
+        $("body").html(res);
+      });
     });
   });
 });
-
 $('button[name="comment_public_section_button"]').click((e: any) => {
   let reportId = getUrlQuery().reportId;
   let url = `http://localhost:3000/mobile/view_report.php?reportId=${reportId}&placeId=${

@@ -39,14 +39,25 @@ $(".search_investigations_form").submit((e) => {
   });
 });
 
-$('.create_comment_form input[type="submit"]').click((e) => {
+$('a[name="view_investigation_back_button"]').ready(() => {
+  $('a[name="view_investigation_back_button"').click((e: any) => {
+    e.preventDefault();
+    window.history.pushState(
+      { href: "http://localhost:3000/investigations.php" },
+      "",
+      "http://localhost:3000/investigations.php"
+    );
+    $("#viewInvestigation").modal("close");
+  });
+});
+
+$(".create_comment_form").submit((e) => {
   e.preventDefault();
-  console.log("Clicked");
-  let investigationId = getUrlQuery().investigationId;
-  let type = getUrlQuery().type;
+  let url = $(e.currentTarget).attr("action");
+  let investigationId = getUrlQuery(url).investigationId;
+  let type = getUrlQuery(url).type;
   let comment = $('.create_comment_form input[name="comment"]').val();
 
-  console.log(investigationId);
   if (comment === "") return;
   $.post({
     url: `http://localhost:3000/actions/create_investigation_comment.php?investigationId=${investigationId}&type=${type}`,

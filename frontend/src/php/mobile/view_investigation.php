@@ -169,11 +169,7 @@ if (!$investigation->open) {
                 </div>
             </div>
             <div class="button_wrapper col s12">
-                <?php if ($detect->isMobile()) : ?>
-                    <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $investigation->report_id; ?> class="btn-small">View Report</a>
-                <?php else : ?>
-                    <a href=<?php echo 'http://localhost:3000/reports.php?model=viewReport&reportId=' . $investigation->report_id; ?> class="btn-small">View Report</a>
-                <?php endif; ?>
+                <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $investigation->report_id; ?> class="btn-small">View Report</a>
                 <?php if (($rank === 'police_admin' || $isInvestigator) && $investigation->open) : ?>
                     <a href=<?php echo 'http://localhost:3000/actions/close_investigation.php?investigationId=' . $investigation->id; ?> class="btn-small">Close</a>
                 <?php endif; ?>
