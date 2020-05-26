@@ -59,6 +59,7 @@ interface ReportOptions {
   startDate?: number;
   endDate?: number;
   attributes?: string[];
+  investigating?: boolean;
 }
 
 /**
@@ -88,6 +89,10 @@ export async function getReportIds(
 
   if (opts.hasOwnProperty("open")) {
     query.where.open = opts.open;
+  }
+
+  if (opts.hasOwnProperty("investigating")) {
+    query.where.investigating = opts.investigating;
   }
 
   if (opts.author) {

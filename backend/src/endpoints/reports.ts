@@ -97,7 +97,12 @@ router.post("/reports", (req: Request, res: Response) => {
 
   if (req.query.open) {
     req.query.open =
-      Number(req.query.open) === 1 ? (true as any) : (false as any);
+      Number(req.query.open) === 0 ? (true as any) : (false as any);
+  }
+
+  if (req.query.investigating) {
+    req.query.investigating =
+      Number(req.query.investigating) === 0 ? (true as any) : (false as any);
   }
 
   actions

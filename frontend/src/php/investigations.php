@@ -294,9 +294,6 @@ if (isset($_GET['modal'])) :
 
     <script type="text/javascript" src="http://localhost:3000/scripts/home.bundle.js"></script>
     <script type="text/javascript" src="http://localhost:3000/scripts/investigations.bundle.js"></script>
-    <script type="text/javascript">
-
-    </script>
     <?php
     include "./components/footer.php"
     ?>

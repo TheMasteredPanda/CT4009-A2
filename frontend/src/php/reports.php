@@ -12,10 +12,10 @@ if (isset($_POST['select_search_type'])) {
     $search_types = [];
 }
 
-$types = array('start_date' => "by illustrated date", 'before_date' => 'before date', 'open' => "by report status", 'investigating' => "by investigation status");
+$types = array('start_date' => "By Illustrated Date", 'before_date' => 'Before Date', 'open' => "By Report Status", 'investigating' => "By Investigation Status");
 
 if ($rank !== 'civilian') {
-    $types['author'] = 'by report author';
+    $types['author'] = 'By Report Author';
 }
 
 if (!isset($_POST['ids'])) {
@@ -27,6 +27,7 @@ if (!isset($_POST['ids'])) {
 } else {
     $reports = $_POST['ids'];
 }
+
 
 if (isset($_GET['modal'])) :
     $modal = $_GET['modal'];
@@ -54,11 +55,11 @@ if (isset($_GET['modal'])) :
                     <div class="view_report_form row">
                         <div class="input-field col m12 l12">
                             <input type="text" name="report_status" value="<?php echo $investigationStatus; ?>" readonly>
-                            <label for="report_status">report status</label>
+                            <label for="report_status">Report Status</label>
                         </div>
                         <div class="input-field col m12 l12">
                             <textarea name="view_report_description" rows="15" class="materialize-textarea" readonly><?php echo $report->content; ?></textarea>
-                            <label for="view_report_description">description</label>
+                            <label for="view_report_description">Description</label>
                         </div>
                         <div class="input-field map-field col m12 l12">
                             <h4 class="center-align">Location Of Theft</h4>
@@ -143,15 +144,13 @@ if (isset($_GET['modal'])) :
         </div>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA43tm6-MqO6IkzYA9he5Zlmu5drqlHtFo&callback=initMap">
         </script>
-
-        </script>
     <?php endif; ?>
 <?php endif; ?>
 
 <div class="reports_container">
     <?php if (count($reports) === 0) : ?>
         <div class="no_reports_container">
-            <h3>no reports</h3>
+            <h3>No Reports</h3>
         </div>
     <?php else : ?>
         <div class="reports_header container">
@@ -166,23 +165,39 @@ if (isset($_GET['modal'])) :
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </select>
-                    <label for="select_search_type[]">search type</label>
+                    <label for="select_search_type[]">Search Type</label>
                 </div>
             </form>
             <?php if (isset($_POST['search_reports']) && count($search_types) > 0) : ?>
+                <?php
+                $startDate = '';
+                $endDate = '';
+                $author = '';
+                $isInvestigating = false;
+                $isOpen = false;
+
+                if (isset($_POST['search_values'])) {
+                    $values = $_POST['search_values'];
+                    $startDate = $values['search_by_start_date'];
+                    $endDate = $values['search_by_before_date'];
+                    $author = $values['author'];
+                    $isInvestigating = $values['investigating'];
+                    $isOpen = $values['open'];
+                }
+                ?>
                 <form action="#" class="search_reports_form row">
                     <?php if ($rank === 'civilian') : ?>
                         <input type="text" name="civ_author" value=<?php echo $userId; ?> hidden>
                     <?php endif; ?>
                     <?php if (in_array('start_date', $search_types)) : ?>
                         <div class="input-field col m10 push-m1 datepicker_input">
-                            <input type="text" class="datepicker" name="search_by_start_date">
+                            <input type="text" class="datepicker" name="search_by_start_date" value="<?php echo $startDate; ?>">
                             <label for="search_by_start_date">Search By Illustrated Date</label>
                         </div>
                     <?php endif; ?>
                     <?php if (in_array('before_date', $search_types)) : ?>
                         <div class="input-field col m10 push-m1 datepicker_input">
-                            <input type="text" class="datepicker" name="search_by_before_date">
+                            <input type="text" class="datepicker" name="search_by_before_date" value="<?php echo $endDate; ?>">
                             <label for="search_by_before_date">Search By Before Date</label>
                         </div>
                     <?php endif; ?>
@@ -190,10 +205,10 @@ if (isset($_GET['modal'])) :
                         <div class="center-align col m12 switch_wrapper">
                             <div class="switch">
                                 <label>
-                                    open
-                                    <input type="checkbox" name="search_by_open">
+                                    Open
+                                    <input type="checkbox" name="search_by_open" <?php if ($isOpen) : ?> checked <?php endif; ?>>
                                     <span class="lever"></span>
-                                    closed
+                                    Closed
                                 </label>
                             </div>
                         </div>
@@ -203,16 +218,16 @@ if (isset($_GET['modal'])) :
                             <div class="switch">
                                 <label>
                                     Investigating
-                                    <input type="checkbox">
+                                    <input type="checkbox" name="search_by_investigating" <?php if ($isInvestigating) : ?> checked <?php endif; ?>>
                                     <span class="lever"></span>
                                     Not Invesigating
                                 </label>
                             </div>
                         </div>
                     <?php endif; ?>
-                    <?php if ($rank !== 'civilian') : ?>
+                    <?php if ($rank !== 'civilian' && in_array('author', $search_types)) : ?>
                         <div class="input-field col m10 push-m1">
-                            <input type="text" name="search_by_author">
+                            <input type="text" name="search_by_author" value="<?php echo $author ?>">
                             <label for="search_by_author">Search By Author</label>
                         </div>
                     <?php endif; ?>

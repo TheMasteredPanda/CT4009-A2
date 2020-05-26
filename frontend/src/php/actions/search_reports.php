@@ -11,12 +11,16 @@ if (isset($_POST['open'])) {
     $url = $url . '&open=' . $_POST['open'];
 }
 
+if (isset($_POST['investigating'])) {
+    $url = $url . '&investigating=' . $_POST['investigating'];
+}
+
 if (isset($_POST['startDate'])) {
-    $url = $url . '&startDate=' . $_POST['startDate'];
+    $url = $url . '&startDate=' . $_POST['start_date'];
 }
 
 if (isset($_POST['beforeDate'])) {
-    $url = $url . '&endDate=' . $_POST['endDate'];
+    $url = $url . '&endDate=' . $_POST['before_date'];
 }
 
 $curl = curl_init($url);

@@ -53,46 +53,60 @@ $(".search_reports_form").submit((e) => {
   let data: any = {};
 
   if (searchTypes.includes("open")) {
-    data.open =
-      $('input[name="search_by_open"]').is(":checked") === true ? 0 : 1;
+    data.open = $('input[name="search_by_open"]').is(":checked") ? 1 : 0;
   }
 
   if (searchTypes.includes("author")) {
     data.author = $('input[name="search_by_author"').val();
   }
 
+  if (searchTypes.includes("investigating")) {
+    data.investigating = $('input[name="search_by_investigating"]').is(
+      ":checked"
+    )
+      ? 1
+      : 0;
+  }
+
   let author = $('input[name="civ_author"]').val();
 
-  if (author !== "") {
+  if (author) {
     data.author = author;
   }
 
   if (searchTypes.includes("start_date")) {
-    data.startDate = new Date(
+    data.start_date = new Date(
       $('input[name="search_by_start_date"]').val() as string
     ).getTime();
   }
 
-  if (searchTypes.includes("end_date")) {
-    data.endDate = new Date(
-      $('input[name="search_by_end_date"]').val() as string
+  if (searchTypes.includes("before_date")) {
+    data.before_date = new Date(
+      $('input[name="search_by_before_date"]').val() as string
     ).getTime();
   }
 
+  console.log(data);
   $.post({
     url: "http://localhost:3000/actions/search_reports.php",
     data,
   }).done((res) => {
     console.log(res);
     let object = JSON.parse(res);
+    let ids = object.ids;
 
-    if (object.ids.length === 0) {
-      object.ids = "empty";
+    if (ids.length === 0) {
+      ids = "empty";
     }
 
     $.post({
       url: "http://localhost:3000/reports.php",
-      data: object,
+      data: {
+        ids,
+        search_values: data,
+        select_search_type: Object.keys(data),
+        search_reports: true,
+      },
     }).done((res1) => {
       $("body").html(res1);
     });
