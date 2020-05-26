@@ -208,9 +208,14 @@ $('a[name="view_bike_back_button"]').ready(() => {
   $('a[name="view_bike_back_button"]').click((e: any) => {
     e.preventDefault();
     $("#viewBike").modal("close");
+    window.history.pushState(
+      { href: "http://localhost:3000/bikes.php" },
+      "",
+      "http://localhost:3000/bikes.php"
+    );
     setTimeout(() => {
-      $('#viewBike').modal('destroy');
-    }, 1000)
+      $("#viewBike").modal("destroy");
+    }, 1000);
   });
 });
 
@@ -250,20 +255,33 @@ let placeId: null | string = null;
       });
 
       polygon.setMap(map);
+      let marker: any = null;
       searchBox.addListener("places_changed", () => {
         let places = searchBox.getPlaces();
         let place = places[0];
         geocoder.geocode({ placeId: place.place_id }, (results, status) => {
           if (status === "OK") {
-            let county = results[0].address_components[2].long_name;
+            let isInGloucestershire = false;
 
-            if (county !== "Gloucestershire") {
+            for (let i = 0; i < results[0].address_components.length; i++) {
+              const component = results[0].address_components[i];
+
+              if (component.long_name === "Gloucestershire") {
+                isInGloucestershire = true;
+                break;
+              }
+            }
+
+            if (!isInGloucestershire) {
               alert("Address must be within gloucestershire");
               return;
             }
 
+            if (marker !== null) {
+              marker.setMap(null);
+            }
             map.setCenter(results[0].geometry.location);
-            let marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
               map: map,
               position: results[0].geometry.location,
             });

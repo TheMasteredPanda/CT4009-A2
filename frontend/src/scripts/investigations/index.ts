@@ -93,7 +93,7 @@ $('a[name="remove_investigator_button"]').click((e) => {
   });
 });
 
-$(".comment_buttons a").click((e: any) => {
+$(".comments_buttons a").click((e: any) => {
   e.preventDefault();
   let url = $(e.currentTarget).attr("href");
   $.post(url).done((res) => {

@@ -32,11 +32,17 @@ $('a[name="close_view_report_button"').ready(() => {
   $('a[name="close_view_report_button"]').click((e: any) => {
     e.preventDefault();
     $("#viewReport").modal("close");
+    window.history.pushState(
+      { href: "http://localhost:3000/reports.php" },
+      "",
+      "http://localhost:3000/reports.php"
+    );
     setTimeout(() => {
       $("#viewReport").modal("destroy");
     }, 1000);
   });
 });
+
 //https://stackoverflow.com/questions/52452763/materialize-textarea-tag-is-not-scrollable-on-fixed-height
 
 $(".search_reports_form").submit((e) => {
@@ -96,8 +102,11 @@ $(".search_reports_form").submit((e) => {
 $('form[name="new_report_comment_form"]').ready(() => {
   $('form[name="new_report_comment_form"]').submit((e: any) => {
     e.preventDefault();
-    console.log("Submitted and prevented. ");
     let query = getUrlQuery();
+
+    if (!query.type) {
+      query.type = "civilian";
+    }
 
     $.post({
       url: $(e.currentTarget).attr("action"),
@@ -106,7 +115,7 @@ $('form[name="new_report_comment_form"]').ready(() => {
       },
     }).done((res) => {
       $.post(
-        `http://localhost:3000/reports.php?reportId=${query.reportId}&modal=viewReport&placeId=${query.placeId}`
+        `http://localhost:3000/reports.php?reportId=${query.reportId}&modal=viewReport&placeId=${query.placeId}&type=${query.type}`
       ).done((res) => {
         $("body").html(res);
       });
@@ -115,7 +124,7 @@ $('form[name="new_report_comment_form"]').ready(() => {
 });
 $('button[name="comment_public_section_button"]').click((e: any) => {
   let reportId = getUrlQuery().reportId;
-  let url = `http://localhost:3000/mobile/view_report.php?reportId=${reportId}&placeId=${
+  let url = `http://localhost:3000/reports.php?modal=viewReport&reportId=${reportId}&placeId=${
     getUrlQuery().placeId
   }&type=civilian`;
   $.get(url).done((res) => {
@@ -126,7 +135,7 @@ $('button[name="comment_public_section_button"]').click((e: any) => {
 
 $('button[name="comment_private_section_button"]').click((e: any) => {
   let reportId = getUrlQuery().reportId;
-  let url = `http://localhost:3000/mobile/view_report.php?reportId=${reportId}&placeId=${
+  let url = `http://localhost:3000/reports.php?modal=viewReport&reportId=${reportId}&placeId=${
     getUrlQuery().placeId
   }&type=police`;
   $.get(url).done((res) => {

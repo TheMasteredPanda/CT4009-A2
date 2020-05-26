@@ -82,9 +82,9 @@ if (isset($_GET['modal'])) :
                                 <?php endfor; ?>
                             <?php endif; ?>
                         </ul>
-                        <?php if ($rank !== 'civilian' && ($isInvestigator || $rank === 'police_admin') && $investigation->open) : ?>
+                        <?php if ($rank !== 'civilian' && (in_array($userId, $investigatorIds) || $rank === 'police_admin') && $investigation->open) : ?>
                             <div class="button_wrapper">
-                                <a href=<?php echo 'http://localhost:3000/investigations.php?investigationId=' . $investigation->id . '&modal=addUpdate'; ?> class=<? '"' . getButtonType() . '"' ?>>Add Update</a>
+                                <a class="<?php echo getButtonType() ?> indigo" href="<?php echo 'http://localhost:3000/investigations.php?investigationId=' . $investigation->id . '&modal=addUpdate'; ?>">Add Update</a>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -98,7 +98,7 @@ if (isset($_GET['modal'])) :
                             </div>
                             <?php if ($rank !== 'civilian') : ?>
                                 <div class="comments_buttons">
-                                    <a href=<?php echo 'http://loclhoast:3000/investigations.php?modal=viewInvestigation&investigationId=' . $_GET['investigationId'] . '&type=civilian'; ?> name="civilian_comments_button" class="<?php echo getButtonType() ?> indigo">Civilian</a>
+                                    <a href=<?php echo 'http://localhost:3000/investigations.php?modal=viewInvestigation&investigationId=' . $_GET['investigationId'] . '&type=civilian'; ?> name="civilian_comments_button" class="<?php echo getButtonType() ?> indigo">Civilian</a>
                                     <a href=<?php echo 'http://localhost:3000/investigations.php?modal=viewInvestigation&investigationId=' . $_GET['investigationId'] . '&type=investigators'; ?> name="police_comments_button" class="<?php echo getButtonType() ?> indigo">Investigators</a>
                                 </div>
                             <?php endif; ?>
@@ -235,7 +235,7 @@ if (isset($_GET['modal'])) :
             </div>
         <?php else : ?>
             <div class="investigations_list_container row">
-                <div class="investigations_list_search col s12 m10 push-m1 l10 push-l1">
+                <div class="investigations_list_search col s12 m8 push-m2 l8 push-l2">
                     <form action="http://localhost:3000/actions/search_investigations.php" class="search_investigations_form">
                         <?php if ($rank !== 'civilian') : ?>
                             <div class="input-field col s12 m10 l10 push-m1 push-l1">

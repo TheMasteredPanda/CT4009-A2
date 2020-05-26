@@ -181,7 +181,7 @@ if ($rank === 'civilian') {
                             <label for="bike_wheel_size">Wheel Size</label>
                         </div>
                         <div class="input-field">
-                            <input type="text" name="bike_colours" value=<?php echo '"'. ucwords($bike->colours) . '"' ?> readonly>
+                            <input type="text" name="bike_colours" value=<?php echo '"' . ucwords($bike->colours) . '"' ?> readonly>
                             <label for="bike_colours">Bike Colours</label>
                         </div>
                         <div class="input-field">
@@ -193,6 +193,14 @@ if ($rank === 'civilian') {
                             <a href=<?php echo '"' . 'http://localhost:3000/actions/delete_bike.php?bikeId=' . $bike->id . '"'; ?> class="btn indigo">Delete</a>
                             <?php if ($rank === 'civilian') : ?>
                                 <a href=<?php echo '"' . "http://localhost:3000/bikes.php?modal=editBike&bikeId=" . $bike->id . '"'; ?> name="edit_bike_button" class="btn indigo">Edit</a>
+                            <?php endif; ?>
+                            <?php
+                            if (hasOpenReport($bike->id)) :
+                                $report = getOpenReportByBike($bike->id, $report->author);
+                            ?>
+                                <a href="<?php echo 'http://localhost:3000/reports.php?modal=viewReport&reportId=' . $report->id . '&placeId=' . $report->place_id; ?>" class="<?php echo getButtonType() ?> indigo">View Report</a>
+                            <?php else : ?>
+                                <a href="<?php echo 'http://localhost:3000/bikes.php?modal=reportStolen&bikeId=' . $bike->id; ?>" class="<?php echo getButtonType() ?> indigo">Report Bike</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -367,12 +375,12 @@ if ($rank === 'civilian') {
             <h3>No Bikes Registered</h3>
         </div>
     <?php else : ?>
-        <ul class="container">
+        <ul class="row">
             <?php for ($i = 0; $i < count($bikes); $i++) :
                 $bike = getBike($bikes[$i]);
             ?>
                 <li>
-                    <div class="card">
+                    <div class="card col m12 l12">
                         <div class="card-title"><?php echo 'Registered Bike ' . $bike->id; ?></div>
                         <div class="card-img">
                             <div class="carousel carousel-slider bike_carousel">

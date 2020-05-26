@@ -15,8 +15,8 @@ if ($status !== 200) {
     print $result;
 }
 
-if ($detect->isMobile()) {
+if ($detect->isMobile() && !$detect->isTablet()) {
     header('Location: /mobile/view_investigation.php?investigationId=' . $investigationId);
 } else {
-    header('Location: /investigations.php?model=viewInvestigation&investigationId=' . $investigationId);
+    header('Location: /investigations.php?modal=viewInvestigation&investigationId=' . $investigationId);
 }

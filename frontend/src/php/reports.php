@@ -12,10 +12,10 @@ if (isset($_POST['select_search_type'])) {
     $search_types = [];
 }
 
-$types = array('start_date' => "By Illustrated Date", 'before_date' => 'Before Date', 'open' => "By Report Status", 'investigating' => "By Investigation Status");
+$types = array('start_date' => "by illustrated date", 'before_date' => 'before date', 'open' => "by report status", 'investigating' => "by investigation status");
 
 if ($rank !== 'civilian') {
-    $types['author'] = 'By Report Author';
+    $types['author'] = 'by report author';
 }
 
 if (!isset($_POST['ids'])) {
@@ -37,8 +37,8 @@ if (isset($_GET['modal'])) :
 
         $commentType = 'civilian';
 
-        if (isset($_GET['commentType'])) {
-            $commentType = $_GET['commentType'];
+        if (isset($_GET['type'])) {
+            $commentType = $_GET['type'];
         }
 
 
@@ -54,14 +54,14 @@ if (isset($_GET['modal'])) :
                     <div class="view_report_form row">
                         <div class="input-field col m12 l12">
                             <input type="text" name="report_status" value="<?php echo $investigationStatus; ?>" readonly>
-                            <label for="report_status">Report Status</label>
+                            <label for="report_status">report status</label>
                         </div>
                         <div class="input-field col m12 l12">
                             <textarea name="view_report_description" rows="15" class="materialize-textarea" readonly><?php echo $report->content; ?></textarea>
-                            <label for="view_report_description">Description</label>
+                            <label for="view_report_description">description</label>
                         </div>
                         <div class="input-field map-field col m12 l12">
-                            <h4 class="center-align">Location of Theft</h4>
+                            <h4 class="center-align">Location Of Theft</h4>
                             <div id="map"></div>
                         </div>
                         <?php if ($rank === 'civilian') : ?>
@@ -73,8 +73,8 @@ if (isset($_GET['modal'])) :
 
                                 <?php if ($rank !== 'civilian') : ?>
                                     <div class="comments_container_header center-align">
-                                        <button class="btn-small indigo" name="comment_public_section_button">Public</button>
-                                        <button class="btn-small indigo" name="comment_private_section_button">Police</button>
+                                        <button class="btn-small indigo" name="comment_public_section_button">public</button>
+                                        <button class="btn-small indigo" name="comment_private_section_button">police</button>
                                     </div>
                                 <?php endif; ?>
                                 <ul class="comments">
@@ -106,13 +106,13 @@ if (isset($_GET['modal'])) :
                                 </ul>
                                 <?php if ($report->open) : ?>
                                     <div class="new_comment_container">
-                                        <form name="new_report_comment_form" action="<?php echo 'http://localhost:3000/actions/create_report_comment.php?reportId=' . $report->id . '&type=' . $commentType; ?>" method="POST">
+                                        <form name="new_report_comment_form" action="<?php echo 'http://localhost:3000/actions/create_report_comment.php?reportId=' . $report->id . '&type=' . $commentType; ?>" method="post">
                                             <div class="input-field">
                                                 <textarea name="new_comment_textarea" id="newCommentTextarea" class="materialize-textarea" cols="30" rows=3></textarea>
                                                 <label for="newCommentTextarea">New Comment</label>
                                             </div>
                                             <div class="button_wrapper">
-                                                <input class="btn-small" type="submit" value="Send" name="new_comment_send_button">
+                                                <input class="btn-small" type="submit" value="send" name="new_comment_send_button">
                                             </div>
                                         </form>
                                     </div>
@@ -122,16 +122,28 @@ if (isset($_GET['modal'])) :
                                 <div class="form_button_wrapper button_wrapper col m12 l12">
                                     <?php if ($report->open) : ?>
                                         <a href="<?php echo 'http://localhost:3000/actions/close_report.php?reportId=' . $report->id; ?>" name="close_report_button" class="btn">Close</a>
+
+                                        <?php if (!$report->investigating && $rank !== 'civilian') : ?>
+                                            <a href="<?php echo 'http://localhost:3000/actions/create_investigation.php?reportId=' . $report->id; ?>" class="<?php echo getButtonType() ?> indigo">Launch Investigation</a>
+                                        <?php endif; ?>
                                     <?php endif; ?>
-                                    <a href="#" name="close_view_report_button" class="btn indigo">Back</a>
+                                    <a href="#" name="close_view_report_button" class="btn indigo">back</a>
                                     <a href="<?php echo 'http://localhost:3000/bikes.php?modal=viewBike&bikeId=' . $report->bike_id; ?>" name="view_reported_bike_button" class="btn">View Reported Bike</a>
+                                    <?php
+                                    if ($report->investigating) :
+                                        $investigation = getInvestigationByReportId($report->id);
+                                    ?>
+                                        <a href="<?php echo 'http://localhost:3000/investigations.php?modal=viewInvestigation&investigationId=' . $investigation->id; ?>" class="<?php echo getButtonType() ?> indigo">View Investigation</a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geocoder&v=3&key=AIzaSyA43tm6-MqO6IkzYA9he5Zlmu5drqlHtFo&callback=initMap">
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA43tm6-MqO6IkzYA9he5Zlmu5drqlHtFo&callback=initMap">
+        </script>
+
         </script>
     <?php endif; ?>
 <?php endif; ?>
@@ -139,7 +151,7 @@ if (isset($_GET['modal'])) :
 <div class="reports_container">
     <?php if (count($reports) === 0) : ?>
         <div class="no_reports_container">
-            <h3>No Reports</h3>
+            <h3>no reports</h3>
         </div>
     <?php else : ?>
         <div class="reports_header container">
@@ -154,7 +166,7 @@ if (isset($_GET['modal'])) :
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </select>
-                    <label for="select_search_type[]">Search Type</label>
+                    <label for="select_search_type[]">search type</label>
                 </div>
             </form>
             <?php if (isset($_POST['search_reports']) && count($search_types) > 0) : ?>
@@ -178,10 +190,10 @@ if (isset($_GET['modal'])) :
                         <div class="center-align col m12 switch_wrapper">
                             <div class="switch">
                                 <label>
-                                    Open
+                                    open
                                     <input type="checkbox" name="search_by_open">
                                     <span class="lever"></span>
-                                    Closed
+                                    closed
                                 </label>
                             </div>
                         </div>
@@ -205,7 +217,7 @@ if (isset($_GET['modal'])) :
                         </div>
                     <?php endif; ?>
                     <div class="button_wrapper col m12">
-                        <input type="submit" value="Search" name="search_reports_button" class="btn-small ">
+                        <input type="submit" value="search" name="search_reports_button" class="btn-small ">
                     </div>
                 </form>
             <?php endif; ?>
@@ -217,21 +229,28 @@ if (isset($_GET['modal'])) :
             ?>
                 <div class="card">
                     <div class="card-content">
-                        <?php if ($report->open) : ?>
+                        <span class="card-title">
+                            <?php
+                            $reportAuthor = '';
+                            if ($rank !== 'civilian') {
+                                $reportAuthor = ' by ' . getUsername($report->author);
+                            }
 
-                            <span class="card-title"><?php echo 'Report ' . $report->id; ?></span>
-                        <?php else : ?>
-                            <span class="card-title">
-                                <?php echo 'Report ' . $report->id . ' (Closed)';  ?>
-                            </span>
-                        <?php endif; ?>
+                            $reportClosed = '';
+
+                            if (!$report->open) {
+                                $reportClosed = ' (Closed)';
+                            }
+
+                            echo 'Report ' . $report->id . $reportClosed . $reportAuthor;  ?>
+                        </span>
                         <p><?php echo $report->content; ?></p>
                     </div>
                     <div class="card-action">
                         <?php if ($detect->isMobile() && !$detect->isTablet()) : ?>
-                            <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn-small">View Report</a>
+                            <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn-small">view report</a>
                         <?php else : ?>
-                            <a href=<?php echo 'http://localhost:3000/reports.php?modal=viewReport&reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn-small">View Report</a>
+                            <a href=<?php echo 'http://localhost:3000/reports.php?modal=viewReport&reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn-small">view report</a>
                         <?php endif; ?>
                     </div>
                 </div>

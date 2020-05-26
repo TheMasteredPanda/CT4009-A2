@@ -123,11 +123,16 @@ export async function getReportIds(
 export async function getReport(reportId: number, bikeId: number) {
   let report = null;
 
+  console.log(`ReportId: ${reportId}, BikeId: ${bikeId}`);
+
   if (reportId !== 0) {
     report = await Reports.findOne({ where: { id: reportId } });
   } else {
+    console.log("Using bike id.");
     report = await Reports.findOne({ where: { bike_id: bikeId } });
   }
+
+  console.log(report?.toJSON());
 
   if (!report) {
     throw new ClientNotFoundError(
