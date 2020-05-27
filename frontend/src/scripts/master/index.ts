@@ -1,5 +1,6 @@
 import $ from "jquery";
 import * as materialize from "materialize-css";
+
 $.fn.extend(materialize);
 
 export function getUrlQuery(url?: string) {

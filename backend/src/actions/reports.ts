@@ -57,7 +57,7 @@ interface ReportOptions {
   open?: boolean;
   bikeId?: number;
   startDate?: number;
-  endDate?: number;
+  beforeDate?: number;
   attributes?: string[];
   investigating?: boolean;
 }
@@ -77,14 +77,19 @@ export async function getReportIds(
 ) {
   let query: { where: any } = { where: {} };
 
-  if (opts.endDate && opts.startDate) {
+  if (opts.beforeDate && opts.startDate) {
     query.where.createdAt = {
-      [Op.between]: [new Date(opts.startDate), new Date(opts.endDate)],
+      [Op.between]: [
+        new Date(Number(opts.startDate)),
+        new Date(Number(opts.beforeDate)),
+      ],
     };
-  } else if (opts.endDate) {
-    query.where.createdAt = { [Op.lte]: new Date(opts.endDate) };
+  } else if (opts.beforeDate) {
+    query.where.createdAt = {
+      [Op.lte]: new Date(Number(opts.beforeDate)),
+    };
   } else if (opts.startDate) {
-    query.where.createdAt = { [Op.gte]: new Date(opts.startDate) };
+    query.where.createdAt = { [Op.gte]: new Date(Number(opts.startDate)) };
   }
 
   if (opts.hasOwnProperty("open")) {
@@ -113,6 +118,7 @@ export async function getReportIds(
     query.where.bike_id = Number(opts.bikeId);
   }
 
+  console.log(query);
   let reports = await Reports.findAll(query);
   return _.map(reports, (report) => (report.toJSON() as any).id);
 }
@@ -128,16 +134,11 @@ export async function getReportIds(
 export async function getReport(reportId: number, bikeId: number) {
   let report = null;
 
-  console.log(`ReportId: ${reportId}, BikeId: ${bikeId}`);
-
   if (reportId !== 0) {
     report = await Reports.findOne({ where: { id: reportId } });
   } else {
-    console.log("Using bike id.");
     report = await Reports.findOne({ where: { bike_id: bikeId } });
   }
-
-  console.log(report?.toJSON());
 
   if (!report) {
     throw new ClientNotFoundError(

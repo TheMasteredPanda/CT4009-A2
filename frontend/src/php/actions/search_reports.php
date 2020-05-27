@@ -15,12 +15,12 @@ if (isset($_POST['investigating'])) {
     $url = $url . '&investigating=' . $_POST['investigating'];
 }
 
-if (isset($_POST['startDate'])) {
+if (isset($_POST['start_date'])) {
     $url = $url . '&startDate=' . $_POST['start_date'];
 }
 
-if (isset($_POST['beforeDate'])) {
-    $url = $url . '&endDate=' . $_POST['before_date'];
+if (isset($_POST['before_date'])) {
+    $url = $url . '&beforeDate=' . $_POST['before_date'];
 }
 
 $curl = curl_init($url);

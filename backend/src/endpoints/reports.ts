@@ -108,6 +108,7 @@ router.post("/reports", (req: Request, res: Response) => {
   actions
     .getReportIds(req.query)
     .then((ids) => {
+      console.log(ids);
       res.status(200).send({ ids });
     })
     .catch((err) => handleInternalError(res, err));

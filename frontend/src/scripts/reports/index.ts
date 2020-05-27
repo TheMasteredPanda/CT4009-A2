@@ -5,16 +5,20 @@ $(document).ready(() => {
   $('select[name="select_search_type[]"]').formSelect();
   $('select[name="search_by_open"]').formSelect();
   $('select[name="police_select_search_type[]').formSelect();
-  let modal = getUrlQuery().modal;
-  if (!modal) return;
-
-  if (modal === "viewReport") {
-    $("#viewReport").modal({ dismissible: false }).modal("open");
-  }
-});
-
-$(".datepicker").ready(() => {
+  $('input[name="search_by_before_date"]').datepicker();
   $(".datepicker").datepicker();
+  let query = getUrlQuery();
+  let modal = query.modal;
+
+  if (modal) {
+    if (modal === "viewReport") {
+      $("#viewReport").modal({ dismissible: false }).modal("open");
+    }
+  }
+
+  $.post("http://localhost:3000/components/reports_list.php").done((res) => {
+    $(".reports").html(res);
+  });
 });
 
 $('select[name="select_search_type[]"]').change((e) => {
@@ -86,12 +90,10 @@ $(".search_reports_form").submit((e) => {
     ).getTime();
   }
 
-  console.log(data);
   $.post({
     url: "http://localhost:3000/actions/search_reports.php",
     data,
   }).done((res) => {
-    console.log(res);
     let object = JSON.parse(res);
     let ids = object.ids;
 
@@ -100,15 +102,10 @@ $(".search_reports_form").submit((e) => {
     }
 
     $.post({
-      url: "http://localhost:3000/reports.php",
-      data: {
-        ids,
-        search_values: data,
-        select_search_type: Object.keys(data),
-        search_reports: true,
-      },
+      url: `http://localhost:3000/components/reports_list.php`,
+      data: { ids },
     }).done((res1) => {
-      $("body").html(res1);
+      $(".reports").html(res1);
     });
   });
 });

@@ -577,6 +577,11 @@ nav {
 
   .reports_header {
     margin-top: 4%;
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 
     input[type="submit"] {
       @extend .indigo;
@@ -586,11 +591,7 @@ nav {
       @extend .grey, .lighten-2;
       height: max-content;
       min-height: 30%;
-      padding-top: 5%;
-
-      .datepicker_input {
-        padding-top: 5%;
-      }
+      padding: 1%;
 
       input[name="search_reports_button"] {
         @extend .indigo;
@@ -623,8 +624,8 @@ nav {
       flex-flow: row;
       flex-wrap: wrap;
       .card {
-        width: 30%;
-        margin: 1%;
+        width: 20%;
+        margin: .5%;
       }
     }
   }

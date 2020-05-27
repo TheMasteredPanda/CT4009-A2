@@ -18,17 +18,6 @@ if ($rank !== 'civilian') {
     $types['author'] = 'By Report Author';
 }
 
-if (!isset($_POST['ids'])) {
-    if ($rank == 'civilian') {
-        $reports = getAllUserReports();
-    } else {
-        $reports = getAllReports();
-    }
-} else {
-    $reports = $_POST['ids'];
-}
-
-
 if (isset($_GET['modal'])) :
     $modal = $_GET['modal'];
 
@@ -148,130 +137,94 @@ if (isset($_GET['modal'])) :
 <?php endif; ?>
 
 <div class="reports_container">
-    <?php if (count($reports) === 0) : ?>
-        <div class="no_reports_container">
-            <h3>No Reports</h3>
-        </div>
-    <?php else : ?>
-        <div class="reports_header container">
-            <form action="#" class="reports_select_search_type_form">
-                <div class="input-field col m12">
-                    <select name="select_search_type[]" multiple>
-                        <?php foreach ($types as $key => $value) : ?>
-                            <?php if (in_array($key, $search_types)) : ?>
-                                <option value=<?php echo $key; ?> selected><?php echo $value ?></option>
-                            <?php else : ?>
-                                <option value=<?php echo $key; ?>><?php echo $value; ?></option>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </select>
-                    <label for="select_search_type[]">Search Type</label>
-                </div>
-            </form>
-            <?php if (isset($_POST['search_reports']) && count($search_types) > 0) : ?>
-                <?php
-                $startDate = '';
-                $endDate = '';
-                $author = '';
-                $isInvestigating = false;
-                $isOpen = false;
+    <div class="reports_header row col l12 m12 s12">
+        <form action="#" class="reports_select_search_type_form col m8 l8 s8 pull-l2">
+            <div class="input-field col m12">
+                <select name="select_search_type[]" multiple>
+                    <?php foreach ($types as $key => $value) : ?>
+                        <?php if (in_array($key, $search_types)) : ?>
+                            <option value=<?php echo $key; ?> selected><?php echo $value ?></option>
+                        <?php else : ?>
+                            <option value=<?php echo $key; ?>><?php echo $value; ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+                <label for="select_search_type[]">Search Type</label>
+            </div>
+        </form>
+        <?php if (isset($_POST['search_reports']) && count($search_types) > 0) : ?>
+            <?php
+            $startDate = '';
+            $beforeDate = '';
+            $author = '';
+            $isInvestigating = false;
+            $isOpen = false;
 
-                if (isset($_POST['search_values'])) {
-                    $values = $_POST['search_values'];
-                    $startDate = $values['search_by_start_date'];
-                    $endDate = $values['search_by_before_date'];
+            if (isset($_POST['search_values'])) {
+                $values = $_POST['search_values'];
+                if (!empty($values)) {
+                    $startDate = $values['start_date'];
+                    $beforeDate = $values['before_date'];
                     $author = $values['author'];
                     $isInvestigating = $values['investigating'];
                     $isOpen = $values['open'];
                 }
-                ?>
-                <form action="#" class="search_reports_form row">
-                    <?php if ($rank === 'civilian') : ?>
-                        <input type="text" name="civ_author" value=<?php echo $userId; ?> hidden>
-                    <?php endif; ?>
-                    <?php if (in_array('start_date', $search_types)) : ?>
-                        <div class="input-field col m10 push-m1 datepicker_input">
-                            <input type="text" class="datepicker" name="search_by_start_date" value="<?php echo $startDate; ?>">
-                            <label for="search_by_start_date">Search By Illustrated Date</label>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (in_array('before_date', $search_types)) : ?>
-                        <div class="input-field col m10 push-m1 datepicker_input">
-                            <input type="text" class="datepicker" name="search_by_before_date" value="<?php echo $endDate; ?>">
-                            <label for="search_by_before_date">Search By Before Date</label>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (in_array('open', $search_types)) : ?>
-                        <div class="center-align col m12 switch_wrapper">
-                            <div class="switch">
-                                <label>
-                                    Open
-                                    <input type="checkbox" name="search_by_open" <?php if ($isOpen) : ?> checked <?php endif; ?>>
-                                    <span class="lever"></span>
-                                    Closed
-                                </label>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (in_array('investigating', $search_types)) : ?>
-                        <div class="center-align col m12 switch_wrapper">
-                            <div class="switch">
-                                <label>
-                                    Investigating
-                                    <input type="checkbox" name="search_by_investigating" <?php if ($isInvestigating) : ?> checked <?php endif; ?>>
-                                    <span class="lever"></span>
-                                    Not Invesigating
-                                </label>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                    <?php if ($rank !== 'civilian' && in_array('author', $search_types)) : ?>
-                        <div class="input-field col m10 push-m1">
-                            <input type="text" name="search_by_author" value="<?php echo $author ?>">
-                            <label for="search_by_author">Search By Author</label>
-                        </div>
-                    <?php endif; ?>
-                    <div class="button_wrapper col m12">
-                        <input type="submit" value="search" name="search_reports_button" class="btn-small ">
-                    </div>
-                </form>
-            <?php endif; ?>
-        </div>
-
-        <div class="reports container">
-            <?php for ($i = 0; $i < count($reports); $i++) :
-                $report = getReport($reports[$i]);
+            }
             ?>
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title">
-                            <?php
-                            $reportAuthor = '';
-                            if ($rank !== 'civilian') {
-                                $reportAuthor = ' by ' . getUsername($report->author);
-                            }
-
-                            $reportClosed = '';
-
-                            if (!$report->open) {
-                                $reportClosed = ' (Closed)';
-                            }
-
-                            echo 'Report ' . $report->id . $reportClosed . $reportAuthor;  ?>
-                        </span>
-                        <p><?php echo $report->content; ?></p>
+            <form action="#" class="search_reports_form col m8 l8 s8 pull-l2">
+                <?php if ($rank === 'civilian') : ?>
+                    <input type="text" name="civ_author" value=<?php echo $userId; ?> hidden>
+                <?php endif; ?>
+                <?php if (in_array('start_date', $search_types)) : ?>
+                    <div class="input-field col m10 push-m1 datepicker_input">
+                        <input type="text" class="datepicker" name="search_by_start_date" id="searchByStartDate">
+                        <label for="search_by_start_date">Search By Illustrated Date</label>
                     </div>
-                    <div class="card-action">
-                        <?php if ($detect->isMobile() && !$detect->isTablet()) : ?>
-                            <a href=<?php echo 'http://localhost:3000/mobile/view_report.php?reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn-small">view report</a>
-                        <?php else : ?>
-                            <a href=<?php echo 'http://localhost:3000/reports.php?modal=viewReport&reportId=' . $report->id . '&placeId=' . $report->place_id; ?> class="btn-small">view report</a>
-                        <?php endif; ?>
+                <?php endif; ?>
+                <?php if (in_array('before_date', $search_types)) : ?>
+                    <div class="input-field col m10 push-m1 datepicker_input">
+                        <input type="text" class="datepicker" name="search_by_before_date">
+                        <label for="search_by_before_date">Search By Before Date</label>
                     </div>
+                <?php endif; ?>
+                <?php if (in_array('open', $search_types)) : ?>
+                    <div class="center-align col m12 switch_wrapper">
+                        <div class="switch">
+                            <label>
+                                Open
+                                <input type="checkbox" name="search_by_open" <?php if ($isOpen) : ?> checked <?php endif; ?>>
+                                <span class="lever"></span>
+                                Closed
+                            </label>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <?php if (in_array('investigating', $search_types)) : ?>
+                    <div class="center-align col m12 switch_wrapper">
+                        <div class="switch">
+                            <label>
+                                Investigating
+                                <input type="checkbox" name="search_by_investigating" <?php if ($isInvestigating) : ?> checked <?php endif; ?>>
+                                <span class="lever"></span>
+                                Not Invesigating
+                            </label>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <?php if ($rank !== 'civilian' && in_array('author', $search_types)) : ?>
+                    <div class="input-field col m10 push-m1">
+                        <input type="text" name="search_by_author" value="<?php echo $author ?>">
+                        <label for="search_by_author">Search By Author</label>
+                    </div>
+                <?php endif; ?>
+                <div class="button_wrapper col m12">
+                    <input type="submit" value="search" name="search_reports_button" class="btn-small ">
                 </div>
-            <?php endfor; ?>
-        </div>
-    <?php endif; ?>
+            </form>
+        <?php endif; ?>
+    </div>
+    <div class="reports row col l12 m12 s12">
+    </div>
 </div>
 
 <script type="text/javascript" src="http://localhost:3000/scripts/reports.bundle.js"></script>
