@@ -10,10 +10,40 @@ $('.create_officer_account_form input[name="retypePassword"]').change((e) => {
   }
 });
 
+$('button[name="promote_user_button"]').click((e: any) => {
+  let accountId = $(e.currentTarget).attr("data-account-id");
+  $.get(
+    `http://localhost:3000/actions/promote_user.php?accountId=${accountId}`
+  ).done((res) => {
+    window.location.reload();
+  });
+});
+
+$('button[name="demote_user_button"]').click((e: any) => {
+  let accountId = $(e.currentTarget).attr("data-account-id");
+  $.get(
+    `http://localhost:5555/actions/demote_user.php?accountId=${accountId}`
+  ).done((res) => {
+    window.location.reload();
+  });
+});
+
+$('button[name="change_user_password_button"]').click((e: any) => {
+  //TODO
+});
+
+$('button[name="delete_user_button"]').click((e: any) => {
+  let accountId = $(e.currentTarget).attr("data-account-id");
+  $.get(
+    `http://localhost:5555/actions/delete_user.php?accountId=${accountId}`
+  ).done((res) => {
+    window.location.reload();
+  });
+});
+
 $(document).ready(() => {
   let query = window.location.search;
   if (!query) return;
-
   let map = query
     .split("?")[1]
     .split("&")
@@ -48,6 +78,38 @@ $(document).ready(() => {
   if (params.password) {
     alert("Password must be a value.");
   }
+});
+
+$(".search_accounts_form").submit((e: any) => {
+  e.preventDefault();
+  let options: any = $('select[name="search_options"]').val();
+  let searchValues: any = {};
+
+  if (options.includes("username")) {
+    searchValues.username = $('input[name="search_by_username"]').val();
+  }
+
+  if (options.includes("id")) {
+    searchValues.id = $('input[name="search_by_id"]').val();
+  }
+
+  if (options.includes("rank")) {
+    searchValues.rank = $('select[name="search_by_rank"]').val();
+  }
+
+  $.post({
+    url: "http://localhost:3000/actions/search_accounts_admin.php",
+    data: { searchValues },
+  }).done((res) => {
+    let ids = JSON.parse(res).ids;
+    console.log(ids);
+    $.post({
+      url: "http://localhost:3000/components/admin_section_account_entries.php",
+      data: { accounts: ids },
+    }).done((res1) => {
+      $(".account_entries").html(res1);
+    });
+  });
 });
 
 $('button[name="admin_account_search_button"]').click((e) => {
@@ -119,9 +181,37 @@ $('button[name="admin_account_search_button"]').click((e) => {
   }
 });
 
+$('select[name="search_options"]').change((e: any) => {
+  let options = $('select[name="search_options"]').val();
+
+  $.post({
+    url: "http://localhost:3000/components/search_accounts_form.php",
+    data: { options, button: true },
+  }).done((res) => {
+    $(".search_accounts_form").html(res);
+    $('select[name="search_by_rank"]').formSelect();
+  });
+});
+
 $(document).ready(() => {
+  $("select").formSelect();
+  let options = $('select[name="search_options"]').val();
+
+  $.post({
+    url: "http://localhost:3000/components/search_accounts_form.php",
+    data: { options, button: options ? true : false },
+  }).done((res) => {
+    $(".search_accounts_form").html(res);
+  });
+
+  $.post(
+    "http://localhost:3000/components/admin_section_account_entries.php"
+  ).done((res) => {
+    $(".account_entries").html(res);
+    $('select[name="search_by_rank"]').formSelect();
+  });
   let modal = getUrlQuery().modal;
   if (!modal) return;
-  $(`#${modal}`).modal({dismissible: false});
-  $(`#${modal}`).modal('open');
-})
+  $(`#${modal}`).modal({ dismissible: false });
+  $(`#${modal}`).modal("open");
+});

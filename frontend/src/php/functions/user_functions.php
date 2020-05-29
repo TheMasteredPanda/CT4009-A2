@@ -43,3 +43,22 @@ function getBadgeFor($userId)
         return '<span class="white-text red badge">Admin</span>';
     }
 }
+
+function getRankFor($userId)
+{
+    $payload = json_decode($_COOKIE['ct4009Auth']);
+    $curl = curl_init('http://localhost:5555/user/rank?userId=' . $payload->id . '&accountId=' . $userId);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
+    $result = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($status !== 200) {
+        print_r(curl_error($curl));
+        print_r($result);
+        return;
+    }
+
+    curl_close($curl);
+    return $result;
+}

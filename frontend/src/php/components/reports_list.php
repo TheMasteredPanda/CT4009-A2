@@ -18,7 +18,7 @@ if (!isset($_POST['ids'])) {
 }
 
 ?>
-<?php if (count($reports) === 0 || $reports === 'empty') : ?>
+<?php if ($reports === 'empty' || count($reports) === 0) : ?>
     <div class="no_reports_container">
         <h3>No Reports</h3>
     </div>

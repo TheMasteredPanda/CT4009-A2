@@ -121,6 +121,44 @@ router.post("/admin/accounts", (req: Request, res: Response) => {
 });
 
 /**
+ * @api {post} /admin/accounts/search       Search all accounts.
+ * @apiVersion 0.1.0
+ * @apiGroup endpoints/admin
+ *
+ * @apiDescription
+ */
+router.post("/admin/accounts/search", (req: Request, res: Response) => {
+  let body = req.body;
+
+  if (body.length === 0) {
+    res.error.client.badRequest(
+      "Client",
+      "Body not found",
+      `Body parameters 'username', 'id', and/or 'rank' was not found.`
+    );
+    return;
+  }
+
+  if (
+    !body.hasOwnProperty("id") &&
+    !body.hasOwnProperty("username") &&
+    !body.hasOwnProperty("rank")
+  ) {
+    res.error.client.badRequest(
+      "Client",
+      "Parameters not found",
+      `Query parameter 'id', 'username', and 'rank' was not found. At least one needs to be present.`
+    );
+    return;
+  }
+
+  adminActions
+    .searchAccounts(body)
+    .then((ids) => res.status(200).send({ ids }))
+    .catch((err) => handleInternalError(res, err));
+});
+
+/**
  * @api {post} /admin/accounts/account      Get account details
  * @apiVersion 0.1.0
  * @apiGroup endpoints/admin

@@ -317,9 +317,9 @@ nav {
         margin-top: 0;
         margin-bottom: 0;
         height: auto;
-        margin-left: .5%;
-        margin-right: .5%;
-        
+        margin-left: 0.5%;
+        margin-right: 0.5%;
+
         .card {
           .card-title {
             padding-bottom: 4%;
@@ -435,20 +435,22 @@ nav {
     flex-flow: column;
     grid-template-rows: 30% 70%;
     height: 90%;
+    width: 100%;
 
     .accounts_header {
       @extend .grey, .lighten-2;
       margin-top: 4%;
       padding: 2%;
-
+      width: 75%;
+      
       .search_accounts_form {
+        margin-top: 1%;
         display: flex;
         flex-flow: row;
         align-items: center;
         justify-content: center;
 
         .input-field {
-          width: 70%;
         }
         .search_accounts_button_wrapper {
           display: flex;
@@ -475,19 +477,37 @@ nav {
       }
     }
 
+    .account_entries {
+      width: 100%;
+    }
     .account_entry a {
       @extend .grey, .lighten-2;
       display: grid;
-      grid-template-columns: 60% 40%;
-      text-align: left;
+      grid-template-columns: 20% 5% 10% 10% 10% 45%;
+      text-align: center;
       color: initial;
 
+      .account_entry_rank {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .account_entry_buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        button {
+          margin-left: 0.5%;
+          margin-right: 0.5%;
+        }
+      }
       h5 {
-        padding-left: 10%;
+        text-align: center;
       }
 
       h6 {
-        padding-left: 10%;
       }
     }
   }
@@ -625,7 +645,7 @@ nav {
       flex-wrap: wrap;
       .card {
         width: 20%;
-        margin: .5%;
+        margin: 0.5%;
       }
     }
   }
@@ -710,7 +730,7 @@ nav {
       display: flex;
       align-items: center;
       justify-content: center;
-      
+
       button {
         margin: 1%;
       }
@@ -1035,8 +1055,8 @@ nav {
 
     .investigations {
       .card {
-        margin: .5%;
-        
+        margin: 0.5%;
+
         .card-action {
           a {
             @extend .indigo;
@@ -1051,11 +1071,11 @@ nav {
     .investigations_list_container {
       .investigations_list_search {
         .button_wrapper {
-          margin: .5%; 
+          margin: 0.5%;
         }
 
         .switch {
-          margin: .5%;
+          margin: 0.5%;
         }
       }
 

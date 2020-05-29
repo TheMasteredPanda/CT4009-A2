@@ -174,3 +174,37 @@ export async function deleteAccount(userId: number) {
   await Contacts.destroy({ where: { user_id: userId } });
   await Users.destroy({ where: { id: userId } });
 }
+
+export interface SearchAccountOptions {
+  username?: string;
+  id?: number;
+  rank?: string;
+}
+
+export async function searchAccounts(options: SearchAccountOptions) {
+  let accounts;
+
+  if (options.id) {
+    accounts = await Users.findOne({
+      where: { id: options.id },
+      attributes: ["id"],
+    });
+
+    if (!accounts) return [];
+
+    return [accounts.toJSON()];
+  } else {
+    let query: any = {};
+
+    if (options.username) {
+      query.username = options.username;
+    }
+
+    if (options.rank) {
+      query.rank = options.rank;
+    }
+
+    accounts = await Users.findAll({ where: query, attributes: ["id"] });
+    return _.map(accounts, (account) => (account.toJSON() as any).id);
+  }
+}

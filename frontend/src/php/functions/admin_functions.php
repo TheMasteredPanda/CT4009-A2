@@ -43,3 +43,42 @@ function getAccountDetails($id)
     curl_close($curl);
     return json_decode($result);
 }
+
+function getRegisteredBikesCount($accountId)
+{
+    $payload = json_decode($_COOKIE['ct4009Auth']);
+    $curl = curl_init('http://localhost:5555/bike/bikes?userId=' . $payload->id . '&accountId=' . $accountId);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
+    $result = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($status !== 200) {
+        print_r(curl_error($curl));
+        print_r($result);
+        return;
+    }
+
+    curl_error($curl);
+    return count(json_decode($result));
+}
+
+function getReportsCount($accountId)
+{
+    $payload = json_decode($_COOKIE['ct4009Auth']);
+    $curl = curl_init('http://localhost:5555/reports?userId=' . $payload->id . '&author=' . $accountId);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $payload->token));
+    $result = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+    if ($status !== 200) {
+        print_r(curl_error($curl));
+        print_r($result);
+        return;
+    }
+
+    curl_close($curl);
+    return count(json_decode($result)->ids);
+}

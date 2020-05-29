@@ -194,8 +194,25 @@ router.post("/bike/images/delete", (req: Request, res: Response) => {
  * @apiSuccess {Success} bikeIds  The ids of bikes.
  */
 router.get("/bike/bikes", (req: Request, res: Response) => {
+  let query = req.query;
+  let accountId;
+
+  if (query.hasOwnProperty("accountId")) {
+    if (req.user.rank !== "police_admin") {
+      res.error.client.unauthorized(
+        "Auth",
+        "Access denied.",
+        `You do not have access to use this endpoint in this way.`
+      );
+      return;
+    }
+    accountId = query.accountId;
+  } else {
+    accountId = req.user.id;
+  }
+
   actions
-    .getAllRegisteredBikes(req.user.id)
+    .getAllRegisteredBikes(accountId)
     .then((bikeIds) => res.status(200).send(bikeIds))
     .catch((err) => handleInternalError(res, err));
 });

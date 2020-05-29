@@ -16,14 +16,6 @@ if (isset($_GET['section'])) {
 } else {
 }
 
-$accounts = [];
-
-if (isset($_POST['accounts'])) {
-    global $accounts;
-    $accounts = getAllAccounts($_POST['accounts']);
-} else {
-    $accounts = getAllAccounts([]);
-}
 
 if (isset($_GET['modal'])) :
     $modal = $_GET['modal'];
@@ -62,18 +54,22 @@ if (isset($_GET['modal'])) :
 
 <div class="admin_panel_container">
     <?php if ($section === 'accounts') : ?>
-        <div class="admin_panel_accounts_section row ">
-            <div class="accounts_header col m10 l10 pull-l1">
-                <form action="" class="search_accounts_form">
-                    <div class="input-field ">
-                        <input type="text" name="admin_accounts_search">
-                        <label for="search_by_username">Search</label>
-                    </div>
-                    <div class="search_accounts_button_wrapper">
-                        <input type="submit" value="Search" name="admin_account_search_button" class="indigo btn-small">
+        <div class="admin_panel_accounts_section">
+            <div class="accounts_header row ">
+                <form action="#" name="search_select_form" class=" col m8 push-m3 l8 push-l2 s8 push-s3">
+                    <div class="input-field">
+                        <select name="search_options" multiple>
+                            <option value="rank">Search by Rank</option>
+                            <option value="id">Search by Id</option>
+                            <option value="username">Search by Name</option>
+                        </select>
+                        <label for="search_options">Search Options</label>
                     </div>
                 </form>
-                <div class="button_wrapper">
+                <form action="" class="search_accounts_form col m8 push-m3 l8 push-l2 s8 push-s3">
+
+                </form>
+                <div class="button_wrapper col m12 l12 s12">
                     <?php if ($detect->isMobile() && !$detect->isTable()) : ?>
                         <a href="http://localhost:3000/mobile/create_officer_account.php" class="btn-small">Create Officer Account</a>
                     <?php else : ?>
@@ -81,47 +77,9 @@ if (isset($_GET['modal'])) :
                     <?php endif; ?>
                 </div>
             </div>
-            <?php if (count($accounts) > 0) : ?>
-                <ul class="col m10 pull-m1 l10 pull-l1">
-                    <li class="account_entry entry_titles">
-                        <a href="#">
-
-                            <div>
-                                <h5>Username</h5>
-                            </div>
-                            <div>
-                                <h5>ID</h5>
-                            </div>
-                        </a>
-                    </li>
-                    <?php for ($i = 0; $i < count($accounts); $i++) : ?>
-                        <li class=" account_entry" data-search-username=<?php echo $accounts[$i]->username; ?> data-search-email=<?php echo '"' . $accounts[$i]->contacts[0]->contact_value . '"'; ?> data-entry-id=<?php echo $accounts[$i]->id; ?>>
-                            <?php
-                            $view_account_href = '';
-
-                            if ($detect->isMobile()) {
-                                $view_account_href = 'http://localhost:3000/mobile/view_account_details.php?accountId=' . $accounts[$i]->id;
-                            } else {
-                                $view_account_href = 'http://localhost:3000/admin_panel.php?section=accounts&model=viewAccount&accountId=' . $accounts[$i]->id;
-                            }
-                            ?>
-                            <a href=<?php echo $view_account_href; ?>>
-                                <div>
-                                    <h6><?php echo ucwords($accounts[$i]->username) ?></h6>
-                                </div>
-                                <div>
-                                    <h6><?php echo ucwords($accounts[$i]->id) ?></h6>
-                                </div>
-                            </a>
-                        </li>
-                    <?php endfor; ?>
-                </ul>
-            <?php else : ?>
-                <div class="no_accounts_container">
-                    <h5>No Accounts Found</h5>
-                </div>
-            <?php endif; ?>
-
+            <div class="account_entries row">
+>
+            </div>
         </div>
     <?php endif; ?>
 </div>
