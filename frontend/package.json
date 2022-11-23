@@ -14,7 +14,7 @@
     "@types/googlemaps": "^3.39.5",
     "@types/jquery": "^3.3.35",
     "@types/materialize-css": "^1.0.7",
-    "browser-sync": "^2.26.7",
+    "browser-sync": "^2.27.10",
     "clean": "^4.0.2",
     "css-loader": "^3.5.2",
     "dependency-tree": "^7.2.1",
